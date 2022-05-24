@@ -1,3 +1,10 @@
 package mp.sudoku.model
 
-data class Game()
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
+class Game {
+    @PrimaryKey(autoGenerate = true)
+    var id:Int = 0
+}
