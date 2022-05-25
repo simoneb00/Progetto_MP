@@ -18,7 +18,7 @@ fun HomeLayout() {
         modifier = Modifier
             .fillMaxHeight()
     ) {
-        UpperBar()
+        TopBar(includeBackButton = false, includeGuideButton = true, includeSettingsButton = true ,modifier = Modifier)
         Logo()
         Buttons()
     }
@@ -49,10 +49,10 @@ fun Buttons() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        NavigationButton(text = "New Game", value = ScreenRouter.DIFFICULTYSCREEN)
-        NavigationButton(text = "Resume", value = ScreenRouter.HOMESCREEN)
-        NavigationButton(text = "Statistics", value = ScreenRouter.HOMESCREEN)
-        NavigationButton(text = "Settings", value = ScreenRouter.HOMESCREEN)
+        NavigationButton(text = "New Game", destination = ScreenRouter.DIFFICULTYSCREEN)
+        NavigationButton(text = "Resume", destination = ScreenRouter.HOMESCREEN)
+        NavigationButton(text = "Statistics", destination = ScreenRouter.HOMESCREEN)
+        NavigationButton(text = "Settings", destination = ScreenRouter.SETTINGSCREEN)
     }
 }
 

@@ -5,39 +5,40 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import mp.sudoku.ui.theme.DarkBlue
 import mp.sudoku.ui.theme.NormalBlue
 
-@Preview(showBackground = true)
+
 @Composable
 fun SettingsLayout() {
     Column(
         modifier = Modifier
             .fillMaxHeight()
     ) {
-        CompleteUpperBar()
+        TopBar(
+            includeBackButton = true,
+            includeSettingsButton = false,
+            includeGuideButton = false,
+            modifier = Modifier
+        )
         SettingsTitle()
         Settings()
     }
 }
+
 
 @Composable
 fun SettingsTitle() {
     Row(
         horizontalArrangement = Arrangement.Center, modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 10.dp, bottom = 20.dp)
     ) {
         Text(
             text = "Settings",
@@ -81,10 +82,10 @@ fun SettingCard(
         ) {
             Text(text = text, fontSize = 18.sp)
 
-            val checkedState = mutableStateOf(true)
+            var checkedState by remember { mutableStateOf(true) }
             Switch(
-                checked = checkedState.value,
-                onCheckedChange = { checkedState.value = it },
+                checked = checkedState,
+                onCheckedChange = { checkedState = it },
                 colors = SwitchDefaults.colors(NormalBlue)
             )
         }
@@ -134,4 +135,5 @@ fun ThemeCard() {
         }
     }
 }
+
 

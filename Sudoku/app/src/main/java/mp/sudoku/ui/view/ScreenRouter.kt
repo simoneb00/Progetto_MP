@@ -9,6 +9,7 @@ object ScreenRouter {
     var currentScreen: MutableState<Int> = mutableStateOf(1)
     val HOMESCREEN = 1
     val DIFFICULTYSCREEN = 2
+    val SETTINGSCREEN = 3
 
 
     fun navigateTo(destination: Int) {
@@ -26,6 +27,7 @@ fun MainScreen() {
     when (ScreenRouter.currentScreen.value) {
         1 -> HomeLayout()
         2 -> DifficultyLayout()
+        3 -> SettingsLayout()
     }
 }
 

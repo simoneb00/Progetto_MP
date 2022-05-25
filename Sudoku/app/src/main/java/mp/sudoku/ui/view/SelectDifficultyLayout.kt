@@ -18,7 +18,7 @@ fun DifficultyLayout() {
         modifier = Modifier
             .fillMaxHeight()
     ) {
-        CompleteUpperBar()
+        TopBar(includeBackButton = true, includeSettingsButton = true, includeGuideButton = true ,modifier = Modifier)
         DifficultyText()
         DifficultyButtons()
     }
@@ -41,8 +41,8 @@ fun DifficultyButtons() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        NavigationButton(text = "Easy", value = 2)
-        NavigationButton(text = "Normal", value = 2)
-        NavigationButton(text = "Hard", value = 2)
+        NavigationButton(text = "Easy", destination = 2)
+        NavigationButton(text = "Normal", destination = 2)
+        NavigationButton(text = "Hard", destination = 2)
     }
 }
