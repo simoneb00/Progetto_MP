@@ -1,5 +1,6 @@
 package mp.sudoku.ui.view
 
+import android.provider.Settings.System.getString
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
@@ -7,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import mp.sudoku.R
@@ -49,10 +51,10 @@ fun Buttons() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        NavigationButton(text = "New Game", destination = ScreenRouter.DIFFICULTYSCREEN)
-        NavigationButton(text = "Resume", destination = ScreenRouter.HOMESCREEN)
-        NavigationButton(text = "Statistics", destination = ScreenRouter.HOMESCREEN)
-        NavigationButton(text = "Settings", destination = ScreenRouter.SETTINGSCREEN)
+        NavigationButton(text = stringResource(R.string.new_game), destination = ScreenRouter.DIFFICULTYSCREEN)
+        NavigationButton(text = stringResource(R.string.resume), destination = ScreenRouter.HOMESCREEN)
+        NavigationButton(text = stringResource(R.string.statistics), destination = ScreenRouter.HOMESCREEN)
+        NavigationButton(text = stringResource(R.string.settings), destination = ScreenRouter.SETTINGSCREEN)
     }
 }
 

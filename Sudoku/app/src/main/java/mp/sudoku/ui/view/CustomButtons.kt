@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.sp
 import mp.sudoku.ui.theme.NormalBlue
 
 @Composable
-fun NavigationButton(text: String, destination : Int) {
+fun NavigationButton(text: String?, destination: Int) {
     Button(
         onClick = { ScreenRouter.navigateTo(destination) },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
