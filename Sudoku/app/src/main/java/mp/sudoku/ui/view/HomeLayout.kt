@@ -18,7 +18,7 @@ fun HomeLayout() {
         modifier = Modifier
             .fillMaxHeight()
     ) {
-        UpperBar(false)
+        UpperBar()
         Logo()
         Buttons()
     }

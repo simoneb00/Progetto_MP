@@ -18,7 +18,7 @@ fun DifficultyLayout() {
         modifier = Modifier
             .fillMaxHeight()
     ) {
-        UpperBar(true)
+        CompleteUpperBar()
         DifficultyText()
         DifficultyButtons()
     }
