@@ -25,8 +25,7 @@ fun SettingsLayout() {
         TopBar(
             includeBackButton = true,
             includeSettingsButton = false,
-            includeGuideButton = false,
-            modifier = Modifier
+            includeGuideButton = false
         )
         SettingsTitle()
         Settings()

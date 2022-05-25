@@ -10,6 +10,7 @@ object ScreenRouter {
     val HOMESCREEN = 1
     val DIFFICULTYSCREEN = 2
     val SETTINGSCREEN = 3
+    val STATSSCREEN = 4
 
 
     fun navigateTo(destination: Int) {
@@ -28,6 +29,7 @@ fun MainScreen() {
         1 -> HomeLayout()
         2 -> DifficultyLayout()
         3 -> SettingsLayout()
+        4 -> StatsLayout()
     }
 }
 

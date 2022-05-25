@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Sudoku</string>
-    <string name="new_game">New Game</string>
-    <string name="resume">Resume</string>
-    <string name="statistics">Statistics</string>
-    <string name="settings">settings</string>
+    <string name="new_game">Nuova Partita</string>
+    <string name="resume">Riprendi</string>
+    <string name="statistics">Statistiche</string>
+    <string name="settings">Opzioni</string>
 </resources>

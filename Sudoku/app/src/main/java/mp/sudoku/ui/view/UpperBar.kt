@@ -20,7 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import mp.sudoku.ui.theme.NormalBlue
 
 @Composable
-fun TopBar(includeBackButton: Boolean, includeSettingsButton: Boolean, includeGuideButton: Boolean, modifier: Modifier) {
+fun TopBar(includeBackButton: Boolean, includeSettingsButton: Boolean, includeGuideButton: Boolean) {
 
     ConstraintLayout (modifier = Modifier.fillMaxWidth().padding(top = 5.dp)) {
         val (backButton, settingsButton, guideButton) = createRefs()

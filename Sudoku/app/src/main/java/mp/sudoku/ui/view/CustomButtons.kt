@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.sp
 import mp.sudoku.ui.theme.NormalBlue
 
 @Composable
-fun NavigationButton(text: String?, destination: Int) {
+fun NavigationButton(text: String, destination: Int) {
     Button(
         onClick = { ScreenRouter.navigateTo(destination) },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
@@ -26,13 +26,5 @@ fun NavigationButton(text: String?, destination: Int) {
             color = NormalBlue,
             fontSize = 20.sp
         )
-    }
-}
-
-
-@Composable
-fun SquareButton(icon: ImageVector, onClick: () -> Unit) {
-    IconButton(onClick = onClick, modifier = Modifier.size(30.dp)) {
-        Icon(icon, contentDescription = "Icon", tint = NormalBlue)
     }
 }
