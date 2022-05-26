@@ -1,45 +1,57 @@
 package mp.sudoku.ui.view
 
-import android.util.StatsLog
+import android.annotation.SuppressLint
+import android.app.Application
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import mp.sudoku.R
-import mp.sudoku.model.Game
 import mp.sudoku.ui.theme.BackgroundWhite
 import mp.sudoku.ui.theme.NormalBlue
+import mp.sudoku.viewmodel.StatisticVM
 
+@SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)
 @Composable
 fun StatsLayout() {
+
+    /* parameters initialization */
+    val viewModel = StatisticVM(
+        LocalContext
+            .current.applicationContext as Application
+    )
+    val numWonGames: MutableState<Int> = mutableStateOf(0)
+    viewModel.getWonGames(numWonGames)
+    val numGames: Int = 10          /* TODO */
+    val numStartedGames: Int = 0    /* TODO */
+    val bestTime: Float = 0f        /* TODO */
+    val averageTime: Float = 0f     /* TODO */
+    val bestScore: Int = 0          /* TODO */
+    val averageScore: Int = 0       /* TODO */
+
+
+    /* color transition animation */
 
     var animationPlayed by remember {
         mutableStateOf(false)
@@ -55,6 +67,8 @@ fun StatsLayout() {
         animationPlayed = true
     }
 
+    /* end of animation */
+
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
             includeBackButton = true,
@@ -67,13 +81,17 @@ fun StatsLayout() {
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = color.value)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState())      // to make the column scrollable
                 .padding(top = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            CircularProgressIndicator()
+            /* percentage indicator */
+            val percentage: Float = (numWonGames.value.toFloat() / numGames)
+            println(percentage)
+            CircularProgressIndicator(percentage = percentage)
 
+            /* percentage indicator description */
             Text(
                 text = stringResource(R.string.won_games_perc),
                 fontSize = 20.sp,
@@ -82,16 +100,16 @@ fun StatsLayout() {
                 modifier = Modifier.padding(20.dp)
             )
 
-            GamesStatsLayout()
-            TimeStatsLayout()
-            ScoreStatsLayout()
+            GamesStatsLayout(numStartedGames = numStartedGames, numGames = numGames, numWonGames = numWonGames.value)
+            TimeStatsLayout(bestTime = bestTime, averageTime = averageTime)
+            ScoreStatsLayout(bestScore = bestScore, averageScore = averageScore)
         }
     }
 }
 
 @Composable
 fun CircularProgressIndicator(
-    percentage: Float = 0.75f,
+    percentage: Float = 0f,
     number: Int = 100,
     fontSize: TextUnit = 28.sp,
     radius: Dp = 50.dp,
@@ -140,7 +158,11 @@ fun CircularProgressIndicator(
 
 
 @Composable
-fun GamesStatsLayout() {
+fun GamesStatsLayout(
+    numGames: Int,
+    numWonGames: Int,
+    numStartedGames: Int
+) {
     Column(
         modifier = Modifier.padding(top = 20.dp, start = 5.dp, end = 5.dp)
     ) {
@@ -166,10 +188,10 @@ fun GamesStatsLayout() {
             backgroundColor = Color.White
         ) {
             Column() {
-                StatsRow(description = stringResource(R.string.games_played), intValue = 10)
-                StatsRow(description = stringResource(R.string.games_won), intValue = 8)
-                StatsRow(description = stringResource(R.string.games_lost), intValue = 2)
-                StatsRow(description = stringResource(R.string.games_started), intValue = 3)
+                StatsRow(description = stringResource(R.string.games_played), intValue = numGames)
+                StatsRow(description = stringResource(R.string.games_won), intValue = numWonGames)
+                StatsRow(description = stringResource(R.string.games_lost), intValue = numGames - numWonGames)
+                StatsRow(description = stringResource(R.string.games_started), intValue = numStartedGames)
 
             }
 
@@ -179,7 +201,7 @@ fun GamesStatsLayout() {
 }
 
 @Composable
-fun TimeStatsLayout() {
+fun TimeStatsLayout(bestTime: Float, averageTime: Float) {
     Column(
         modifier = Modifier.padding(top = 20.dp, start = 5.dp, end = 5.dp)
     ) {
@@ -205,8 +227,8 @@ fun TimeStatsLayout() {
             backgroundColor = Color.White
         ) {
             Column() {
-                StatsRow(description = stringResource(R.string.best_time), floatValue = 10.35f)
-                StatsRow(description = stringResource(R.string.av_time), floatValue = 13.00f)
+                StatsRow(description = stringResource(R.string.best_time), floatValue = bestTime)
+                StatsRow(description = stringResource(R.string.av_time), floatValue = averageTime)
             }
 
         }
@@ -215,7 +237,7 @@ fun TimeStatsLayout() {
 }
 
 @Composable
-fun ScoreStatsLayout() {
+fun ScoreStatsLayout(bestScore: Int, averageScore: Int) {
     Column(
         modifier = Modifier.padding(top = 20.dp, start = 5.dp, end = 5.dp)
     ) {
@@ -241,8 +263,8 @@ fun ScoreStatsLayout() {
             backgroundColor = Color.White
         ) {
             Column() {
-                StatsRow(description = stringResource(R.string.best_score), intValue = 1000)
-                StatsRow(description = stringResource(R.string.av_score), intValue = 1300)
+                StatsRow(description = stringResource(R.string.best_score), intValue = bestScore)
+                StatsRow(description = stringResource(R.string.av_score), intValue = averageScore)
 
             }
 
