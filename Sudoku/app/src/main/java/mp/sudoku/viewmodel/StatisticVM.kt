@@ -37,8 +37,8 @@ class StatisticVM(application:Application) {
         repGame.insertGame(game)
     }
 
-    fun getGames(){
-        repGame.getAllGames()
+    fun getGames(num: MutableState<Int>){
+        repGame.getAllGames(num)
     }
 
     fun getWonGames(num: MutableState<Int>){

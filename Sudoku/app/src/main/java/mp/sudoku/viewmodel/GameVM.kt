@@ -1,6 +1,7 @@
 package mp.sudoku.viewmodel
 
 import android.app.Application
+import androidx.compose.runtime.MutableState
 import mp.sudoku.model.Game
 import mp.sudoku.model.Note
 import mp.sudoku.model.SudokuGrid
@@ -37,8 +38,8 @@ class GameVM(application: Application) {
         repGame.insertGame(game)
     }
 
-    fun getGames(){
-        repGame.getAllGames()
+    fun getGames(num: MutableState<Int>){
+        repGame.getAllGames(num)
     }
 
     //Grid func
