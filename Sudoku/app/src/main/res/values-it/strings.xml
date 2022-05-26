@@ -4,4 +4,5 @@
     <string name="resume">Riprendi</string>
     <string name="statistics">Statistiche</string>
     <string name="settings">Opzioni</string>
+    <string name="won_games_perc">Percentuale di Partite Vinte</string>
 </resources>
