@@ -17,12 +17,16 @@ import mp.sudoku.model.database.util.DBName
 @Database(entities = [Game::class, SudokuGrid::class, Note::class, Timer::class],version = 1)
 abstract class DBGame: RoomDatabase() {
     companion object{
-        private var db: DBGame? = null
+        private var INSTANCE: DBGame? = null
         fun getInstance(context : Context): DBGame {
-            val dbName = DBName()
-            if(db == null)
-                db = Room.databaseBuilder(context.applicationContext, DBGame::class.java,dbName.DBNAME).createFromAsset(dbName.DBNAME).build()
-            return db as DBGame
+            val tempInstance = INSTANCE
+            if(tempInstance != null)
+                return  tempInstance
+            synchronized(this){
+                val instance = Room.databaseBuilder(context.applicationContext, DBGame::class.java,DBName.DBNAME).createFromAsset(DBName.DBNAME).build()
+                INSTANCE = instance
+                return instance
+            }
         }
 
     }

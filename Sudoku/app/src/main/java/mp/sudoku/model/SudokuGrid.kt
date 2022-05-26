@@ -6,14 +6,12 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import org.jetbrains.annotations.NotNull
 
-@Entity( foreignKeys = [ForeignKey(
-        entity = Game::class,
-        onDelete =ForeignKey.CASCADE,
-        onUpdate = ForeignKey.NO_ACTION,
-        parentColumns = ["id"],
-        childColumns = ["game"])
-    ]
-)
+@Entity(    foreignKeys = [ForeignKey(
+    entity = Game::class,
+    parentColumns = arrayOf("id"),
+    childColumns = arrayOf("game"),
+    onDelete = ForeignKey.CASCADE
+)])
 class SudokuGrid {
     @PrimaryKey(autoGenerate = true)
     var game:Int = 0
