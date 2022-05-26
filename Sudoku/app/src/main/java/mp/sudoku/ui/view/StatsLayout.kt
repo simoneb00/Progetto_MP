@@ -3,11 +3,10 @@ package mp.sudoku.ui.view
 import android.util.StatsLog
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.Image
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,32 +55,38 @@ fun StatsLayout() {
         animationPlayed = true
     }
 
-    TopBar(
-        includeBackButton = true,
-        includeSettingsButton = false,
-        includeGuideButton = false,
-        backgroundColor = color.value
-    )
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 30.dp)
-            .background(color = color.value),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        CircularProgressIndicator()
-        Text(
-            text = stringResource(R.string.won_games_perc),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            modifier = Modifier.padding(20.dp)
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopBar(
+            includeBackButton = true,
+            includeSettingsButton = false,
+            includeGuideButton = false,
+            backgroundColor = color.value
         )
 
-        GamesStatsLayout()
-    }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = color.value)
+                .verticalScroll(rememberScrollState())
+                .padding(top = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
+            CircularProgressIndicator()
+
+            Text(
+                text = stringResource(R.string.won_games_perc),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.padding(20.dp)
+            )
+
+            GamesStatsLayout()
+            TimeStatsLayout()
+            ScoreStatsLayout()
+        }
+    }
 }
 
 @Composable
@@ -93,8 +98,7 @@ fun CircularProgressIndicator(
     color: Color = NormalBlue,
     strokeWidth: Dp = 8.dp,
     animDuration: Int = 1000,
-    animDelay: Int = 0,
-    modifier: Modifier = Modifier
+    animDelay: Int = 0
 ) {
     var animationPlayed by remember {
         mutableStateOf(false)
@@ -147,7 +151,7 @@ fun GamesStatsLayout() {
             horizontalArrangement = Arrangement.Start
         ) {
             Text(
-                text = "Games",
+                text = stringResource(R.string.games),
                 fontSize = 15.sp,
                 color = Color.DarkGray,
                 fontWeight = FontWeight.Bold
@@ -157,15 +161,16 @@ fun GamesStatsLayout() {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 5.dp, top = 5.dp),
+                .padding(start = 5.dp, top = 5.dp, end = 5.dp),
             shape = RoundedCornerShape(3.dp),
             backgroundColor = Color.White
         ) {
             Column() {
-                StatsRow(description = "Games Played:", value = 10)
-                StatsRow(description = "Games Won:", value = 8)
-                StatsRow(description = "Games Lost:", value = 2)
-                StatsRow(description = "Games Started:", value = 3)
+                StatsRow(description = stringResource(R.string.games_played), intValue = 10)
+                StatsRow(description = stringResource(R.string.games_won), intValue = 8)
+                StatsRow(description = stringResource(R.string.games_lost), intValue = 2)
+                StatsRow(description = stringResource(R.string.games_started), intValue = 3)
+
             }
 
         }
@@ -174,7 +179,95 @@ fun GamesStatsLayout() {
 }
 
 @Composable
-fun StatsRow(description: String, value: Int) {
+fun TimeStatsLayout() {
+    Column(
+        modifier = Modifier.padding(top = 20.dp, start = 5.dp, end = 5.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(start = 5.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text(
+                text = stringResource(R.string.time),
+                fontSize = 15.sp,
+                color = Color.DarkGray,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 5.dp, top = 5.dp, end = 5.dp),
+            shape = RoundedCornerShape(3.dp),
+            backgroundColor = Color.White
+        ) {
+            Column() {
+                StatsRow(description = stringResource(R.string.best_time), floatValue = 10.35f)
+                StatsRow(description = stringResource(R.string.av_time), floatValue = 13.00f)
+            }
+
+        }
+
+    }
+}
+
+@Composable
+fun ScoreStatsLayout() {
+    Column(
+        modifier = Modifier.padding(top = 20.dp, start = 5.dp, end = 5.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(start = 5.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text(
+                text = stringResource(R.string.score),
+                fontSize = 15.sp,
+                color = Color.DarkGray,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 5.dp, top = 5.dp, bottom = 20.dp, end = 5.dp),
+            shape = RoundedCornerShape(3.dp),
+            backgroundColor = Color.White
+        ) {
+            Column() {
+                StatsRow(description = stringResource(R.string.best_score), intValue = 1000)
+                StatsRow(description = stringResource(R.string.av_score), intValue = 1300)
+
+            }
+
+        }
+
+    }
+}
+
+@Composable
+fun StatsRow(description: String, intValue: Int = -1, floatValue: Float = -1f) {
+
+    var animationPlayed by remember {
+        mutableStateOf(false)
+    }
+    val dividerWidth = animateDpAsState(
+        targetValue = if (animationPlayed) 400.dp else 0.dp,
+        animationSpec = tween(
+            durationMillis = 1000,
+            delayMillis = 0
+        )
+    )
+    LaunchedEffect(key1 = true) {
+        animationPlayed = true
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -184,7 +277,11 @@ fun StatsRow(description: String, value: Int) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = description, fontSize = 15.sp, color = Color.Black)
-        Text(text = value.toString(), fontSize = 15.sp, color = Color.DarkGray, fontWeight = FontWeight.Bold)
+        if (intValue >= 0)
+            Text(text = intValue.toString(), fontSize = 15.sp, color = Color.DarkGray, fontWeight = FontWeight.Bold)
+        else
+            Text(text = "$floatValue min", fontSize = 15.sp, color = Color.DarkGray, fontWeight = FontWeight.Bold)
     }
-    Divider(color = Color.LightGray, thickness = 0.5.dp, modifier = Modifier.width(400.dp))
+    Divider(color = Color.LightGray, thickness = 1.dp, modifier = Modifier.width(dividerWidth.value), startIndent = 10.dp)
 }
+

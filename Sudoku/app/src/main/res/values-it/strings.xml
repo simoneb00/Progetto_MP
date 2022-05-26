@@ -5,4 +5,15 @@
     <string name="statistics">Statistiche</string>
     <string name="settings">Opzioni</string>
     <string name="won_games_perc">Percentuale di Partite Vinte</string>
+    <string name="games">Partite</string>
+    <string name="games_played">Partite Giocate:</string>
+    <string name="games_won">Partite Vinte:</string>
+    <string name="games_lost">Partite Perse:</string>
+    <string name="games_started">Partite Iniziate:</string>
+    <string name="time">Tempo</string>
+    <string name="best_time">Miglior Tempo:</string>
+    <string name="av_time">Tempo Medio:</string>
+    <string name="score">Punteggio</string>
+    <string name="best_score">Miglior Punteggio:</string>
+    <string name="av_score">Punteggio Medio:</string>
 </resources>
