@@ -1,5 +1,6 @@
 package mp.sudoku.model.database.repository
 
+import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,4 +32,20 @@ class RepositoryGame (private val daoGame: DAOGame){
             }
         }
     }
+
+    fun getWonGames(num: MutableState<Int>){
+            CoroutineScope(Dispatchers.IO).launch {
+                val games:List<Game>
+                try {
+                    games = daoGame.getWonGames()
+                    num.value = games.size
+                    for(i in games){
+                        System.out.println("Game:" + i.id)
+                    }
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
+            }
+    }
+
 }

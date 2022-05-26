@@ -10,4 +10,6 @@ interface DAOGame {
     fun insertOne(game: Game)
     @Query("SELECT * FROM Game")
     fun getAllGames():List<Game>
+    @Query("SELECT * FROM Game WHERE finished = 1")
+    fun getWonGames():List<Game>
 }
