@@ -19,11 +19,12 @@ class RepositoryGame (private val daoGame: DAOGame){
         }
     }
 
-    fun getAllGames(){
+    fun getAllGames(num: MutableState<Int>){
         CoroutineScope(Dispatchers.IO).launch {
             val games:List<Game>
             try {
                 games = daoGame.getAllGames()
+                num.value = games.size
                 for(i in games){
                     System.out.println("Game:" + i.id)
                 }
