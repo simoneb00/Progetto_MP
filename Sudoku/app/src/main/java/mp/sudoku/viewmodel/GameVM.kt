@@ -2,37 +2,69 @@ package mp.sudoku.viewmodel
 
 import android.app.Application
 import mp.sudoku.model.Game
+import mp.sudoku.model.Note
 import mp.sudoku.model.SudokuGrid
+import mp.sudoku.model.Timer
 import mp.sudoku.model.database.DBGame
 import mp.sudoku.model.database.repository.RepositoryGame
 import mp.sudoku.model.database.repository.RepositoryGrid
+import mp.sudoku.model.database.repository.RepositoryNote
+import mp.sudoku.model.database.repository.RepositoryTimer
 
 
 class GameVM(application: Application) {
-    private val rep: RepositoryGame
-    private val rep2: RepositoryGrid
+    private val repGame: RepositoryGame
+    private val repGrid: RepositoryGrid
+    private val repNote: RepositoryNote
+    private val repTimer: RepositoryTimer
+
 
     init {
-        val db = DBGame.getInstance(application)
-        val dao = db.gameDAO()
-        val dao2 = db.gridDAO()
-        rep = RepositoryGame(dao)
-        rep2 = RepositoryGrid(dao2)
+        val db = DBGame.getInstance(application) //Singleton instance of the db
+        val daoGame = db.gameDAO()
+        val daoGrid = db.gridDAO()
+        val daoNote = db.noteDAO()
+        val daoTimer = db.timerDAO()
+
+        repGame = RepositoryGame(daoGame)
+        repGrid = RepositoryGrid(daoGrid)
+        repNote = RepositoryNote(daoNote)
+        repTimer = RepositoryTimer(daoTimer)
     }
 
+    //Game func
     fun addGame(game:Game){
-        rep.insertGame(game)
+        repGame.insertGame(game)
     }
 
     fun getGames(){
-        rep.getAllGames()
+        repGame.getAllGames()
     }
 
+    //Grid func
     fun addGrid(grid:SudokuGrid){
-        rep2.insertGrid(grid)
+        repGrid.insertGrid(grid)
     }
 
     fun getGrids(){
-        rep2.getAllGrids()
+        repGrid.getAllGrids()
+    }
+
+
+    //Note func
+    fun addNote(note:Note){
+        repNote.insertNote(note)
+    }
+
+    fun getNotes(){
+        repNote.getAllNotes()
+    }
+
+    fun addTimer(timer: Timer){
+        repTimer.insertTimer(timer)
+    }
+
+    fun getTimers(){
+        repTimer.getAllTimers()
     }
 }
