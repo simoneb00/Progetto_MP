@@ -28,7 +28,6 @@ import mp.sudoku.R
 import mp.sudoku.ui.theme.BackgroundWhite
 import mp.sudoku.ui.theme.DarkBlue
 
-@Preview(showBackground = true)
 @Composable
 fun RulesLayout() {
 

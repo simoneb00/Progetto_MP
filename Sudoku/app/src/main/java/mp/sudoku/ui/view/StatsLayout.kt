@@ -53,7 +53,7 @@ fun StatsLayout() {
     val bestScore: Int = 0          /* TODO */
     val averageScore: Int = 0       /* TODO */
 
-
+/*
     /* background color transition animation */
 
     var animationPlayed by remember {
@@ -72,21 +72,25 @@ fun StatsLayout() {
 
     /* end of animation */
 
+ */
+
     Column(modifier = Modifier.fillMaxSize()) {
 
         TopBar(
             includeSettingsButton = false,
             includeGuideButton = false,
-            backgroundColor = color.value
+            //backgroundColor = color.value
+            backgroundColor = BackgroundWhite
         )
 
         Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = color.value)
+                //.background(color = color.value)
+                .background(color = BackgroundWhite)
                 .verticalScroll(rememberScrollState())      // to make the column scrollable
-                .padding(top = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(top = 10.dp)
         ) {
 
             /* percentage indicator */
@@ -111,7 +115,7 @@ fun StatsLayout() {
 
 @Composable
 fun CircularProgressIndicator(
-    percentage: Float = 0f,
+    percentage: Float,
     number: Int = 100,
     fontSize: TextUnit = 28.sp,
     radius: Dp = 50.dp,
@@ -130,6 +134,8 @@ fun CircularProgressIndicator(
             delayMillis = animDelay
         )
     )
+
+
     LaunchedEffect(key1 = true) {
         animationPlayed = true
     }
@@ -278,6 +284,7 @@ fun ScoreStatsLayout(bestScore: Int, averageScore: Int) {
 @Composable
 fun StatsRow(description: String, intValue: Int = -1, floatValue: Float = -1f) {
 
+
     var animationPlayed by remember {
         mutableStateOf(false)
     }
@@ -291,6 +298,7 @@ fun StatsRow(description: String, intValue: Int = -1, floatValue: Float = -1f) {
     LaunchedEffect(key1 = true) {
         animationPlayed = true
     }
+
 
     Row(
         modifier = Modifier

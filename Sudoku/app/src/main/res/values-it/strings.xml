@@ -25,17 +25,13 @@
     <string name="rule4">\"Regola 4 \"</string>
     <string name="rule4_subtitle">La somma di ogni singola riga, colonna e blocco deve essere pari a 45</string>
     <string name="rule1_description">
-        Il giocatore deve riempire ogni riga della griglia assicurandosi che non ci siano numeri duplicati. L\'ordine in cui i numeri vengono inseriti è irrilevante.
-        Ogni schema, a prescindere dalla difficoltà, presenta all\'inizio dei numeri già allocati. Il giocatore deve usare questi numeri come indizi per trovare i numeri mancanti in ogni riga.
+        Il giocatore deve riempire ogni riga della griglia assicurandosi che non ci siano numeri duplicati. L\'ordine in cui i numeri vengono inseriti è irrilevante.\nOgni schema, a prescindere dalla difficoltà, presenta all\'inizio dei numeri già allocati, che il giocatore deve usare come indizi per trovare i numeri mancanti in ogni riga.
     </string>
-    <string name="rule2_description">Le regole relative alle colonne sono analoghe a quelle per le righe. Il giocatore deve riempirle con numeri da 1 a 9, senza ripetizioni.
-        I numeri allocati all\'inizio del puzzle sono indizi per trovare i numeri mancanti e le loro posizioni.
+    <string name="rule2_description">Le regole relative alle colonne sono analoghe a quelle per le righe.\nIl giocatore deve riempirle con numeri da 1 a 9, senza ripetizioni.\nI numeri allocati all\'inizio del puzzle sono indizi per trovare i numeri mancanti e le loro posizioni.
     </string>
-    <string name="rule3_description">La griglia è divisa in blocchi 3x3. Ogni numero da 1 a 9 deve comparire una sola volta in ogni blocco.
-        In pratica, le restrizioni relative alle righe e alle colonne valgono anche per i blocchi.
+    <string name="rule3_description">La griglia è divisa in blocchi 3x3. Ogni numero da 1 a 9 deve comparire una sola volta in ogni blocco.\nIn pratica, le restrizioni relative alle righe e alle colonne valgono anche per i blocchi.
     </string>
     <string name="rule4_description">
-        Per trovare i numeri mancanti in una riga, colonna o blocco o se ci sono duplicati, il giocatore può fare la somma dei numeri presenti nella riga, colonna o blocco. Se ogni numero compare una sola volta, la somma dei numeri presenti in ogni riga, colonna o blocco deve essere pari a 45.
-        1+2+3+4+5+6+7+8+9= 45
+        Per trovare i numeri mancanti in una riga, colonna o blocco o se ci sono duplicati, il giocatore può fare la somma dei numeri presenti nella riga, colonna o blocco.\nSe ogni numero compare una sola volta, la somma dei numeri presenti in ogni riga, colonna o blocco deve essere pari a 45.\n1+2+3+4+5+6+7+8+9= 45
     </string>
 </resources>
