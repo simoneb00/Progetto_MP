@@ -41,9 +41,12 @@ fun StatsLayout() {
         LocalContext
             .current.applicationContext as Application
     )
-    val numWonGames: MutableState<Int> = mutableStateOf(0)
+    val numWonGames: MutableState<Int> = remember { mutableStateOf(0) }
+    val numGames: MutableState<Int> = remember { mutableStateOf(0) }
+
     viewModel.getWonGames(numWonGames)
-    val numGames: Int = 10          /* TODO */
+    viewModel.getGames(numGames)
+
     val numStartedGames: Int = 0    /* TODO */
     val bestTime: Float = 0f        /* TODO */
     val averageTime: Float = 0f     /* TODO */
@@ -51,7 +54,7 @@ fun StatsLayout() {
     val averageScore: Int = 0       /* TODO */
 
 
-    /* color transition animation */
+    /* background color transition animation */
 
     var animationPlayed by remember {
         mutableStateOf(false)
@@ -70,8 +73,8 @@ fun StatsLayout() {
     /* end of animation */
 
     Column(modifier = Modifier.fillMaxSize()) {
+
         TopBar(
-            includeBackButton = true,
             includeSettingsButton = false,
             includeGuideButton = false,
             backgroundColor = color.value
@@ -87,8 +90,7 @@ fun StatsLayout() {
         ) {
 
             /* percentage indicator */
-            val percentage: Float = (numWonGames.value.toFloat() / numGames)
-            println(percentage)
+            val percentage: Float = numWonGames.value.toFloat() / numGames.value
             CircularProgressIndicator(percentage = percentage)
 
             /* percentage indicator description */
@@ -100,7 +102,7 @@ fun StatsLayout() {
                 modifier = Modifier.padding(20.dp)
             )
 
-            GamesStatsLayout(numStartedGames = numStartedGames, numGames = numGames, numWonGames = numWonGames.value)
+            GamesStatsLayout(numStartedGames = numStartedGames, numGames = numGames.value, numWonGames = numWonGames.value)
             TimeStatsLayout(bestTime = bestTime, averageTime = averageTime)
             ScoreStatsLayout(bestScore = bestScore, averageScore = averageScore)
         }

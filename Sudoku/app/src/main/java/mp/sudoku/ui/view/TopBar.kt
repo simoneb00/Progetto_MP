@@ -23,18 +23,16 @@ import mp.sudoku.ui.theme.NormalBlue
 
 @Composable
 fun TopBar(
-    includeBackButton: Boolean,
-    includeSettingsButton: Boolean,
-    includeGuideButton: Boolean,
-    modifier: Modifier = Modifier,
+    includeBackButton: Boolean = true,
+    includeSettingsButton: Boolean = true,
+    includeGuideButton: Boolean = true,
     backgroundColor: Color = Color.White
 ) {
 
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 5.dp)
-            .background(color = backgroundColor)
+    ConstraintLayout(modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 5.dp)
+        .background(color = backgroundColor)
     ) {
         val (backButton, settingsButton, guideButton) = createRefs()
 
@@ -50,11 +48,12 @@ fun TopBar(
         }
 
         if (includeGuideButton) {
-            IconButton(onClick = { /* TODO */ }, modifier = Modifier
-                .size(30.dp)
-                .constrainAs(guideButton) {
-                    end.linkTo(parent.end, margin = 5.dp)
-                }) {
+            IconButton(onClick = { ScreenRouter.navigateTo(ScreenRouter.RULESSCREEN) },
+                modifier = Modifier
+                    .size(30.dp)
+                    .constrainAs(guideButton) {
+                        end.linkTo(parent.end, margin = 5.dp)
+                    }) {
                 Icon(Icons.Rounded.Info, contentDescription = "Icon", tint = NormalBlue)
             }
         }

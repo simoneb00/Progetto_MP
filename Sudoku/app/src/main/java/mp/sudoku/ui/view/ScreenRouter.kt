@@ -11,6 +11,7 @@ object ScreenRouter {
     val DIFFICULTYSCREEN = 2
     val SETTINGSCREEN = 3
     val STATSSCREEN = 4
+    val RULESSCREEN = 5
 
 
     fun navigateTo(destination: Int) {
@@ -21,8 +22,6 @@ object ScreenRouter {
 }
 
 
-
-
 @Composable
 fun MainScreen() {
     when (ScreenRouter.currentScreen.value) {
@@ -30,6 +29,7 @@ fun MainScreen() {
         2 -> DifficultyLayout()
         3 -> SettingsLayout()
         4 -> StatsLayout()
+        5 -> RulesLayout()
     }
 }
 
