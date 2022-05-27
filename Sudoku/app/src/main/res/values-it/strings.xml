@@ -28,14 +28,14 @@
         Il giocatore deve riempire ogni riga della griglia assicurandosi che non ci siano numeri duplicati. L\'ordine in cui i numeri vengono inseriti è irrilevante.
         Ogni schema, a prescindere dalla difficoltà, presenta all\'inizio dei numeri già allocati. Il giocatore deve usare questi numeri come indizi per trovare i numeri mancanti in ogni riga.
     </string>
-    <string name="rule2_description">The Sudoku rules for the columns on the grid are exactly the same as for the rows. The player must also fill these with the numbers from 1 to 9, making sure each digit occurs only once per column.
-        The numbers allocated at the beginning of the puzzle work as clues to find which digits are missing in each column and their position.
+    <string name="rule2_description">Le regole relative alle colonne sono analoghe a quelle per le righe. Il giocatore deve riempirle con numeri da 1 a 9, senza ripetizioni.
+        I numeri allocati all\'inizio del puzzle sono indizi per trovare i numeri mancanti e le loro posizioni.
     </string>
-    <string name="rule3_description">A regular 9 x 9 grid is divided into 9 smaller blocks of 3 x 3, also known as nonets. The numbers from 1 to 9 can only occur once per nonet.
-        In practice, this means that the process of filling the rows and columns without duplicated digits finds inside each block another restriction to the numbers’ positioning.
+    <string name="rule3_description">La griglia è divisa in blocchi 3x3. Ogni numero da 1 a 9 deve comparire una sola volta in ogni blocco.
+        In pratica, le restrizioni relative alle righe e alle colonne valgono anche per i blocchi.
     </string>
     <string name="rule4_description">
-        To find out which numbers are missing from each row, column or block or if there are any duplicates, the player can simply count or flex their math skills and sum the numbers. When the digits occur only once, the total of each row, column and group must be of 45.
+        Per trovare i numeri mancanti in una riga, colonna o blocco o se ci sono duplicati, il giocatore può fare la somma dei numeri presenti nella riga, colonna o blocco. Se ogni numero compare una sola volta, la somma dei numeri presenti in ogni riga, colonna o blocco deve essere pari a 45.
         1+2+3+4+5+6+7+8+9= 45
     </string>
 </resources>
