@@ -2,15 +2,14 @@ package mp.sudoku.ui.view
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateSizeAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,13 +19,11 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import mp.sudoku.R
 import mp.sudoku.ui.theme.BackgroundWhite
-import mp.sudoku.ui.theme.DarkBlue
+
 
 @Composable
 fun RulesLayout() {
@@ -122,9 +119,9 @@ fun RuleCard(
 
     Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 15.dp)) {
 
-        Text(text = title, fontSize = 17.sp, fontWeight = FontWeight.Bold, color = DarkBlue)        /* Rule no. * */
+        Text(text = title, fontSize = 17.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.secondary)        /* Rule no. * */
 
-        Text(text = subtitle, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = DarkBlue)     /* short description of the rule */
+        Text(text = subtitle, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.secondary)     /* short description of the rule */
 
         Card(
             modifier = Modifier

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.R
 import mp.sudoku.ui.theme.BackgroundWhite
-import mp.sudoku.ui.theme.NormalBlue
 import mp.sudoku.viewmodel.StatisticVM
 
 @SuppressLint("UnrememberedMutableState")
@@ -80,7 +80,7 @@ fun StatsLayout() {
             includeSettingsButton = false,
             includeGuideButton = false,
             //backgroundColor = color.value
-            backgroundColor = BackgroundWhite
+            backgroundColor = MaterialTheme.colors.primaryVariant
         )
 
         Column(
@@ -119,7 +119,7 @@ fun CircularProgressIndicator(
     number: Int = 100,
     fontSize: TextUnit = 28.sp,
     radius: Dp = 50.dp,
-    color: Color = NormalBlue,
+    color: Color = MaterialTheme.colors.secondary,
     strokeWidth: Dp = 8.dp,
     animDuration: Int = 1000,
     animDelay: Int = 0

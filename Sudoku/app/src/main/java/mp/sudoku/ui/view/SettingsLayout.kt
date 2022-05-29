@@ -20,9 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import mp.sudoku.R
-import mp.sudoku.ui.theme.DarkBlue
-import mp.sudoku.ui.theme.NormalBlue
-import mp.sudoku.ui.theme.darkModeOn
+import mp.sudoku.ui.theme.invertTheme
+import mp.sudoku.ui.theme.isDarkModeOn
 
 @Preview(showBackground = true)
 @Composable
@@ -54,7 +53,7 @@ fun SettingsTitle() {
             text = stringResource(R.string.settings),
             fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
-            color = DarkBlue
+            color = MaterialTheme.colors.secondary
         )
     }
 }
@@ -87,7 +86,7 @@ fun Settings() {
             text = stringResource(R.string.game_settings),
             fontWeight = FontWeight.Bold,
             fontSize = 15.sp,
-            color = DarkBlue,
+            color = MaterialTheme.colors.secondary,
             modifier = Modifier.padding(start = 10.dp, bottom = 2.dp)
         )
 
@@ -100,7 +99,7 @@ fun Settings() {
         )
 
         Divider(
-            color = DarkBlue,
+            color = MaterialTheme.colors.secondary,
             thickness = 1.dp,
             modifier = Modifier
                 .width(dividerWidth.value)
@@ -111,31 +110,28 @@ fun Settings() {
             text = stringResource(R.string.theme),
             fontWeight = FontWeight.Bold,
             fontSize = 15.sp,
-            color = DarkBlue,
+            color = MaterialTheme.colors.secondary,
             modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 2.dp)
         )
 
         SettingCard(
             title = stringResource(R.string.dark_theme),
-            initialState = false,
-            onCheckedChange = {
-                darkModeOn()
-            })
-        //ThemeCard()
+            initialState = isDarkModeOn(),
+            onCheckedChange = { invertTheme() }
+        )
     }
 }
 
 @Composable
 fun SettingCard(
     title: String,
-    description: String = "",
-    initialState: Boolean = true,
-    onCheckedChange: ((Boolean)) -> Unit
+    description: String = "",           // optional: by default, the description is empty
+    initialState: Boolean = true,       // optional: by default, the switch is activated
+    onCheckedChange: () -> Unit = {}    // optional: by default, the switch does not trigger any action
 ) {
     Card(
-        //border = BorderStroke(width = 0.5.dp, color = DarkBlue),
         modifier = Modifier.height(60.dp),
-        elevation = 0.dp
+        elevation = 0.dp    // to make the border of the card invisible
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -148,11 +144,18 @@ fun SettingCard(
                 Text(text = description, fontSize = 12.sp, color = Color.Gray)
             }
 
-            var checkedState = remember { mutableStateOf(initialState) }
+            var checkedState = remember { mutableStateOf(initialState) }    // initial state of the switch
+
+            /* to update the switch and to execute the lambda function passed as parameter */
+            val update: ((Boolean)) -> Unit = { boolean ->
+                checkedState.value = boolean
+                onCheckedChange()
+            }
+
             Switch(
                 checked = checkedState.value,
-                onCheckedChange = onCheckedChange,
-                colors = SwitchDefaults.colors(NormalBlue)
+                onCheckedChange =  update ,
+                colors = SwitchDefaults.colors(MaterialTheme.colors.secondary)
             )
         }
     }
@@ -161,7 +164,7 @@ fun SettingCard(
 @Composable
 fun ThemeCard() {
     Card(
-        border = BorderStroke(width = 0.5.dp, color = DarkBlue),
+        border = BorderStroke(width = 0.5.dp, color = MaterialTheme.colors.secondary),
         modifier = Modifier.height(50.dp)
     ) {
         Row(
@@ -193,7 +196,7 @@ fun ThemeCard() {
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = "icon",
-                    tint = NormalBlue,
+                    tint = MaterialTheme.colors.secondary,
                     modifier = Modifier.size(40.dp)
                 )
             }

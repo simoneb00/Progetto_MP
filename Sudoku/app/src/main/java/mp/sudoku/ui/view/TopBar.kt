@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowBack
@@ -19,7 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import mp.sudoku.ui.theme.NormalBlue
 
 @Composable
 fun TopBar(
@@ -43,7 +43,7 @@ fun TopBar(
                     .constrainAs(backButton) {
                         start.linkTo(parent.start, margin = 5.dp)
                     }) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Icon", tint = NormalBlue)
+                Icon(Icons.Filled.ArrowBack, contentDescription = "Icon", tint = MaterialTheme.colors.secondary)
             }
         }
 
@@ -54,7 +54,7 @@ fun TopBar(
                     .constrainAs(guideButton) {
                         end.linkTo(parent.end, margin = 5.dp)
                     }) {
-                Icon(Icons.Rounded.Info, contentDescription = "Icon", tint = NormalBlue)
+                Icon(Icons.Rounded.Info, contentDescription = "Icon", tint = MaterialTheme.colors.secondary)
             }
         }
 
@@ -65,7 +65,7 @@ fun TopBar(
                     .constrainAs(settingsButton) {
                         end.linkTo(guideButton.start, margin = 5.dp)
                     }) {
-                Icon(Icons.Rounded.Settings, contentDescription = "Icon", tint = NormalBlue)
+                Icon(Icons.Rounded.Settings, contentDescription = "Icon", tint = MaterialTheme.colors.secondary)
             }
         }
     }
