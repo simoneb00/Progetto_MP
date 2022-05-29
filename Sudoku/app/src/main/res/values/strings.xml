@@ -33,5 +33,12 @@
     <string name="rule4_subtitle">The sum of every single row, column and nonet must equal 45</string>
     <string name="rule1_description">The player must focus on filling each row of the grid while ensuring there are not duplicated numbers.\nThe placement order of the digits is irrelevant.\nEvery puzzle, regardless of the difficulty level, begins with allocated numbers on the grid.\nThe plyer should use these numbers as clues to find which digits are missing in each row.
     </string>
+    <string name="show_timer">Show Timer</string>
+    <string name="show_score">Show Score</string>
+    <string name="hints">Hints</string>
+    <string name="dark_theme">Dark Theme</string>
+    <string name="game_settings">Game</string>
+    <string name="theme">Theme</string>
+    <string name="hints_setting_desc">Enable or disable hints during the game</string>
 
 </resources>

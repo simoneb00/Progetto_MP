@@ -3,7 +3,7 @@
     <string name="new_game">Nuova Partita</string>
     <string name="resume">Riprendi</string>
     <string name="statistics">Statistiche</string>
-    <string name="settings">Opzioni</string>
+    <string name="settings">Impostazioni</string>
     <string name="won_games_perc">Percentuale di Partite Vinte</string>
     <string name="games">Partite</string>
     <string name="games_played">Partite Giocate:</string>
@@ -34,4 +34,11 @@
     <string name="rule4_description">
         Per trovare i numeri mancanti in una riga, colonna o blocco o se ci sono duplicati, il giocatore può fare la somma dei numeri presenti nella riga, colonna o blocco.\nSe ogni numero compare una sola volta, la somma dei numeri presenti in ogni riga, colonna o blocco deve essere pari a 45.\n1+2+3+4+5+6+7+8+9= 45
     </string>
+    <string name="show_timer">Mostra Timer</string>
+    <string name="show_score">Mostra Punteggio</string>
+    <string name="hints">Suggerimenti</string>
+    <string name="dark_theme">Tema Scuro</string>
+    <string name="game_settings">Gioco</string>
+    <string name="theme">Tema</string>
+    <string name="hints_setting_desc">Abilita o disabilita i suggerimenti durante la partita</string>
 </resources>
