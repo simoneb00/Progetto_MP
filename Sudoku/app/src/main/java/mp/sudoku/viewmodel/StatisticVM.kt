@@ -15,6 +15,11 @@ import mp.sudoku.model.database.repository.RepositoryGrid
 import mp.sudoku.model.database.repository.RepositoryNote
 import mp.sudoku.model.database.repository.RepositoryTimer
 
+/*
+    Class used to keep track of the changes of the entities used in the statistic use case
+    Use it like:
+        val all by viewmodel.attr.observeStateOf(listof())
+ */
 class StatisticVM(application:Application) {
     private val repGame: RepositoryGame
     private val repTimer: RepositoryTimer
@@ -35,6 +40,7 @@ class StatisticVM(application:Application) {
         finishedGames = repGame.getFinishedGames()
     }
 
+    //Statics methods to get information about games, when needed
     companion object{
         fun getMaxScore(games: List<Game>):Int{
             var max = 0
@@ -53,8 +59,6 @@ class StatisticVM(application:Application) {
             return (sum/games.size)
         }
     }
-
-
 
 
     //Game func
