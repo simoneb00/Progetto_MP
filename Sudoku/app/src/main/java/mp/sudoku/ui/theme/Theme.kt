@@ -1,23 +1,16 @@
 package mp.sudoku.ui.theme
 
-import android.hardware.lights.Light
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.AnimationSpec
-import androidx.compose.animation.core.tween
 import mp.sudoku.R
-import java.util.Collections.copy
 
-/* TODO */
 private var DarkColorPalette = darkColors(
     primary = Black,
-    secondary = Color.White,
+    secondary = Color.Green,
     background = Color.Black,
     surface = Color(0xFF121212),
     onPrimary = Color.White,
@@ -43,7 +36,7 @@ private var colors: MutableState<Colors> = mutableStateOf(LightColorPalette)
 var logoId = mutableStateOf(R.drawable.sudoku_logo)
 
 @Composable
-fun SudokuTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun SudokuTheme(content: @Composable () -> Unit) {
 
     MaterialTheme(
         colors = colors.value,

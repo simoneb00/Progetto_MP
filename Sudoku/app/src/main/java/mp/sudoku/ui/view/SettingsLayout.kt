@@ -1,15 +1,9 @@
 package mp.sudoku.ui.view
 
-import android.text.method.DateKeyListener
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,7 +12,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import mp.sudoku.R
 import mp.sudoku.ui.theme.invertTheme
 import mp.sudoku.ui.theme.isDarkModeOn
@@ -144,7 +137,7 @@ fun SettingCard(
                 Text(text = description, fontSize = 12.sp, color = Color.Gray)
             }
 
-            var checkedState = remember { mutableStateOf(initialState) }    // initial state of the switch
+            val checkedState = remember { mutableStateOf(initialState) }    // initial state of the switch
 
             /* to update the switch and to execute the lambda function passed as parameter */
             val update: ((Boolean)) -> Unit = { boolean ->
@@ -161,48 +154,5 @@ fun SettingCard(
     }
 }
 
-@Composable
-fun ThemeCard() {
-    Card(
-        border = BorderStroke(width = 0.5.dp, color = MaterialTheme.colors.secondary),
-        modifier = Modifier.height(50.dp)
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-        ) {
-            Text(text = "Theme", fontSize = 18.sp)
-
-            var expanded by remember { mutableStateOf(false) }
-            DropdownMenu(expanded = expanded,
-                onDismissRequest = { expanded = false }) {
-                DropdownMenuItem(onClick = { /*TODO*/ }) {
-                    Text(text = "Blue", fontSize = 15.sp)
-                }
-                DropdownMenuItem(onClick = { /*TODO*/ }) {
-                    Text(text = "Red", fontSize = 15.sp)
-                }
-                DropdownMenuItem(onClick = { /*TODO*/ }) {
-                    Text(text = "Black", fontSize = 15.sp)
-                }
-                DropdownMenuItem(onClick = { /*TODO*/ }) {
-                    Text(text = "Orange", fontSize = 15.sp)
-                }
-            }
-
-            IconButton(onClick = { expanded = true }) {
-                Icon(
-                    imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = "icon",
-                    tint = MaterialTheme.colors.secondary,
-                    modifier = Modifier.size(40.dp)
-                )
-            }
-
-        }
-    }
-}
 
 
