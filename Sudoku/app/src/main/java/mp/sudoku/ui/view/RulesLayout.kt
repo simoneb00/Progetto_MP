@@ -28,7 +28,7 @@ import mp.sudoku.ui.theme.BackgroundWhite
 @Composable
 fun RulesLayout() {
 
-    /* background color transition animation */
+    /* background color transition animation
 
     var animationPlayed by remember {
         mutableStateOf(false)
@@ -44,20 +44,22 @@ fun RulesLayout() {
         animationPlayed = true
     }
 
-    /* end of animation */
+     end of animation */
 
-    TopBar(includeGuideButton = false, includeSettingsButton = false, backgroundColor = color.value)
+    TopBar(includeGuideButton = false, includeSettingsButton = false, //backgroundColor = color.value
+    )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 30.dp)
-            .background(color = color.value),
+            //.background(color = color.value)
+                ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         val image: Painter = painterResource(id = R.drawable.rules)
-        Image(painter = image, contentDescription = "Rules Image", modifier = Modifier.size(300.dp))
+        Image(painter = image, contentDescription = "Rules Image", modifier = Modifier.size(300.dp).background(color = Color.White))
 
         Column(
             modifier = Modifier
@@ -119,17 +121,21 @@ fun RuleCard(
 
     Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 15.dp)) {
 
-        Text(text = title, fontSize = 17.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.secondary)        /* Rule no. * */
+        Text(text = title, fontSize = 17.sp, fontWeight = FontWeight.Bold,
+            //color = MaterialTheme.colors.secondary
+            )        /* Rule no. * */
 
         Text(text = subtitle, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.secondary)     /* short description of the rule */
 
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = Color.White)
+                //.background(color = Color.White)
                 .height(height = height.value)
         ) {
-            Text(text = text, fontSize = 15.sp, color = textColor, modifier = Modifier.padding(5.dp))       /* long description of the rule */
+            Text(text = text, fontSize = 15.sp,
+                //color = textColor,
+                modifier = Modifier.padding(5.dp))       /* long description of the rule */
         }
     }
 

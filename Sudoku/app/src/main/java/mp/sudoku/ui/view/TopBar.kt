@@ -26,7 +26,7 @@ fun TopBar(
     includeBackButton: Boolean = true,
     includeSettingsButton: Boolean = true,
     includeGuideButton: Boolean = true,
-    backgroundColor: Color = Color.White
+    backgroundColor: Color = MaterialTheme.colors.background
 ) {
 
     ConstraintLayout(modifier = Modifier

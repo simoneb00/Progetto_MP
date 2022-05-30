@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import mp.sudoku.R
+import mp.sudoku.ui.theme.logoId
 
 @Preview(showBackground = true)
 @Composable
@@ -35,8 +36,9 @@ fun HomeLayout() {
 
 @Composable
 fun Logo() {
+
     Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
-        val image: Painter = painterResource(id = R.drawable.sudoku_logo)
+        val image: Painter = painterResource(id = logoId.value)
         Image(
             painter = image,
             contentDescription = "",

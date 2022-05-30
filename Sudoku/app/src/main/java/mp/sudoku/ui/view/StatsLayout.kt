@@ -80,7 +80,6 @@ fun StatsLayout() {
             includeSettingsButton = false,
             includeGuideButton = false,
             //backgroundColor = color.value
-            backgroundColor = MaterialTheme.colors.primaryVariant
         )
 
         Column(
@@ -88,7 +87,7 @@ fun StatsLayout() {
             modifier = Modifier
                 .fillMaxSize()
                 //.background(color = color.value)
-                .background(color = BackgroundWhite)
+                //.background(color = BackgroundWhite)
                 .verticalScroll(rememberScrollState())      // to make the column scrollable
                 .padding(top = 10.dp)
         ) {
@@ -102,7 +101,7 @@ fun StatsLayout() {
                 text = stringResource(R.string.won_games_perc),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                //color = Color.Black,
                 modifier = Modifier.padding(20.dp)
             )
 
@@ -156,7 +155,7 @@ fun CircularProgressIndicator(
 
         Text(
             text = (curPercentage.value * number).toInt().toString() + "%",
-            color = Color.Black,
+            //color = Color.Black,
             fontSize = fontSize,
             fontWeight = FontWeight.Bold
         )
@@ -193,7 +192,7 @@ fun GamesStatsLayout(
                 .fillMaxWidth()
                 .padding(start = 5.dp, top = 5.dp, end = 5.dp),
             shape = RoundedCornerShape(3.dp),
-            backgroundColor = Color.White
+            //backgroundColor = Color.White
         ) {
             Column() {
                 StatsRow(description = stringResource(R.string.games_played), intValue = numGames)
@@ -232,7 +231,7 @@ fun TimeStatsLayout(bestTime: Float, averageTime: Float) {
                 .fillMaxWidth()
                 .padding(start = 5.dp, top = 5.dp, end = 5.dp),
             shape = RoundedCornerShape(3.dp),
-            backgroundColor = Color.White
+            //backgroundColor = MaterialTheme.colors.surface
         ) {
             Column() {
                 StatsRow(description = stringResource(R.string.best_time), floatValue = bestTime)
@@ -268,7 +267,7 @@ fun ScoreStatsLayout(bestScore: Int, averageScore: Int) {
                 .fillMaxWidth()
                 .padding(start = 5.dp, top = 5.dp, bottom = 20.dp, end = 5.dp),
             shape = RoundedCornerShape(3.dp),
-            backgroundColor = Color.White
+            //backgroundColor = MaterialTheme.colors.surface
         ) {
             Column() {
                 StatsRow(description = stringResource(R.string.best_score), intValue = bestScore)
@@ -308,7 +307,10 @@ fun StatsRow(description: String, intValue: Int = -1, floatValue: Float = -1f) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = description, fontSize = 15.sp, color = Color.Black)
+        Text(text = description,
+            fontSize = 15.sp,
+            //color = Color.Black
+            )
         if (intValue >= 0)
             Text(text = intValue.toString(), fontSize = 15.sp, color = Color.DarkGray, fontWeight = FontWeight.Bold)
         else

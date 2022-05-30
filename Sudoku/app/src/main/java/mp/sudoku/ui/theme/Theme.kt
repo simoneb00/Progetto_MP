@@ -11,14 +11,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
+import mp.sudoku.R
 import java.util.Collections.copy
 
 /* TODO */
 private var DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200,
-    background = Color.Black
+    primary = Black,
+    secondary = Color.White,
+    background = Color.Black,
+    surface = Color(0xFF121212),
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onSurface = Color.White,
+    onBackground = Color.White
 )
 
 private var LightColorPalette = lightColors(
@@ -35,6 +40,7 @@ private var LightColorPalette = lightColors(
 )
 
 private var colors: MutableState<Colors> = mutableStateOf(LightColorPalette)
+var logoId = mutableStateOf(R.drawable.sudoku_logo)
 
 @Composable
 fun SudokuTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
@@ -49,8 +55,13 @@ fun SudokuTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
 
 fun invertTheme() {
     colors.value = if (colors.value == LightColorPalette) DarkColorPalette else LightColorPalette
+    invertLogoTheme()
 }
 
 fun isDarkModeOn(): Boolean {
     return colors.value == DarkColorPalette
+}
+
+fun invertLogoTheme() {
+    logoId.value = if (logoId.value == R.drawable.sudoku_logo)  R.drawable.sudoku_logo_dark else R.drawable.sudoku_logo
 }
