@@ -1,7 +1,17 @@
 package mp.sudoku.viewmodel
 
 import android.app.Application
+import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.android.volley.Request
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import mp.sudoku.model.Game
 import mp.sudoku.model.Note
 import mp.sudoku.model.SudokuGrid
@@ -13,59 +23,61 @@ import mp.sudoku.model.database.repository.RepositoryNote
 import mp.sudoku.model.database.repository.RepositoryTimer
 
 
-class GameVM(application: Application) {
-    private val repGame: RepositoryGame
-    private val repGrid: RepositoryGrid
-    private val repNote: RepositoryNote
-    private val repTimer: RepositoryTimer
+class GameVM(application: Application) :AndroidViewModel(application){
 
-
-    init {
-        val db = DBGame.getInstance(application) //Singleton instance of the db
-        val daoGame = db.gameDAO()
-        val daoGrid = db.gridDAO()
-        val daoNote = db.noteDAO()
-        val daoTimer = db.timerDAO()
-
-        repGame = RepositoryGame(daoGame)
-        repGrid = RepositoryGrid(daoGrid)
-        repNote = RepositoryNote(daoNote)
-        repTimer = RepositoryTimer(daoTimer)
+    /* To insert Volley
+    private val data: MutableLiveData<List<SudokuGrid>> by lazy {
+        MutableLiveData<List<SudokuGrid>>().also {
+            loadData(application)
+        }
     }
 
-    //Game func
-    fun addGame(game:Game){
-        repGame.insertGame(game)
+    private val date: MutableLiveData<String> by lazy {
+        MutableLiveData<String>("")
     }
 
-    fun getGames(num: MutableState<Int>){
-        repGame.getAllGames(num)
-    }
-
-    //Grid func
-    fun addGrid(grid:SudokuGrid){
-        repGrid.insertGrid(grid)
-    }
-
-    fun getGrids(){
-        repGrid.getAllGrids()
+    private val current: MutableLiveData<SudokuGrid> by lazy {
+        MutableLiveData<SudokuGrid>()
     }
 
 
-    //Note func
-    fun addNote(note:Note){
-        repNote.insertNote(note)
+    fun setDate(d: String) {
+        date.value = d
+        if(data.value != null) {
+            for (c in data.value!!) {
+                if (c.grid.substring(0..9) == date.value) {
+                    current.value = c
+                }
+            }
+        }
     }
 
-    fun getNotes(){
-        repNote.getAllNotes()
+    fun getData(): LiveData<List<SudokuGrid>> {
+        return data
     }
 
-    fun addTimer(timer: Timer){
-        repTimer.insertTimer(timer)
+    fun getLast(): MutableLiveData<SudokuGrid> {
+        return current
     }
+    private fun loadData(context: Context,difficulty:String) {
+        val url = "https://sugoku.herokuapp.com/board?difficulty=$difficulty"
+        val latestQueue = Volley.newRequestQueue(context)
+        val stringRequest = StringRequest(
+            Request.Method.GET,
+            url, { response ->
+                Log.w("LATEST", response)
 
-    fun getTimers(){
-        repTimer.getAllTimers()
+                val sType = object : TypeToken<List<SudokuGrid>>() {}.type
+                val gson = Gson()
+                val mData = gson.fromJson<List<SudokuGrid>>(response, sType)
+                data.value = mData
+                current.value = mData[mData.lastIndex]
+            },
+            {
+                Log.e("LATEST", it.message!!)
+            })
+        latestQueue.add(stringRequest)
     }
+*/
+
 }

@@ -2,6 +2,9 @@ package mp.sudoku.viewmodel
 
 import android.app.Application
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.LiveData
 import mp.sudoku.model.Game
 import mp.sudoku.model.Note
 import mp.sudoku.model.SudokuGrid
@@ -14,61 +17,60 @@ import mp.sudoku.model.database.repository.RepositoryTimer
 
 class StatisticVM(application:Application) {
     private val repGame: RepositoryGame
-    private val repGrid: RepositoryGrid
-    private val repNote: RepositoryNote
     private val repTimer: RepositoryTimer
-
+    var allTimer: LiveData<List<Timer>>
+    var allGames: LiveData<List<Game>>
+    var finishedGames: LiveData<List<Game>>
 
     init {
         val db = DBGame.getInstance(application) //Singleton instance of the db
         val daoGame = db.gameDAO()
-        val daoGrid = db.gridDAO()
-        val daoNote = db.noteDAO()
         val daoTimer = db.timerDAO()
 
         repGame = RepositoryGame(daoGame)
-        repGrid = RepositoryGrid(daoGrid)
-        repNote = RepositoryNote(daoNote)
         repTimer = RepositoryTimer(daoTimer)
+
+        allTimer = repTimer.listTimer
+        allGames = repGame.getAllGames()
+        finishedGames = repGame.getFinishedGames()
     }
+
+    companion object{
+        fun getMaxScore(games: List<Game>):Int{
+            var max = 0
+            for(g in games){
+                if(max<g.score)
+                    max = g.score
+            }
+            return max
+        }
+
+        fun getAvgScore(games: List<Game>): Float {
+            var sum = 0F
+            for(g in games){
+                sum+=g.score
+            }
+            return (sum/games.size)
+        }
+    }
+
+
+
 
     //Game func
     fun addGame(game: Game){
         repGame.insertGame(game)
     }
 
-    fun getGames(num: MutableState<Int>){
-        repGame.getAllGames(num)
+
+    @JvmName("getFinishedGames1")
+    fun getFinishedGames(): LiveData<List<Game>> {
+        return finishedGames
     }
 
-    fun getWonGames(num: MutableState<Int>){
-        repGame.getWonGames(num)
+    //Timer fun
+    fun getTimers(): LiveData<List<Timer>> {
+        return allTimer
     }
 
-    //Grid func
-    fun addGrid(grid: SudokuGrid){
-        repGrid.insertGrid(grid)
-    }
-
-    fun getGrids(){
-        repGrid.getAllGrids()
-    }
-
-
-    //Note func
-    fun addNote(note: Note){
-        repNote.insertNote(note)
-    }
-
-    fun getNotes(){
-        repNote.getAllNotes()
-    }
-
-    fun addTimer(timer: Timer){
-        repTimer.insertTimer(timer)
-    }
-
-    fun getTimers(){
-        repTimer.getAllTimers()
-    }
 }

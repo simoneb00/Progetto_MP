@@ -14,7 +14,7 @@ import mp.sudoku.model.database.dao.DAONote
 import mp.sudoku.model.database.dao.DAOTimer
 import mp.sudoku.model.database.util.DBName
 
-@Database(entities = [Game::class, SudokuGrid::class, Note::class, Timer::class],version = 1)
+@Database(entities = [Game::class, SudokuGrid::class, Note::class, Timer::class],version = 1,exportSchema = false)
 abstract class DBGame: RoomDatabase() {
     companion object{
         private var INSTANCE: DBGame? = null

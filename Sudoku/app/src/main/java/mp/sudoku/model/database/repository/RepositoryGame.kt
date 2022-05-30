@@ -1,6 +1,6 @@
 package mp.sudoku.model.database.repository
 
-import androidx.compose.runtime.MutableState
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -8,6 +8,8 @@ import mp.sudoku.model.Game
 import mp.sudoku.model.database.dao.DAOGame
 
 class RepositoryGame (private val daoGame: DAOGame){
+    private var allGames: LiveData<List<Game>> = daoGame.getAll()
+    private var allFinishedGames: LiveData<List<Game>> = daoGame.getWonGames()
 
     fun insertGame(game:Game){
         CoroutineScope(Dispatchers.IO).launch {
@@ -19,34 +21,12 @@ class RepositoryGame (private val daoGame: DAOGame){
         }
     }
 
-    fun getAllGames(num: MutableState<Int>){
-        CoroutineScope(Dispatchers.IO).launch {
-            val games:List<Game>
-            try {
-                games = daoGame.getAllGames()
-                num.value = games.size
-                for(i in games){
-                    System.out.println("Game:" + i.id)
-                }
-            }catch (e:Exception){
-                e.printStackTrace()
-            }
-        }
+    fun getAllGames(): LiveData<List<Game>> {
+        return allGames
     }
 
-    fun getWonGames(num: MutableState<Int>){
-            CoroutineScope(Dispatchers.IO).launch {
-                val games:List<Game>
-                try {
-                    games = daoGame.getWonGames()
-                    num.value = games.size
-                    for(i in games){
-                        System.out.println("Game:" + i.id)
-                    }
-                }catch (e:Exception){
-                    e.printStackTrace()
-                }
-            }
+    fun getFinishedGames(): LiveData<List<Game>> {
+        return allFinishedGames
     }
 
 }
