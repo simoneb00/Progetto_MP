@@ -12,13 +12,12 @@ object ScreenRouter {
     val SETTINGSCREEN = 3
     val STATSSCREEN = 4
     val RULESSCREEN = 5
+    val GAMELAYOUT = 6
 
 
     fun navigateTo(destination: Int) {
         currentScreen.value = destination
     }
-
-
 }
 
 
@@ -30,6 +29,7 @@ fun MainScreen() {
         3 -> SettingsLayout()
         4 -> StatsLayout()
         5 -> RulesLayout()
+        6 -> GameLayout()
     }
 }
 

@@ -10,8 +10,8 @@ import mp.sudoku.R
 
 private var DarkColorPalette = darkColors(
     primary = Black,
-    secondary = Color.Green,
-    background = Color.Black,
+    secondary = Color.White,
+    background = Black,
     surface = Color(0xFF121212),
     onPrimary = Color.White,
     onSecondary = Color.White,

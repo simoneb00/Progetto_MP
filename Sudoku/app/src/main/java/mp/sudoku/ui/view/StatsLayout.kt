@@ -14,6 +14,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,38 +42,21 @@ fun StatsLayout() {
         LocalContext
             .current.applicationContext as Application
     )
-    val numWonGames: MutableState<Int> = remember { mutableStateOf(0) }
-    val numGames: MutableState<Int> = remember { mutableStateOf(0) }
 
-    viewModel.getWonGames(numWonGames)
-    viewModel.getGames(numGames)
+    val allGames by viewModel.allGames.observeAsState(listOf())
+    val finishedGames by viewModel.finishedGames.observeAsState(listOf())
+    val allTimers by viewModel.allTimer.observeAsState(listOf())
 
-    val numStartedGames: Int = 0    /* TODO */
-    val bestTime: Float = 0f        /* TODO */
-    val averageTime: Float = 0f     /* TODO */
-    val bestScore: Int = 0          /* TODO */
-    val averageScore: Int = 0       /* TODO */
+    val numWonGames = finishedGames.size
+    val numGames = allGames.size
 
-/*
-    /* background color transition animation */
+    val bestTime = 0f
 
-    var animationPlayed by remember {
-        mutableStateOf(false)
-    }
-    val color = animateColorAsState(
-        targetValue = if (animationPlayed) BackgroundWhite else Color.White,
-        animationSpec = tween(
-            durationMillis = 1000,
-            delayMillis = 0
-        )
-    )
-    LaunchedEffect(key1 = true) {
-        animationPlayed = true
-    }
+    val numStartedGames = 0     /* TODO */
+    val averageTime = 0f        /* TODO */
+    val bestScore = 0           /* TODO */
+    val averageScore = 0        /* TODO */
 
-    /* end of animation */
-
- */
 
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -93,7 +77,7 @@ fun StatsLayout() {
         ) {
 
             /* percentage indicator */
-            val percentage: Float = numWonGames.value.toFloat() / numGames.value
+            val percentage: Float = numWonGames.toFloat() / numGames
             CircularProgressIndicator(percentage = percentage)
 
             /* percentage indicator description */
@@ -105,7 +89,7 @@ fun StatsLayout() {
                 modifier = Modifier.padding(20.dp)
             )
 
-            GamesStatsLayout(numStartedGames = numStartedGames, numGames = numGames.value, numWonGames = numWonGames.value)
+            GamesStatsLayout(numStartedGames = numStartedGames, numGames = numGames, numWonGames = numWonGames)
             TimeStatsLayout(bestTime = bestTime, averageTime = averageTime)
             ScoreStatsLayout(bestScore = bestScore, averageScore = averageScore)
         }
@@ -197,8 +181,8 @@ fun GamesStatsLayout(
             Column() {
                 StatsRow(description = stringResource(R.string.games_played), intValue = numGames)
                 StatsRow(description = stringResource(R.string.games_won), intValue = numWonGames)
-                StatsRow(description = stringResource(R.string.games_lost), intValue = numGames - numWonGames)
-                StatsRow(description = stringResource(R.string.games_started), intValue = numStartedGames)
+                //StatsRow(description = stringResource(R.string.games_lost), intValue = numGames - numWonGames)
+                //StatsRow(description = stringResource(R.string.games_started), intValue = numStartedGames)
 
             }
 
