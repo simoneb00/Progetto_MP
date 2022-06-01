@@ -1,18 +1,13 @@
 package mp.sudoku.viewmodel
 
 import android.app.Application
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import android.content.Intent
+import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import mp.sudoku.model.Game
-import mp.sudoku.model.Note
-import mp.sudoku.model.SudokuGrid
 import mp.sudoku.model.Timer
 import mp.sudoku.model.database.DBGame
 import mp.sudoku.model.database.repository.RepositoryGame
-import mp.sudoku.model.database.repository.RepositoryGrid
-import mp.sudoku.model.database.repository.RepositoryNote
 import mp.sudoku.model.database.repository.RepositoryTimer
 
 /*
