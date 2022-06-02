@@ -19,10 +19,10 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.SudokuCell
 
-@Preview
 @Composable
 fun Grid(
     values: List<List<Int>> = listOf(
@@ -35,10 +35,10 @@ fun Grid(
         listOf(0, 0, 0, 0, 0, 0, 7, 0, 0),
         listOf(0, 6, 0, 0, 0, 0, 0, 8, 0),
         listOf(0, 0, 0, 0, 0, 0, 0, 0, 9),
-    )
+    ),
+    activeGameVM: ActiveGameVM
 ) {
 
-    val activeGameVM = ActiveGameVM()
     activeGameVM.initGrid(values)
 
     var gridState by remember { mutableStateOf(activeGameVM.gridState, neverEqualPolicy()) }
@@ -94,8 +94,10 @@ fun SudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, Su
 
     gridState.values.forEach { cell ->
         var text = cell.value.toString()
+        var note = cell.note.toString()
 
         if (text == "0") text = ""
+        if (note == "0") note = ""
 
         Box(
             modifier = Modifier
@@ -106,17 +108,31 @@ fun SudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, Su
                 .width(offset.dp)
                 .height(offset.dp)
                 .background(
-                    if (cell.isSelected) Color.LightGray else Color.White
+                    when {
+                        cell.isSelected -> Color.LightGray
+                        cell.isOnFocus -> Color(0xffebebeb)
+                        else -> MaterialTheme.colors.surface
+                    }
                 )
                 .clickable {
-                    vm.selectCell(cell.x, cell.y)
+                    if (!cell.isReadOnly)
+                        vm.selectCell(cell.x, cell.y)
                 },
-            contentAlignment = Alignment.Center
+            contentAlignment = if (note == "") Alignment.Center else Alignment.TopStart
         ) {
-            Text(
-                text = text,
-                textAlign = TextAlign.Center
-            )
+            if (note == "") {
+                Text(
+                    text = text,
+                    //textAlign = TextAlign.Center
+                )
+            } else {
+                Text(
+                    text = note,
+                    modifier = Modifier.padding(start = 5.dp, top = 5.dp),
+                    fontSize = 10.sp
+
+                )
+            }
         }
     }
 }

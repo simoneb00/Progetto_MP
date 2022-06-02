@@ -29,6 +29,7 @@ import mp.sudoku.model.*
 
 
 class GameVM(application: Application) :AndroidViewModel(application){
+
     private val grid: MutableLiveData<VolleyGrid> by lazy {
         MutableLiveData<VolleyGrid>().also {
             loadData(application,"easy")
@@ -56,5 +57,6 @@ class GameVM(application: Application) :AndroidViewModel(application){
             })
         volley.getRequestQueue(context)?.add(stringRequest)
     }
+
 
 }

@@ -8,6 +8,7 @@ import mp.sudoku.ui.theme.BackgroundWhite
 class ActiveGameVM() {
     internal val gridState: HashMap<Int, SudokuCell> = HashMap()
     internal var subGridState: ((HashMap<Int, SudokuCell>) -> Unit)? = null
+    internal var notesMode: Boolean = false
 
     fun initGrid(list: List<List<Int>>) {
 
@@ -27,7 +28,10 @@ class ActiveGameVM() {
                     y = i,
                     value = list[i][j],
                     isSelected = false,
-                    nonet = findNonet(j, i)
+                    nonet = findNonet(j, i),
+                    isOnFocus = false,
+                    isReadOnly = (list[i][j] != 0),
+                    note = 0
                 )
             }
         }
@@ -59,40 +63,46 @@ class ActiveGameVM() {
         }
     }
 
-
     fun updateGrid(
-        key: Int,
         value: Int
     ) {
-        gridState[key]?.let {
-            it.value = value
-        }
+        gridState.values.forEach {
+            if (it.isSelected) {
+                if (notesMode) {
+                    it.value = 0
+                    it.note = value
+                } else {
+                    it.note = 0
+                    it.value = value
+                }
+            }
+         }
+        subGridState?.invoke(gridState)
     }
 
     fun selectCell(
         x: Int,
         y: Int
     ) {
-
-        println("x = $x")
-        println("y = $y")
-        println("nonet = ${findNonet(x, y)}")
-
-
         gridState.values.forEach {
             it.isSelected = false
+            it.isOnFocus = false
+            if (it.x == x && it.y == y)
+                it.isSelected = true
+            else if (gridState[x*10 + y]?.value == 0) {
+                if (it.x == x || it.y == y)
+                    it.isOnFocus = true
+            }
         }
-
-        gridState.values.forEach {
-            //if (gridState[x * 10 + y]?.value != 0) {
-                if (it.x == x || it.y == y) {//|| it.nonet == gridState[x * 10 + y]?.nonet) {
-                    it.isSelected = true
-                }
-            //}
-        }
-
         subGridState?.invoke(gridState)
+    }
 
+    fun cancelCell() {
+        gridState.values.forEach {
+            if (it.isSelected)
+                it.value = 0
+        }
+        subGridState?.invoke(gridState)
     }
 }
 
@@ -102,5 +112,8 @@ class SudokuCell(
     val y: Int,
     var value: Int,
     var isSelected: Boolean,
-    val nonet: Int
+    val nonet: Int,
+    var isReadOnly: Boolean,
+    var isOnFocus: Boolean,
+    var note: Int
 )

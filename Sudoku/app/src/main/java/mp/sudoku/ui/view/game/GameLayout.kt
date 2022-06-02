@@ -1,6 +1,10 @@
 package mp.sudoku.ui.view
 
 import android.widget.GridView
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -11,7 +15,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.rounded.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,27 +34,30 @@ import mp.sudoku.viewmodel.ActiveGameVM
 @Composable
 fun GameLayout() {
 
+    val activeGameVM = ActiveGameVM()
+
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         TopBar()
-
         GridButtons()
-
-        Grid()
-
-        GameButtons()
-        NumberButtons()
+        Grid(activeGameVM = activeGameVM)
+        GameButtons(activeGameVM)
+        NumberButtons(activeGameVM)
     }
 }
 
 @Composable
-fun GameButtons() {
+fun GameButtons(
+    activeGameVM: ActiveGameVM
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 50.dp, end = 50.dp, top = 20.dp, bottom = 0.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = {
+            activeGameVM.cancelCell()
+        }) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Icon(
                     imageVector = Icons.Rounded.KeyboardBackspace,
@@ -61,12 +68,21 @@ fun GameButtons() {
             }
         }
 
-        IconButton(onClick = { /*TODO*/ }) {
+        var isRed by remember {
+            mutableStateOf(false)
+        }
+
+        IconButton(onClick = {
+            activeGameVM.notesMode = !activeGameVM.notesMode
+            isRed = !isRed
+        }) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Icon(
                     imageVector = Icons.Rounded.Edit,
                     contentDescription = "",
-                    tint = MaterialTheme.colors.secondary
+                    tint = if (isRed) {
+                        Color.Red
+                    } else MaterialTheme.colors.secondary
                 )
                 Text(text = "Notes")
             }
@@ -86,7 +102,9 @@ fun GameButtons() {
 }
 
 @Composable
-fun NumberButtons() {
+fun NumberButtons(
+    activeGameVM: ActiveGameVM
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -95,7 +113,9 @@ fun NumberButtons() {
     ) {
         for (i in 1..9) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    activeGameVM.updateGrid(value = i)
+                },
                 modifier = Modifier.size(height = 60.dp, width = 35.dp),
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colors.primary),
                 elevation = ButtonDefaults.elevation(0.dp)
