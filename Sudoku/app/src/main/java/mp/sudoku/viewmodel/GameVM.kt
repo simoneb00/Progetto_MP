@@ -3,81 +3,58 @@ package mp.sudoku.viewmodel
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import mp.sudoku.model.Game
-import mp.sudoku.model.Note
-import mp.sudoku.model.SudokuGrid
-import mp.sudoku.model.Timer
-import mp.sudoku.model.database.DBGame
-import mp.sudoku.model.database.repository.RepositoryGame
-import mp.sudoku.model.database.repository.RepositoryGrid
-import mp.sudoku.model.database.repository.RepositoryNote
-import mp.sudoku.model.database.repository.RepositoryTimer
+import mp.sudoku.model.*
+
+
+/*
+ *  ViewModel utile per gestire il caricamento via volley di un nuovo schema di sudoku. Utilizzare nel seguente modo
+ *              val myVM: GameVM by viewModels()
+                val last = remember {
+                    mutableStateOf(
+                        VolleyGrid()
+                    )
+                }
+                myVM.getData()
+
+                myVM.getData().observe(this) { d -> last.value = d }
+
+                Text(text = "${last.value.board[0][0]}")
+ */
 
 
 class GameVM(application: Application) :AndroidViewModel(application){
-
-    /* To insert Volley
-    private val data: MutableLiveData<List<SudokuGrid>> by lazy {
-        MutableLiveData<List<SudokuGrid>>().also {
-            loadData(application)
+    private val grid: MutableLiveData<VolleyGrid> by lazy {
+        MutableLiveData<VolleyGrid>().also {
+            loadData(application,"easy")
         }
     }
 
-    private val date: MutableLiveData<String> by lazy {
-        MutableLiveData<String>("")
+    fun getData(): MutableLiveData<VolleyGrid> {
+        return grid
     }
 
-    private val current: MutableLiveData<SudokuGrid> by lazy {
-        MutableLiveData<SudokuGrid>()
-    }
-
-
-    fun setDate(d: String) {
-        date.value = d
-        if(data.value != null) {
-            for (c in data.value!!) {
-                if (c.grid.substring(0..9) == date.value) {
-                    current.value = c
-                }
-            }
-        }
-    }
-
-    fun getData(): LiveData<List<SudokuGrid>> {
-        return data
-    }
-
-    fun getLast(): MutableLiveData<SudokuGrid> {
-        return current
-    }
-    private fun loadData(context: Context,difficulty:String) {
+    private fun loadData(context: Context, difficulty: String) {
         val url = "https://sugoku.herokuapp.com/board?difficulty=$difficulty"
-        val latestQueue = Volley.newRequestQueue(context)
+        val volley = VolleySingleton.getInstance()
         val stringRequest = StringRequest(
             Request.Method.GET,
             url, { response ->
                 Log.w("LATEST", response)
-
-                val sType = object : TypeToken<List<SudokuGrid>>() {}.type
+                val sType = object : TypeToken<VolleyGrid>() {}.type
                 val gson = Gson()
-                val mData = gson.fromJson<List<SudokuGrid>>(response, sType)
-                data.value = mData
-                current.value = mData[mData.lastIndex]
+                val mData = gson.fromJson<VolleyGrid>(response, sType)
+                grid.value = mData
             },
             {
                 Log.e("LATEST", it.message!!)
             })
-        latestQueue.add(stringRequest)
+        volley.getRequestQueue(context)?.add(stringRequest)
     }
-*/
 
 }
