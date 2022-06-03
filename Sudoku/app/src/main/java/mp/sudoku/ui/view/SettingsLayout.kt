@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -15,10 +16,15 @@ import androidx.compose.ui.unit.sp
 import mp.sudoku.R
 import mp.sudoku.ui.theme.invertTheme
 import mp.sudoku.ui.theme.isDarkModeOn
+import mp.sudoku.viewmodel.SettingsVM
+import kotlin.concurrent.timer
 
 @Preview(showBackground = true)
 @Composable
 fun SettingsLayout() {
+
+    val settingsVM = SettingsVM(LocalContext.current.applicationContext)
+
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -30,7 +36,7 @@ fun SettingsLayout() {
         )
 
         SettingsTitle()
-        Settings()
+        Settings(settingsVM)
     }
 }
 
@@ -52,7 +58,12 @@ fun SettingsTitle() {
 }
 
 @Composable
-fun Settings() {
+fun Settings(settingsVM: SettingsVM) {
+
+    val timerSetting = settingsVM.getTimerSetting()
+    val scoreSetting = settingsVM.getScoreSetting()
+    val hintsSetting = settingsVM.getHintsSetting()
+    val darkModeSetting = settingsVM.getDarkModeSetting()
 
     /* divider animation */
     var animationPlayed by remember {
@@ -83,12 +94,27 @@ fun Settings() {
             modifier = Modifier.padding(start = 10.dp, bottom = 2.dp)
         )
 
-        SettingCard(title = stringResource(R.string.show_timer), onCheckedChange = {})
-        SettingCard(title = stringResource(R.string.show_score), onCheckedChange = {})
+        SettingCard(
+            title = stringResource(R.string.show_timer),
+            onCheckedChange = {
+                            settingsVM.updateShowTimerSetting(!timerSetting)
+            },
+            initialState = timerSetting
+        )
+        SettingCard(
+            title = stringResource(R.string.show_score),
+            onCheckedChange = {
+                              settingsVM.updateShowScoreSetting(!scoreSetting)
+            },
+            initialState = scoreSetting
+        )
         SettingCard(
             title = stringResource(R.string.hints),
             description = stringResource(R.string.hints_setting_desc),
-            onCheckedChange = {}
+            onCheckedChange = {
+                              settingsVM.updateEnableHintsSetting(!hintsSetting)
+            },
+            initialState = hintsSetting
         )
 
         Divider(
@@ -109,8 +135,11 @@ fun Settings() {
 
         SettingCard(
             title = stringResource(R.string.dark_theme),
-            initialState = isDarkModeOn(),
-            onCheckedChange = { invertTheme() }
+            initialState = darkModeSetting,
+            onCheckedChange = {
+                settingsVM.updateEnableDarkThemeSetting(!darkModeSetting)
+                invertTheme()
+            }
         )
     }
 }
@@ -137,7 +166,8 @@ fun SettingCard(
                 Text(text = description, fontSize = 12.sp, color = Color.Gray)
             }
 
-            val checkedState = remember { mutableStateOf(initialState) }    // initial state of the switch
+            val checkedState =
+                remember { mutableStateOf(initialState) }    // initial state of the switch
 
             /* to update the switch and to execute the lambda function passed as parameter */
             val update: ((Boolean)) -> Unit = { boolean ->
@@ -147,7 +177,7 @@ fun SettingCard(
 
             Switch(
                 checked = checkedState.value,
-                onCheckedChange =  update ,
+                onCheckedChange = update,
                 colors = SwitchDefaults.colors(MaterialTheme.colors.secondary)
             )
         }

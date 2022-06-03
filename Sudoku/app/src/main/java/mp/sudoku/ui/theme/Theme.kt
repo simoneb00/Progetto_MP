@@ -6,7 +6,9 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import mp.sudoku.R
+import mp.sudoku.viewmodel.SettingsVM
 
 private var DarkColorPalette = darkColors(
     primary = Black,
@@ -37,6 +39,10 @@ var logoId = mutableStateOf(R.drawable.sudoku_logo)
 
 @Composable
 fun SudokuTheme(content: @Composable () -> Unit) {
+
+    val settingsVM = SettingsVM(LocalContext.current.applicationContext)
+    if (settingsVM.getDarkModeSetting())
+        colors.value = DarkColorPalette
 
     MaterialTheme(
         colors = colors.value,

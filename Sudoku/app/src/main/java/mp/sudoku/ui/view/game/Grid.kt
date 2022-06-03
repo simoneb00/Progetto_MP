@@ -122,8 +122,7 @@ fun SudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, Su
         ) {
             if (note == "") {
                 Text(
-                    text = text,
-                    //textAlign = TextAlign.Center
+                    text = text
                 )
             } else {
                 Text(

@@ -99,8 +99,10 @@ class ActiveGameVM() {
 
     fun cancelCell() {
         gridState.values.forEach {
-            if (it.isSelected)
+            if (it.isSelected) {
+                it.note = 0
                 it.value = 0
+            }
         }
         subGridState?.invoke(gridState)
     }
