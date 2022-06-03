@@ -109,8 +109,8 @@ fun SudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, Su
                 .height(offset.dp)
                 .background(
                     when {
-                        cell.isSelected -> Color.LightGray
-                        cell.isOnFocus -> Color(0xffebebeb)
+                        cell.isSelected -> MaterialTheme.colors.secondaryVariant
+                        cell.isOnFocus -> MaterialTheme.colors.primaryVariant
                         else -> MaterialTheme.colors.surface
                     }
                 )

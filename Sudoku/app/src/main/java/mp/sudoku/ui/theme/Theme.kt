@@ -12,7 +12,9 @@ import mp.sudoku.viewmodel.SettingsVM
 
 private var DarkColorPalette = darkColors(
     primary = Black,
+    primaryVariant = Color(0xff606060),
     secondary = Color.White,
+    secondaryVariant = Color(0xff3c3c3c),
     background = Black,
     surface = Color(0xFF121212),
     onPrimary = Color.White,
@@ -23,9 +25,9 @@ private var DarkColorPalette = darkColors(
 
 private var LightColorPalette = lightColors(
     primary = Color.White,
-    primaryVariant = BackgroundWhite,
+    primaryVariant = Color(0xffebebeb),
     secondary = Blue900,
-    secondaryVariant = Blue500,
+    secondaryVariant = Color.LightGray,
     background = Color.White,
     surface = Color.White,
     onPrimary = Black,

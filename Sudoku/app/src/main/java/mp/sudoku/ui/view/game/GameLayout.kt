@@ -5,12 +5,14 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -42,6 +44,7 @@ fun GameLayout() {
         Grid(activeGameVM = activeGameVM)
         GameButtons(activeGameVM)
         NumberButtons(activeGameVM)
+        CheckButton()
     }
 }
 
@@ -140,9 +143,27 @@ fun GridButtons() {
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "Difficulty: Hard")
-        Text(text = "Timer: ")
-        Text(text = "Score: ")
+        Text(text = "Difficulty:")  // TODO linkare vm
+        Text(text = "Timer: ")      // TODO linkare vm
+        Text(text = "Score: ")      // TODO linkare vm
 
+    }
+}
+
+@Composable
+fun CheckButton() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 20.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Button(
+            onClick = { /*TODO*/ },
+            border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            Text(text = "Check", fontSize = 20.sp)
+        }
     }
 }
