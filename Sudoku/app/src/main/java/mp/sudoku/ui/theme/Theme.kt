@@ -41,8 +41,10 @@ var logoId = mutableStateOf(R.drawable.sudoku_logo)
 fun SudokuTheme(content: @Composable () -> Unit) {
 
     val settingsVM = SettingsVM(LocalContext.current.applicationContext)
-    if (settingsVM.getDarkModeSetting())
+    if (settingsVM.getDarkModeSetting()) {
         colors.value = DarkColorPalette
+        logoId.value = R.drawable.sudoku_logo_dark
+    }
 
     MaterialTheme(
         colors = colors.value,

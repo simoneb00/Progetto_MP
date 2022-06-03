@@ -1,49 +1,42 @@
 package mp.sudoku.viewmodel
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.content.SharedPreferences.Editor
-import androidx.compose.ui.platform.LocalContext
+import mp.sudoku.model.database.sharedpreferences.SettingsSharedPreferences
 
 class SettingsVM (context: Context) {
 
-    private val sharedPrefs: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
-    private val editor: Editor = sharedPrefs.edit()
+    private val settingsSharedPreferences = SettingsSharedPreferences(context)
 
     fun updateShowTimerSetting(value: Boolean) {
-        editor.putBoolean("show_timer", value)
-        editor.apply()
+        settingsSharedPreferences.updateShowScoreSetting(value)
     }
 
     fun updateShowScoreSetting(value: Boolean) {
-        editor.putBoolean("show_score", value)
-        editor.apply()
+        settingsSharedPreferences.updateShowScoreSetting(value)
 
     }
 
     fun updateEnableHintsSetting(value: Boolean) {
-        editor.putBoolean("enable_hints", value)
-        editor.apply()
+        settingsSharedPreferences.updateEnableHintsSetting(value)
     }
 
     fun updateEnableDarkThemeSetting(value: Boolean) {
-        editor.putBoolean("enable_dark_mode", value)
-        editor.apply()
+        settingsSharedPreferences.updateEnableDarkThemeSetting(value)
     }
 
     fun getTimerSetting(): Boolean {
-        return sharedPrefs.getBoolean("show_timer", true)
+        return settingsSharedPreferences.getTimerSetting()
     }
 
     fun getScoreSetting(): Boolean {
-        return sharedPrefs.getBoolean("show_score", true)
+        return settingsSharedPreferences.getScoreSetting()
     }
 
     fun getHintsSetting(): Boolean {
-        return sharedPrefs.getBoolean("enable_hints", true)
+        return settingsSharedPreferences.getHintsSetting()
     }
 
     fun getDarkModeSetting(): Boolean {
-        return sharedPrefs.getBoolean("enable_dark_mode", false)
+        return settingsSharedPreferences.getDarkModeSetting()
     }
 }
