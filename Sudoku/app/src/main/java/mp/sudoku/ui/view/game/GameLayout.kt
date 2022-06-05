@@ -1,42 +1,35 @@
-package mp.sudoku.ui.view
+package mp.sudoku.ui.view.game
 
-import android.widget.GridView
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.KeyboardBackspace
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.HorizontalAlignmentLine
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import mp.sudoku.ui.view.game.Grid
+import mp.sudoku.ui.view.TopBar
 import mp.sudoku.viewmodel.ActiveGameVM
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview(showBackground = true)
 @Composable
 fun GameLayout() {
 
     val activeGameVM = ActiveGameVM()
+    var isCompleted by remember { mutableStateOf(activeGameVM.isCompleted, neverEqualPolicy()) }
+
+    activeGameVM.subCompletedState = {
+        isCompleted = it
+    }
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         TopBar()
@@ -44,7 +37,10 @@ fun GameLayout() {
         Grid(activeGameVM = activeGameVM)
         GameButtons(activeGameVM)
         NumberButtons(activeGameVM)
-        CheckButton()
+
+        if (isCompleted) {
+            CheckButton()
+        }
     }
 }
 
