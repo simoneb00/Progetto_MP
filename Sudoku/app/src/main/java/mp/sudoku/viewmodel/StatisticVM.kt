@@ -1,14 +1,12 @@
 package mp.sudoku.viewmodel
 
 import android.app.Application
-import android.content.Intent
-import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import mp.sudoku.model.Game
 import mp.sudoku.model.Timer
 import mp.sudoku.model.database.DBGame
-import mp.sudoku.model.database.repository.RepositoryGame
-import mp.sudoku.model.database.repository.RepositoryTimer
+import mp.sudoku.viewmodel.repository.RepositoryGame
+import mp.sudoku.viewmodel.repository.RepositoryTimer
 
 /*
     Class used to keep track of the changes of the entities used in the statistic use case
