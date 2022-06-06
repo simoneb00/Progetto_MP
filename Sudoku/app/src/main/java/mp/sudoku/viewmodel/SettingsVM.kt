@@ -8,7 +8,7 @@ class SettingsVM (context: Context) {
     private val settingsSharedPreferences = SettingsSharedPreferences(context)
 
     fun updateShowTimerSetting(value: Boolean) {
-        settingsSharedPreferences.updateShowScoreSetting(value)
+        settingsSharedPreferences.updateShowTimerSetting(value)
     }
 
     fun updateShowScoreSetting(value: Boolean) {

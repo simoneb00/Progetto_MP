@@ -40,5 +40,6 @@
     <string name="game_settings">Game</string>
     <string name="theme">Theme</string>
     <string name="hints_setting_desc">Enable or disable hints during the game</string>
+    <string name="difficulty">Difficulty</string>
 
 </resources>

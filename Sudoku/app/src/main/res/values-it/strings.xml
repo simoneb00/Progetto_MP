@@ -41,4 +41,5 @@
     <string name="game_settings">Gioco</string>
     <string name="theme">Tema</string>
     <string name="hints_setting_desc">Abilita o disabilita i suggerimenti durante la partita</string>
+    <string name="difficulty">Difficoltà</string>
 </resources>

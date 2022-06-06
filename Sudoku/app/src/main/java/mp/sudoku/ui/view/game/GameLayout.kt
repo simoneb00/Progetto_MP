@@ -16,24 +16,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import mp.sudoku.R
 import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.ui.view.components.TopBar
-import mp.sudoku.viewmodel.ActiveGameVM
-import mp.sudoku.viewmodel.Adapter
-import mp.sudoku.viewmodel.GameVM
-import mp.sudoku.viewmodel.StopWatch
+import mp.sudoku.viewmodel.*
 import java.util.*
 
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun GameLayout(difficulty: String) {
+    val settingsVM = SettingsVM(LocalContext.current.applicationContext)
     val activeGameVM = ActiveGameVM()
     var isCompleted by remember { mutableStateOf(activeGameVM.isCompleted, neverEqualPolicy()) }
 
@@ -54,11 +54,11 @@ fun GameLayout(difficulty: String) {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         TopBar()
         if(s.value != listOf(listOf(""))){
-            GridButtons(difficulty)
+            GridButtons(difficulty, settingsVM)
             Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
         }
         else{
-            CircularProgressIndicator(color = Color.Blue)
+            CircularProgressIndicator(color = MaterialTheme.colors.secondary)
             gameVM.loadData(
                 difficulty.lowercase(Locale.getDefault())
             ) {
@@ -69,7 +69,7 @@ fun GameLayout(difficulty: String) {
             }
             gameVM.addGame(board = s.value, difficulty = difficulty)
         }
-        GameButtons(activeGameVM)
+        GameButtons(activeGameVM, settingsVM)
         NumberButtons(activeGameVM)
 
         if (isCompleted) {
@@ -80,7 +80,8 @@ fun GameLayout(difficulty: String) {
 
 @Composable
 fun GameButtons(
-    activeGameVM: ActiveGameVM
+    activeGameVM: ActiveGameVM,
+    settingsVM: SettingsVM
 ) {
     Row(
         modifier = Modifier
@@ -121,14 +122,16 @@ fun GameButtons(
             }
         }
 
-        IconButton(onClick = { /*TODO*/ }) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Icon(
-                    imageVector = Icons.Filled.Lightbulb,
-                    contentDescription = "",
-                    tint = MaterialTheme.colors.secondary
-                )
-                Text(text = "Hint")
+        if (settingsVM.getHintsSetting()) {
+            IconButton(onClick = { /*TODO*/ }) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(
+                        imageVector = Icons.Filled.Lightbulb,
+                        contentDescription = "",
+                        tint = MaterialTheme.colors.secondary
+                    )
+                    Text(text = "Hint")
+                }
             }
         }
     }
@@ -166,7 +169,8 @@ fun NumberButtons(
 }
 
 @Composable
-fun GridButtons(difficulty: String) {
+fun GridButtons(difficulty: String, settingsVM: SettingsVM) {
+
     val stopwatch = remember {
         StopWatch()
     }
@@ -178,10 +182,11 @@ fun GridButtons(difficulty: String) {
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "Difficulty:$difficulty")  // TODO linkare vm
-        Text(text = "Timer: " + stopwatch.formattedTime)      // TODO linkare vm
-        Text(text = "Score: 100")      // TODO linkare vm
-
+        Text(text = stringResource(R.string.difficulty) +  ": " + difficulty)
+        if (settingsVM.getTimerSetting())
+            Text(text = "Timer: " + stopwatch.formattedTime)
+        if (settingsVM.getScoreSetting())
+        Text(text = stringResource(R.string.score) + ": " + "100")      // TODO linkare vm
     }
 }
 
