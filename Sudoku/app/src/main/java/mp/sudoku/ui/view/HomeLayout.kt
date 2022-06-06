@@ -81,7 +81,7 @@ fun Buttons() {
         )
         NavigationButton(
             text = stringResource(R.string.resume),
-            destination = ScreenRouter.HOMESCREEN
+            destination = ScreenRouter.RESUMESCREEN
         )
         NavigationButton(
             text = stringResource(R.string.statistics),

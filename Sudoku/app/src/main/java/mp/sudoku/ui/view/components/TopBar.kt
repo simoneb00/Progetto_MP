@@ -45,7 +45,19 @@ fun TopBar(
 
         if (includeBackButton) {
             IconButton(onClick = {
-                ScreenRouter.navigateTo(ScreenRouter.HOMESCREEN)
+                if (
+                    ScreenRouter.currentScreen.value == ScreenRouter.DIFFICULTYSCREEN ||
+                    ScreenRouter.currentScreen.value == ScreenRouter.RESUMESCREEN
+                ) {
+                    ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
+                } else if (ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
+                    ScreenRouter.navigateTo(destination = ScreenRouter.DIFFICULTYSCREEN)
+                } else {
+                    ScreenRouter.navigateTo(
+                        destination = ScreenRouter.previousScreen.value,
+                        source = ScreenRouter.currentScreen.value
+                    )
+                }
             },
                 modifier = Modifier
                     .size(30.dp)
@@ -61,7 +73,7 @@ fun TopBar(
         }
 
         if (includeGuideButton) {
-            IconButton(onClick = { ScreenRouter.navigateTo(ScreenRouter.RULESSCREEN) },
+            IconButton(onClick = { ScreenRouter.navigateTo(destination = ScreenRouter.RULESSCREEN) },
                 modifier = Modifier
                     .size(30.dp)
                     .constrainAs(guideButton) {
@@ -76,7 +88,7 @@ fun TopBar(
         }
 
         if (includeSettingsButton) {
-            IconButton(onClick = { ScreenRouter.navigateTo(ScreenRouter.SETTINGSCREEN) },
+            IconButton(onClick = { ScreenRouter.navigateTo(destination = ScreenRouter.SETTINGSCREEN) },
                 modifier = Modifier
                     .size(30.dp)
                     .constrainAs(settingsButton) {

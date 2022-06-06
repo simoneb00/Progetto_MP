@@ -21,6 +21,7 @@ class StatisticVM(application: Application) {
     private val repGame: RepositoryGame
     var allGames: LiveData<List<Game>>
     var finishedGames: LiveData<List<Game>>
+    var startedGames: LiveData<List<Game>>
 
     init {
         val db = DBGame.getInstance(application) //Singleton instance of the db
@@ -30,6 +31,7 @@ class StatisticVM(application: Application) {
 
         allGames = repGame.getAllGames()
         finishedGames = repGame.getFinishedGames()
+        startedGames = repGame.getStartedGames()
     }
 
     //Statics methods to get information about games, when needed

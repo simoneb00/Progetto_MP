@@ -61,8 +61,8 @@ fun DifficultyButtons() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        DifficultyButton(text = "Easy", destination = ScreenRouter.GAMELAYOUT)
-        DifficultyButton(text = "Medium", destination = ScreenRouter.GAMELAYOUT)
-        DifficultyButton(text = "Hard", destination = ScreenRouter.GAMELAYOUT)
+        DifficultyButton(text = "Easy", destination = ScreenRouter.GAMESCREEN)
+        DifficultyButton(text = "Medium", destination = ScreenRouter.GAMESCREEN)
+        DifficultyButton(text = "Hard", destination = ScreenRouter.GAMESCREEN)
     }
 }

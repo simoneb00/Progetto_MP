@@ -13,7 +13,7 @@ import mp.sudoku.ui.view.ScreenRouter
 @Composable
 fun NavigationButton(text: String, destination: Int) {
     Button(
-        onClick = { ScreenRouter.navigateTo(destination) },
+        onClick = { ScreenRouter.navigateTo(destination = destination) },
         colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),
         modifier = Modifier.size(height = 50.dp, width = 250.dp),
         shape = RoundedCornerShape(20.dp),
@@ -30,7 +30,7 @@ fun NavigationButton(text: String, destination: Int) {
 @Composable
 fun DifficultyButton(text: String, destination: Int) {
     Button(
-        onClick = { ScreenRouter.difficulty.value = text; ScreenRouter.navigateTo(destination) },
+        onClick = { ScreenRouter.difficulty.value = text; ScreenRouter.navigateTo(destination = destination) },
         colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),
         modifier = Modifier.size(height = 50.dp, width = 250.dp),
         shape = RoundedCornerShape(20.dp),

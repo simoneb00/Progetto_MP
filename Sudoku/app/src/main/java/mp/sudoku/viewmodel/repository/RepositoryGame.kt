@@ -31,7 +31,7 @@ class RepositoryGame (private val daoGame: DAOGame){
     }
 
     fun getStartedGames(): LiveData<List<Game>> {
-        return allFinishedGames
+        return allStartedGames
     }
 
     fun updateOne(game: Game?) {
