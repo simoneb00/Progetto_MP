@@ -15,5 +15,7 @@ interface DAOGame {
     @Query("SELECT * FROM Game")
     fun getAll():LiveData<List<Game>>
     @Query("SELECT * FROM Game WHERE finished = 1")
-    fun getWonGames():LiveData<List<Game>>
+    fun getFinishedGames():LiveData<List<Game>>
+    @Query("SELECT * FROM Game WHERE finished = 0")
+    fun getStartedGames():LiveData<List<Game>>
 }

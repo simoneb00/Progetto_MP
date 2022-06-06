@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import mp.sudoku.R
 import mp.sudoku.ui.theme.logoId
 import mp.sudoku.ui.view.components.NavigationButton
+import mp.sudoku.ui.view.components.TopBar
 
 @Preview(showBackground = true)
 @Composable

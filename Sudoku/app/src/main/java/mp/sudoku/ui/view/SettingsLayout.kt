@@ -15,9 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.R
 import mp.sudoku.ui.theme.invertTheme
-import mp.sudoku.ui.theme.isDarkModeOn
+import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.SettingsVM
-import kotlin.concurrent.timer
 
 @Preview(showBackground = true)
 @Composable

@@ -1,42 +1,24 @@
 package mp.sudoku.viewmodel
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import com.android.volley.Request
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.Game
 import mp.sudoku.model.database.DBGame
-import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.model.volley.VolleySingleton
 import mp.sudoku.viewmodel.repository.RepositoryGame
-import mp.sudoku.viewmodel.repository.RepositoryTimer
+import java.time.LocalDate
 
 
 /*
- *  ViewModel utile per gestire il caricamento via volley di un nuovo schema di sudoku. Utilizzare nel seguente modo
- *              val myVM: GameVM by viewModels()
-                val last = remember {
-                    mutableStateOf(
-                        VolleyGrid()
-                    )
-                }
-                myVM.getData()
-
-                myVM.getData().observe(this) { d -> last.value = d }
-
-                Text(text = "${last.value.board[0][0]}")
+ *  ViewModel utile per gestire il caricamento via volley di un nuovo schema di sudoku.
  */
 
 
 class GameVM(application: Application) : AndroidViewModel(application) {
-    var grid: VolleyGrid = VolleyGrid()
     private val repGame: RepositoryGame
 
     private val app = application
@@ -68,10 +50,6 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-/*
-    fun getData(difficulty: String) {
-        loadData(app, difficulty)
-    }*/
 
 
     fun loadData(
@@ -92,8 +70,18 @@ class GameVM(application: Application) : AndroidViewModel(application) {
     }
 
     //Game func
-    fun addGame(game: Game){
+    fun addGame(board: List<List<String>>, difficulty: String){
+        val game = Game()
+        game.grid = board.toString()
+        game.difficulty = difficulty
+        game.lastUpdate = LocalDate.now().toString()
+        game.score = 100
+
         repGame.insertGame(game)
+    }
+
+    fun updateGame(board: Any?, noteBoard: Any?, timer: Any?, hintCounter: Any?, score: Any?) {
+        repGame.updateOne(CurrentGame.getInstance().getCurrent())
     }
 
 }

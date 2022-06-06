@@ -2,7 +2,6 @@ package mp.sudoku.ui.view
 
 import android.annotation.SuppressLint
 import android.app.Application
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -29,7 +28,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.R
-import mp.sudoku.ui.theme.BackgroundWhite
+import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.StatisticVM
 
 @SuppressLint("UnrememberedMutableState")
@@ -45,17 +44,15 @@ fun StatsLayout() {
 
     val allGames by viewModel.allGames.observeAsState(listOf())
     val finishedGames by viewModel.finishedGames.observeAsState(listOf())
-    val allTimers by viewModel.allTimer.observeAsState(listOf())
 
-    val numWonGames = finishedGames.size
+    val numFinishedGames = finishedGames.size
     val numGames = allGames.size
 
-    val bestTime = 0f
+    val bestTime = StatisticVM.getBestTime(finishedGames)
 
-    val numStartedGames = allGames.size
-    val averageTime = 0f
-    val bestScore = StatisticVM.getMaxScore(allGames)
-    val averageScore = StatisticVM.getAvgScore(allGames)
+    val averageTime = StatisticVM.getAvgTime(finishedGames)
+    val bestScore = StatisticVM.getMaxScore(finishedGames)
+    val averageScore = StatisticVM.getAvgScore(finishedGames)
 
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -77,7 +74,7 @@ fun StatsLayout() {
         ) {
 
             /* percentage indicator */
-            val percentage: Float = numWonGames.toFloat() / numGames
+            val percentage: Float = numFinishedGames.toFloat() / numGames
             CircularProgressIndicator(percentage = percentage)
 
             /* percentage indicator description */
@@ -89,7 +86,7 @@ fun StatsLayout() {
                 modifier = Modifier.padding(20.dp)
             )
 
-            GamesStatsLayout(numStartedGames = numStartedGames, numGames = numGames, numWonGames = numWonGames)
+            GamesStatsLayout(numGames = numGames, numFinishedGames = numFinishedGames)
             TimeStatsLayout(bestTime = bestTime, averageTime = averageTime)
             ScoreStatsLayout(bestScore = bestScore, averageScore = averageScore)
         }
@@ -151,8 +148,7 @@ fun CircularProgressIndicator(
 @Composable
 fun GamesStatsLayout(
     numGames: Int,
-    numWonGames: Int,
-    numStartedGames: Int
+    numFinishedGames: Int
 ) {
     Column(
         modifier = Modifier.padding(top = 20.dp, start = 5.dp, end = 5.dp)
@@ -180,7 +176,7 @@ fun GamesStatsLayout(
         ) {
             Column() {
                 StatsRow(description = stringResource(R.string.games_played), intValue = numGames.toFloat())
-                StatsRow(description = stringResource(R.string.games_won), intValue = numWonGames.toFloat())
+                StatsRow(description = stringResource(R.string.games_won), intValue = numFinishedGames.toFloat())
             }
 
         }
@@ -189,7 +185,7 @@ fun GamesStatsLayout(
 }
 
 @Composable
-fun TimeStatsLayout(bestTime: Float, averageTime: Float) {
+fun TimeStatsLayout(bestTime: String, averageTime: String) {
     Column(
         modifier = Modifier.padding(top = 20.dp, start = 5.dp, end = 5.dp)
     ) {
@@ -216,7 +212,7 @@ fun TimeStatsLayout(bestTime: Float, averageTime: Float) {
         ) {
             Column() {
                 StatsRow(description = stringResource(R.string.best_time), floatValue = bestTime)
-                StatsRow(description = stringResource(R.string.av_time), floatValue = averageTime)
+                StatsRow(description = stringResource(R.string.av_time), floatValue = averageTime.toString())
             }
 
         }
@@ -262,7 +258,7 @@ fun ScoreStatsLayout(bestScore: Float, averageScore: Float) {
 }
 
 @Composable
-fun StatsRow(description: String, intValue: Float = (-1).toFloat(), floatValue: Float = -1f) {
+fun StatsRow(description: String, intValue: Float = (-1).toFloat(), floatValue: String = "") {
 
 
     var animationPlayed by remember {
@@ -295,7 +291,7 @@ fun StatsRow(description: String, intValue: Float = (-1).toFloat(), floatValue: 
         if (intValue >= 0)
             Text(text = intValue.toString(), fontSize = 15.sp, color = Color.DarkGray, fontWeight = FontWeight.Bold)
         else
-            Text(text = "$floatValue min", fontSize = 15.sp, color = Color.DarkGray, fontWeight = FontWeight.Bold)
+            Text(text = "$floatValue", fontSize = 15.sp, color = Color.DarkGray, fontWeight = FontWeight.Bold)
     }
     Divider(color = Color.LightGray, thickness = 1.dp, modifier = Modifier.width(dividerWidth.value), startIndent = 10.dp)
 }

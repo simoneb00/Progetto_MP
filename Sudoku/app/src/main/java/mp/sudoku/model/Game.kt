@@ -26,6 +26,19 @@ class Game {
     @ColumnInfo(defaultValue = "easy")
     var difficulty: String = "easy"
 
-    @ColumnInfo(defaultValue = "null")
-    var finishDate: String? = null
+    @NotNull
+    @ColumnInfo(defaultValue = "01-01-2022")
+    var lastUpdate: String = "01-01-2022"
+
+    @NotNull
+    @ColumnInfo(defaultValue = "empty")
+    var grid: String = "empty"
+
+    @NotNull
+    @ColumnInfo(defaultValue = "00:00")
+    var timer: String = "00:00"
+
+    @NotNull
+    @ColumnInfo(defaultValue = "empty")
+    var noteGrid: String = "empty"
 }

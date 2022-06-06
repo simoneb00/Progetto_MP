@@ -9,7 +9,8 @@ import mp.sudoku.model.database.dao.DAOGame
 
 class RepositoryGame (private val daoGame: DAOGame){
     private var allGames: LiveData<List<Game>> = daoGame.getAll()
-    private var allFinishedGames: LiveData<List<Game>> = daoGame.getWonGames()
+    private var allFinishedGames: LiveData<List<Game>> = daoGame.getFinishedGames()
+    private var allStartedGames: LiveData<List<Game>> = daoGame.getStartedGames()
 
     fun insertGame(game:Game){
         CoroutineScope(Dispatchers.IO).launch {
@@ -27,6 +28,20 @@ class RepositoryGame (private val daoGame: DAOGame){
 
     fun getFinishedGames(): LiveData<List<Game>> {
         return allFinishedGames
+    }
+
+    fun getStartedGames(): LiveData<List<Game>> {
+        return allFinishedGames
+    }
+
+    fun updateOne(game: Game?) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                //daoGame.updateOne(game)
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
+        }
     }
 
 }

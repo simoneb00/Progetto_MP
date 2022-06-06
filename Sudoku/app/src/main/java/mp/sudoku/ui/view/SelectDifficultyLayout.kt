@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.ui.view.components.DifficultyButton
-import mp.sudoku.ui.view.components.NavigationButton
+import mp.sudoku.ui.view.components.TopBar
 
 @Preview(showBackground = true)
 @Composable

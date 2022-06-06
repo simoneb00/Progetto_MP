@@ -3,10 +3,8 @@ package mp.sudoku.viewmodel
 import android.app.Application
 import androidx.lifecycle.LiveData
 import mp.sudoku.model.Game
-import mp.sudoku.model.Timer
 import mp.sudoku.model.database.DBGame
 import mp.sudoku.viewmodel.repository.RepositoryGame
-import mp.sudoku.viewmodel.repository.RepositoryTimer
 
 /*
     Class used to keep track of the changes of the entities used in the statistic use case
@@ -15,20 +13,15 @@ import mp.sudoku.viewmodel.repository.RepositoryTimer
  */
 class StatisticVM(application:Application) {
     private val repGame: RepositoryGame
-    private val repTimer: RepositoryTimer
-    var allTimer: LiveData<List<Timer>>
     var allGames: LiveData<List<Game>>
     var finishedGames: LiveData<List<Game>>
 
     init {
         val db = DBGame.getInstance(application) //Singleton instance of the db
         val daoGame = db.gameDAO()
-        val daoTimer = db.timerDAO()
 
         repGame = RepositoryGame(daoGame)
-        repTimer = RepositoryTimer(daoTimer)
 
-        allTimer = repTimer.listTimer
         allGames = repGame.getAllGames()
         finishedGames = repGame.getFinishedGames()
     }
@@ -51,23 +44,34 @@ class StatisticVM(application:Application) {
             }
             return (sum/games.size)
         }
+
+        fun getBestTime(finishedGames: List<Game>): String {
+            var bestTime = 0f
+            var tempString = "00:00"
+
+            for(g in finishedGames){
+                if(g.timer.toFloat() > bestTime){
+                    bestTime = g.timer.toFloat()
+                    tempString = g.timer
+                }
+            }
+            return tempString
+        }
+
+        fun getAvgTime(finishedGames: List<Game>): String {
+            var totTime = 0f
+            var avgTime = 0f
+            for(g in finishedGames){
+                if(g.timer.toFloat() > totTime){
+                    totTime = g.timer.toFloat()
+                }
+            }
+            if(finishedGames.isNotEmpty())
+                avgTime = totTime/finishedGames.size
+
+            return avgTime.toString()
+        }
     }
 
-
-    //Game func
-    fun addGame(game: Game){
-        repGame.insertGame(game)
-    }
-
-
-    @JvmName("getFinishedGames1")
-    fun getFinishedGames(): LiveData<List<Game>> {
-        return finishedGames
-    }
-
-    //Timer fun
-    fun getTimers(): LiveData<List<Timer>> {
-        return allTimer
-    }
 
 }

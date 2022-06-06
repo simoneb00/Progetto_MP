@@ -18,14 +18,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import mp.sudoku.model.Game
 import mp.sudoku.model.volley.VolleyGrid
-import mp.sudoku.ui.view.TopBar
+import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.Adapter
 import mp.sudoku.viewmodel.GameVM
@@ -48,8 +46,6 @@ fun GameLayout(difficulty: String) {
         mutableStateOf(listOf(listOf("")))
     }
 
-    var game = Game()
-
     activeGameVM.subCompletedState = {
         isCompleted = it
     }
@@ -62,9 +58,7 @@ fun GameLayout(difficulty: String) {
             Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
         }
         else{
-            //TODO(Aggiustare rotella che gira,padding ecc)
             CircularProgressIndicator(color = Color.Blue)
-            println(difficulty.lowercase(Locale.getDefault()))
             gameVM.loadData(
                 difficulty.lowercase(Locale.getDefault())
             ) {
@@ -73,11 +67,7 @@ fun GameLayout(difficulty: String) {
                 val mData = gson.fromJson<VolleyGrid>(it, sType)
                 s.value = mData.board
             }
-            game.difficulty = difficulty
-            game.hintCounter = 0
-            game.score = 100
-            gameVM.addGame(game)
-            //TODO(modificare il db per migliorare la persistenza)
+            gameVM.addGame(board = s.value, difficulty = difficulty)
         }
         GameButtons(activeGameVM)
         NumberButtons(activeGameVM)
