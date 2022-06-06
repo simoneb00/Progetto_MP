@@ -6,11 +6,17 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.android.volley.Request
+import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import mp.sudoku.model.Game
+import mp.sudoku.model.database.DBGame
 import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.model.volley.VolleySingleton
+import mp.sudoku.viewmodel.repository.RepositoryGame
+import mp.sudoku.viewmodel.repository.RepositoryTimer
 
 
 /*
@@ -29,55 +35,65 @@ import mp.sudoku.model.volley.VolleySingleton
  */
 
 
-class GameVM(application: Application) :AndroidViewModel(application){
-    val grid: MutableLiveData<VolleyGrid> by lazy {
-        MutableLiveData<VolleyGrid>().also {
-            loadData(application,"easy")
-        }
+class GameVM(application: Application) : AndroidViewModel(application) {
+    var grid: VolleyGrid = VolleyGrid()
+    private val repGame: RepositoryGame
+
+    private val app = application
+
+    init {
+        val db = DBGame.getInstance(application) //Singleton instance of the db
+        val daoGame = db.gameDAO()
+
+        repGame = RepositoryGame(daoGame)
     }
 
-    companion object{
-        fun solve(s:List<List<String>>){
+    companion object {
+        fun solve(s: List<List<String>>) {
             var adaptedGrid = ""
-            for(i in s){
-                for(j in i){
+            for (i in s) {
+                for (j in i) {
                     if (j.toInt() == 0)
                         adaptedGrid.plus(".").also { adaptedGrid = it }
                     else
                         adaptedGrid.plus(j).also { adaptedGrid = it }
                 }
             }
-            try{
+            try {
                 val solver = SudokuSolver(adaptedGrid)
                 println(solver.solveRecursive())
-                println(solver.sudoku)
-            }catch (e:Exception){
+                println(solver.getSudoku())
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
+/*
+    fun getData(difficulty: String) {
+        loadData(app, difficulty)
+    }*/
 
-    fun getData(): MutableLiveData<VolleyGrid> {
-        return grid
-    }
 
-    private fun loadData(context: Context, difficulty: String) {
+    fun loadData(
+        difficulty: String,
+        onSuccess: (String) -> Unit
+    ) {
         val url = "https://sugoku.herokuapp.com/board?difficulty=$difficulty"
         val volley = VolleySingleton.getInstance()
         val stringRequest = StringRequest(
             Request.Method.GET,
-            url, { response ->
-                Log.w("LATEST", response)
-                val sType = object : TypeToken<VolleyGrid>() {}.type
-                val gson = Gson()
-                val mData = gson.fromJson<VolleyGrid>(response, sType)
-                grid.value = mData
+            url, {
+                onSuccess(it)
             },
             {
-                Log.e("LATEST", it.message!!)
+               Log.e("LATEST", it.message!!)
             })
-        volley.getRequestQueue(context)?.add(stringRequest)
+        volley.getRequestQueue(app)?.add(stringRequest)
     }
 
+    //Game func
+    fun addGame(game: Game){
+        repGame.insertGame(game)
+    }
 
 }

@@ -14,22 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import mp.sudoku.model.SudokuCell
+import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.viewmodel.ActiveGameVM
-import mp.sudoku.viewmodel.SudokuCell
+
 
 @Composable
 fun Grid(
-    values: List<List<Int>> = listOf(
-        listOf(1, 0, 0, 0, 0, 0, 2, 0, 0),
-        listOf(0, 2, 0, 0, 0, 0, 0, 9, 0),
-        listOf(0, 0, 3, 0, 0, 0, 0, 0, 0),
-        listOf(5, 0, 0, 4, 0, 0, 0, 0, 0),
-        listOf(0, 0, 0, 0, 5, 0, 0, 0, 0),
-        listOf(0, 0, 0, 0, 0, 6, 0, 0, 0),
-        listOf(0, 0, 0, 0, 0, 0, 7, 0, 0),
-        listOf(0, 6, 0, 0, 0, 0, 0, 8, 0),
-        listOf(0, 0, 0, 0, 0, 0, 0, 0, 9),
-    ),
+    values: List<List<Int>>,
     activeGameVM: ActiveGameVM
 ) {
 

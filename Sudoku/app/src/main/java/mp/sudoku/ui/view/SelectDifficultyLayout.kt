@@ -12,6 +12,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import mp.sudoku.ui.view.components.DifficultyButton
+import mp.sudoku.ui.view.components.NavigationButton
 
 @Preview(showBackground = true)
 @Composable
@@ -59,8 +61,8 @@ fun DifficultyButtons() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        NavigationButton(text = "Easy", destination = ScreenRouter.GAMELAYOUT)
-        NavigationButton(text = "Normal", destination = ScreenRouter.GAMELAYOUT)
-        NavigationButton(text = "Hard", destination = ScreenRouter.GAMELAYOUT)
+        DifficultyButton(text = "Easy", destination = ScreenRouter.GAMELAYOUT)
+        DifficultyButton(text = "Medium", destination = ScreenRouter.GAMELAYOUT)
+        DifficultyButton(text = "Hard", destination = ScreenRouter.GAMELAYOUT)
     }
 }

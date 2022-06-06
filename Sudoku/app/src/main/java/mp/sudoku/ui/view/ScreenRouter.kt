@@ -8,6 +8,7 @@ import mp.sudoku.ui.view.game.GameLayout
 
 object ScreenRouter {
     var currentScreen: MutableState<Int> = mutableStateOf(1)
+    var difficulty: MutableState<String> = mutableStateOf("easy")
     val HOMESCREEN = 1
     val DIFFICULTYSCREEN = 2
     val SETTINGSCREEN = 3
@@ -30,7 +31,7 @@ fun MainScreen() {
         3 -> SettingsLayout()
         4 -> StatsLayout()
         5 -> RulesLayout()
-        6 -> GameLayout()
+        6 -> GameLayout(ScreenRouter.difficulty.value)
     }
 }
 

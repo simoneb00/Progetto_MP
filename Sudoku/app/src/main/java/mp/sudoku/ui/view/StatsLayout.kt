@@ -52,10 +52,10 @@ fun StatsLayout() {
 
     val bestTime = 0f
 
-    val numStartedGames = 0     /* TODO */
-    val averageTime = 0f        /* TODO */
-    val bestScore = 0           /* TODO */
-    val averageScore = 0        /* TODO */
+    val numStartedGames = allGames.size
+    val averageTime = 0f
+    val bestScore = StatisticVM.getMaxScore(allGames)
+    val averageScore = StatisticVM.getAvgScore(allGames)
 
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -179,11 +179,8 @@ fun GamesStatsLayout(
             //backgroundColor = Color.White
         ) {
             Column() {
-                StatsRow(description = stringResource(R.string.games_played), intValue = numGames)
-                StatsRow(description = stringResource(R.string.games_won), intValue = numWonGames)
-                //StatsRow(description = stringResource(R.string.games_lost), intValue = numGames - numWonGames)
-                //StatsRow(description = stringResource(R.string.games_started), intValue = numStartedGames)
-
+                StatsRow(description = stringResource(R.string.games_played), intValue = numGames.toFloat())
+                StatsRow(description = stringResource(R.string.games_won), intValue = numWonGames.toFloat())
             }
 
         }
@@ -228,7 +225,7 @@ fun TimeStatsLayout(bestTime: Float, averageTime: Float) {
 }
 
 @Composable
-fun ScoreStatsLayout(bestScore: Int, averageScore: Int) {
+fun ScoreStatsLayout(bestScore: Float, averageScore: Float) {
     Column(
         modifier = Modifier.padding(top = 20.dp, start = 5.dp, end = 5.dp)
     ) {
@@ -265,7 +262,7 @@ fun ScoreStatsLayout(bestScore: Int, averageScore: Int) {
 }
 
 @Composable
-fun StatsRow(description: String, intValue: Int = -1, floatValue: Float = -1f) {
+fun StatsRow(description: String, intValue: Float = (-1).toFloat(), floatValue: Float = -1f) {
 
 
     var animationPlayed by remember {

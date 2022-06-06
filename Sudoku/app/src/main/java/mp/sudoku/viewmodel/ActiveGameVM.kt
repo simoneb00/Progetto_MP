@@ -1,5 +1,7 @@
 package mp.sudoku.viewmodel
 
+import mp.sudoku.model.SudokuCell
+
 class ActiveGameVM {
 
     internal val gridState: HashMap<Int, SudokuCell> = HashMap()
@@ -16,11 +18,8 @@ class ActiveGameVM {
 
 
     fun initGrid(list: List<List<Int>>) {
-
-
         for (i in list.indices) {               // i = number of row
             for (j in list[i].indices) {        // j = number of element in the row
-
                 /*
                 *   The key can be seen as the matrix indexes (row, col).
                 *
@@ -126,13 +125,3 @@ class ActiveGameVM {
     }
 }
 
-class SudokuCell(
-    val x: Int,
-    val y: Int,
-    var value: Int,
-    var isSelected: Boolean,
-    val nonet: Int,
-    var isReadOnly: Boolean,
-    var isInEvidence: Boolean,
-    var note: Int
-)

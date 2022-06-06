@@ -35,11 +35,11 @@ class StatisticVM(application:Application) {
 
     //Statics methods to get information about games, when needed
     companion object{
-        fun getMaxScore(games: List<Game>):Int{
-            var max = 0
+        fun getMaxScore(games: List<Game>):Float{
+            var max = 0F
             for(g in games){
                 if(max<g.score)
-                    max = g.score
+                    max = g.score.toFloat()
             }
             return max
         }

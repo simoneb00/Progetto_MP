@@ -7,6 +7,6 @@ class SudokuCell(
     var isSelected: Boolean,
     val nonet: Int,
     var isReadOnly: Boolean,
-    var isOnFocus: Boolean,
+    var isInEvidence: Boolean,
     var note: Int
 )

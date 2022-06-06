@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import mp.sudoku.R
 import mp.sudoku.ui.theme.logoId
+import mp.sudoku.ui.view.components.NavigationButton
 
 @Preview(showBackground = true)
 @Composable

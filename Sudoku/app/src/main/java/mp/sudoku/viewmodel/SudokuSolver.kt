@@ -11,7 +11,7 @@ data class Move(val row: Int, val col: Int, val nmb: Int)
 @Suppress("ControlFlowWithEmptyBody")
 class SudokuSolver(data: String) {
     // sudoku: initally empty 9x9 list, to be initalized in constructor
-    val sudoku = List(9) { MutableList(9) { 0 } }
+    private val sudoku = List(9) { MutableList(9) { 0 } }
 
     // set of candidates for each cell of sudoku
     private var candidates =
@@ -26,8 +26,7 @@ class SudokuSolver(data: String) {
     // debugging
     private var debugNoOfTries = 0
     private var debugRecLevel = 0
-    private val debugShowText = true
-    private val debugShowPlot = false
+    //private val debugShowText = true
 
     // constructor, initializes sudoku list from data;
     // causes exception if data has more or less than 9 lines
@@ -44,6 +43,11 @@ class SudokuSolver(data: String) {
         }
         //
         eliminateCandidates()
+    }
+
+    @JvmName("getSudoku1")
+    fun getSudoku(): List<MutableList<Int>> {
+        return sudoku
     }
 
     // count empty cells with no candidates left
@@ -99,11 +103,11 @@ class SudokuSolver(data: String) {
                             break@findcell
                         }
             choices = choices.reversed()
-            debugPrintln("Possible choices to continue: ${choices.size} $choices")
+            //debugPrintln("Possible choices to continue: ${choices.size} $choices")
 
             // try them out
             for ((moveNo, move) in choices.withIndex()) {
-                debugPrintln("Try recursively ${moveNo + 1} / ${choices.size}")
+               // debugPrintln("Try recursively ${moveNo + 1} / ${choices.size}")
                 debugRecLevel++
                 // make backup of current state of sudoku
                 // (flatten gives a sufficiently 'deep copy' here)
@@ -118,7 +122,7 @@ class SudokuSolver(data: String) {
                     // all done
                     return recResult
                 } else {
-                    debugPrintln("$recResult, try next.")
+                    //debugPrintln("$recResult, try next.")
                     // restore Sudoku + candidates, try next
                     var cnt=0
                     for (row in 0..8)
@@ -233,7 +237,7 @@ class SudokuSolver(data: String) {
         candidates[row][col] = mutableSetOf()
         updateCandidates(row, col)
         // debugging output
-        debugPrintln("%-20s %d @ row %d | col %d".format(why, nmb, row + 1, col + 1))
+        //debugPrintln("%-20s %d @ row %d | col %d".format(why, nmb, row + 1, col + 1))
     }
 
     // within a row, is there a number which only appears once?
@@ -502,13 +506,5 @@ class SudokuSolver(data: String) {
     // indent line according to recursion level (for debugging output)
     private fun indent() {
         print("  ".repeat(debugRecLevel))
-    }
-
-    // output debug message indented according to recursion level
-    private fun debugPrintln(msg: String) {
-        if (debugShowText) {
-            indent()
-            println(msg)
-        }
     }
 }

@@ -10,6 +10,8 @@ import mp.sudoku.model.Game
 interface DAOGame {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertOne(game: Game)
+    @Update
+    fun updateOne(game: Game)
     @Query("SELECT * FROM Game")
     fun getAll():LiveData<List<Game>>
     @Query("SELECT * FROM Game WHERE finished = 1")

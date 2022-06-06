@@ -1,5 +1,7 @@
 package mp.sudoku.ui.view.game
 
+import android.annotation.SuppressLint
+import android.app.Application
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,32 +11,74 @@ import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.KeyboardBackspace
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import mp.sudoku.model.Game
+import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.ui.view.TopBar
 import mp.sudoku.viewmodel.ActiveGameVM
+import mp.sudoku.viewmodel.Adapter
+import mp.sudoku.viewmodel.GameVM
+import mp.sudoku.viewmodel.StopWatch
+import java.util.*
 
-@Preview(showBackground = true)
+
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun GameLayout() {
-
+fun GameLayout(difficulty: String) {
     val activeGameVM = ActiveGameVM()
     var isCompleted by remember { mutableStateOf(activeGameVM.isCompleted, neverEqualPolicy()) }
+
+    val gameVM = GameVM(
+        LocalContext
+            .current.applicationContext as Application
+    )
+
+    val s = rememberSaveable {
+        mutableStateOf(listOf(listOf("")))
+    }
+
+    var game = Game()
 
     activeGameVM.subCompletedState = {
         isCompleted = it
     }
 
+
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         TopBar()
-        GridButtons()
-        Grid(activeGameVM = activeGameVM)
+        if(s.value != listOf(listOf(""))){
+            GridButtons(difficulty)
+            Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
+        }
+        else{
+            //TODO(Aggiustare rotella che gira,padding ecc)
+            CircularProgressIndicator(color = Color.Blue)
+            println(difficulty.lowercase(Locale.getDefault()))
+            gameVM.loadData(
+                difficulty.lowercase(Locale.getDefault())
+            ) {
+                val sType = object : TypeToken<VolleyGrid>() {}.type
+                val gson = Gson()
+                val mData = gson.fromJson<VolleyGrid>(it, sType)
+                s.value = mData.board
+            }
+            game.difficulty = difficulty
+            game.hintCounter = 0
+            game.score = 100
+            gameVM.addGame(game)
+            //TODO(modificare il db per migliorare la persistenza)
+        }
         GameButtons(activeGameVM)
         NumberButtons(activeGameVM)
 
@@ -132,16 +176,21 @@ fun NumberButtons(
 }
 
 @Composable
-fun GridButtons() {
+fun GridButtons(difficulty: String) {
+    val stopwatch = remember {
+        StopWatch()
+    }
+    stopwatch.start()
+
     Row(
         modifier = Modifier
             .padding(start = 15.dp, end = 15.dp, top = 30.dp, bottom = 10.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "Difficulty:")  // TODO linkare vm
-        Text(text = "Timer: ")      // TODO linkare vm
-        Text(text = "Score: ")      // TODO linkare vm
+        Text(text = "Difficulty:$difficulty")  // TODO linkare vm
+        Text(text = "Timer: " + stopwatch.formattedTime)      // TODO linkare vm
+        Text(text = "Score: 100")      // TODO linkare vm
 
     }
 }
