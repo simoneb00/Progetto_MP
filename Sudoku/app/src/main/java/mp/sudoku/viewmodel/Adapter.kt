@@ -1,13 +1,16 @@
 package mp.sudoku.viewmodel
 
-class Adapter {
-    companion object{
-        fun changeStringToInt(board:List<List<String>>): List<List<Int>> {
-            var newList:MutableList<List<Int>> = mutableListOf()
+import mp.sudoku.model.SudokuCell
 
-            for((count, i) in board.withIndex()){
-                var tempList:List<Int> = mutableListOf()
-                for(j in i.indices){
+@Suppress("UNCHECKED_CAST")
+class Adapter {
+    companion object {
+        fun changeStringToInt(board: List<List<String>>): List<List<Int>> {
+            val newList: MutableList<List<Int>> = mutableListOf()
+
+            for ((count, i) in board.withIndex()) {
+                var tempList: List<Int> = mutableListOf()
+                for (j in i.indices) {
                     tempList.plus(board[count][j].toInt()).also { tempList = it }
                 }
                 newList.addAll(listOf(tempList))
@@ -35,10 +38,12 @@ class Adapter {
             rows.removeAt(0)
             rows.removeAt(rows.size - 1)
 
-            var values: MutableList<List<String>> = mutableListOf()     // this creates an empty mutableList
+            var values: MutableList<List<String>> =
+                mutableListOf()     // this creates an empty mutableList
 
             rows.forEach { row ->
-                val rowValues: List<String> = row.split(".")      // we get a list of strings (every value in the row)
+                val rowValues: List<String> =
+                    row.split(".")      // we get a list of strings (every value in the row)
                 values.add(rowValues)
             }
 
@@ -52,18 +57,42 @@ class Adapter {
             var boardString = ""
 
             board.forEach { intList ->
-                boardString = "$boardString*"
+                boardString = "$boardString*"   // inserts a '*' after every row
                 intList.forEach { int ->
-                    boardString += if (intList.indexOf(int) == intList.size - 1)
+                    boardString += if (intList.indexOf(int) == intList.size - 1)    // if the value is some row's last value, there will not be a dot after it
                         int.toString()
                     else
                         "$int."
                 }
             }
 
-            boardString += "*"
+            boardString += "*"      // inserts the final '*'
 
             return boardString
+        }
+
+        fun hashMapToList(hashMap: HashMap<Int, SudokuCell>): List<List<Int>> {
+            var list: MutableList<MutableList<Int?>> = mutableListOf(
+                mutableListOf(),
+                mutableListOf(),
+                mutableListOf(),
+                mutableListOf(),
+                mutableListOf(),
+                mutableListOf(),
+                mutableListOf(),
+                mutableListOf(),
+                mutableListOf(),
+            )
+
+            for (i in 0..8) {
+                for (j in 0..8) {
+                    val value = hashMap[i * 10 + j]?.value
+                    println(value)
+                    list[j].add(index = i, element = value)
+                }
+            }
+
+            return list as List<List<Int>>
         }
     }
 
