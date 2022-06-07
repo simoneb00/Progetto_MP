@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.R
 import mp.sudoku.ui.view.components.TopBar
+import mp.sudoku.viewmodel.ActiveGameVM
+import mp.sudoku.viewmodel.StopWatch
 
 
 @Composable
@@ -45,7 +47,11 @@ fun RulesLayout() {
 
      end of animation */
 
-    TopBar(includeGuideButton = false, includeSettingsButton = false, //backgroundColor = color.value
+    TopBar(
+        includeSettingsButton = false,
+        includeGuideButton = false,
+        activeGameVM = ActiveGameVM(),
+        stopWatch = StopWatch()
     )
 
     Column(

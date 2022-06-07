@@ -21,9 +21,7 @@ import androidx.compose.ui.unit.sp
 import mp.sudoku.model.Game
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.ui.view.game.Grid
-import mp.sudoku.viewmodel.ActiveGameVM
-import mp.sudoku.viewmodel.Adapter
-import mp.sudoku.viewmodel.StatisticVM
+import mp.sudoku.viewmodel.*
 
 @Preview
 @Composable
@@ -33,10 +31,12 @@ fun ResumeLayout() {
             .current.applicationContext as Application
     )
 
+    val actVM = ActiveGameVM()
+
     val startedGames by statsVM.startedGames.observeAsState(listOf())
 
     Column(modifier = Modifier.fillMaxSize()) {
-        TopBar()
+        TopBar(activeGameVM = actVM, stopWatch = StopWatch())
 
         LazyColumn(
             modifier = Modifier
@@ -66,6 +66,10 @@ fun StartedGameCard(game: Game = Game()) {
 
         val boardStringList: List<List<String>> = Adapter.boardPersistenceFormatToList(game.grid)
         val boardIntList: List<List<Int>> = Adapter.changeStringToInt(boardStringList)
+        val gameVM = GameVM(
+            LocalContext
+                .current.applicationContext as Application
+        )
         val activeGameVM = ActiveGameVM()
 
 
@@ -128,8 +132,7 @@ fun StartedGameCard(game: Game = Game()) {
 
                 Button(
                     onClick = {
-                        ScreenRouter.game = game
-                        ScreenRouter.navigateTo(destination = ScreenRouter.GAMEDETAILSSCREEN)
+                        gameVM.deleteOne(game)
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
                     shape = RoundedCornerShape(10.dp)

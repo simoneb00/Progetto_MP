@@ -29,7 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.R
 import mp.sudoku.ui.view.components.TopBar
+import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.StatisticVM
+import mp.sudoku.viewmodel.StopWatch
 
 @SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)
@@ -60,6 +62,8 @@ fun StatsLayout() {
         TopBar(
             includeSettingsButton = false,
             includeGuideButton = false,
+            activeGameVM = ActiveGameVM(),
+            stopWatch = StopWatch(),
             //backgroundColor = color.value
         )
 

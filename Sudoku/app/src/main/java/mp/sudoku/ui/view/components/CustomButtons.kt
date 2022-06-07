@@ -9,8 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.ui.view.ScreenRouter
-import mp.sudoku.viewmodel.ActiveGameVM
-import mp.sudoku.viewmodel.Adapter
+
 
 @Composable
 fun NavigationButton(text: String, destination: Int) {

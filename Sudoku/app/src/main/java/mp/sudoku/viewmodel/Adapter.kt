@@ -8,13 +8,19 @@ class Adapter {
         fun changeStringToInt(board: List<List<String>>): List<List<Int>> {
             val newList: MutableList<List<Int>> = mutableListOf()
 
-            for ((count, i) in board.withIndex()) {
-                var tempList: List<Int> = mutableListOf()
-                for (j in i.indices) {
-                    tempList.plus(board[count][j].toInt()).also { tempList = it }
+            try {
+                for ((count, i) in board.withIndex()) {
+                    var tempList: List<Int> = mutableListOf()
+                    for (j in i.indices) {
+                        if (board[count][j] != "")
+                            tempList.plus(board[count][j].toInt()).also { tempList = it }
+                    }
+                    newList.addAll(listOf(tempList))
                 }
-                newList.addAll(listOf(tempList))
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
+
             return newList
         }
 
@@ -87,7 +93,6 @@ class Adapter {
             for (i in 0..8) {
                 for (j in 0..8) {
                     val value = hashMap[i * 10 + j]?.value
-                    println(value)
                     list[j].add(index = i, element = value)
                 }
             }

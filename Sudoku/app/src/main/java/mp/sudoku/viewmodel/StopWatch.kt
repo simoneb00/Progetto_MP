@@ -1,9 +1,11 @@
 package mp.sudoku.viewmodel
 
+import android.os.Parcelable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.*
+import kotlinx.parcelize.Parcelize
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -21,7 +23,7 @@ import java.util.*
 * Utilizzare sempre la classe Stopwatch come parametro per il passaggio da uno scope ad un altro
 * */
 class StopWatch {
-    var formattedTime by mutableStateOf("00:00")
+    var formattedTime by mutableStateOf("")
 
     private var coroutineScope = CoroutineScope(Dispatchers.Main) //Do not change scope or it will broke
     private var isActive = false

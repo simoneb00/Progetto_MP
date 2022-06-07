@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import mp.sudoku.model.CurrentGame
+import mp.sudoku.model.Game
 import mp.sudoku.model.database.DBGame
 import mp.sudoku.model.volley.VolleySingleton
 import mp.sudoku.viewmodel.repository.RepositoryGame
@@ -87,15 +88,26 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateGame(board: Any?, noteBoard: Any?, timer: Any?, hintCounter: Any?, score: Any?) {
+    fun updateGame(board: String, noteBoard: String, timer: String) {
         val game = CurrentGame.getInstance().getCurrent()
         try{
-            game!!.lastUpdate = LocalDate.now().toString()
+            game!!.grid = board
+            game.noteGrid = noteBoard
+            game.timer = timer
+            game.lastUpdate = LocalDate.now().toString()
             repGame.updateOne(CurrentGame.getInstance().getCurrent())
         }catch(e:Exception){
             e.printStackTrace()
         }
 
+    }
+
+    fun deleteOne(game: Game) {
+        try{
+            repGame.deleteOne(game)
+        }catch(e:Exception){
+            e.printStackTrace()
+        }
     }
 
 }

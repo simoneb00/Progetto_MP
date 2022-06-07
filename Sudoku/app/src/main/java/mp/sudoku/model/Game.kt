@@ -19,8 +19,8 @@ class Game {
     var finished: Int = 0
 
     @NotNull
-    @ColumnInfo(defaultValue = "0")
-    var score: Int = 0
+    @ColumnInfo(defaultValue = "100")
+    var score: Int = 100
 
     @NotNull
     @ColumnInfo(defaultValue = "easy")

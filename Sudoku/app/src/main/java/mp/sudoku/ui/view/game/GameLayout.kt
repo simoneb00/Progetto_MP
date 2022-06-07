@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import mp.sudoku.R
-import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.*
@@ -47,15 +46,19 @@ fun GameLayout(difficulty: String) {
         mutableStateOf(listOf(listOf("")))
     }
 
+    val stopwatch = rememberSaveable {
+        mutableStateOf(StopWatch())
+    }
+
     activeGameVM.subCompletedState = {
         isCompleted = it
     }
 
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        TopBar()
+        TopBar(activeGameVM = activeGameVM, stopWatch = stopwatch.value)
         if(s.value != listOf(listOf(""))){
-            GridButtons(difficulty, settingsVM)
+            GridButtons(difficulty,settingsVM,stopwatch,activeGameVM)
             Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
             gameVM.addGame(board = s.value, difficulty = difficulty)
         }
@@ -125,6 +128,7 @@ fun GameButtons(
 
         if (settingsVM.getHintsSetting()) {
             IconButton(onClick = {
+                activeGameVM.incrementCounter()
                 activeGameVM.updateGrid(activeGameVM.getHint())
             }) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -172,12 +176,13 @@ fun NumberButtons(
 }
 
 @Composable
-fun GridButtons(difficulty: String, settingsVM: SettingsVM) {
+fun GridButtons(
+    difficulty: String, settingsVM: SettingsVM, stopwatch: MutableState<StopWatch>,
+    activeGameVM: ActiveGameVM) {
 
-    val stopwatch = remember {
-        StopWatch()
-    }
-    stopwatch.start()
+    if(stopwatch.value.formattedTime == "")
+        stopwatch.value.start()
+
 
     Row(
         modifier = Modifier
@@ -187,9 +192,9 @@ fun GridButtons(difficulty: String, settingsVM: SettingsVM) {
     ) {
         Text(text = stringResource(R.string.difficulty) +  ": " + difficulty)
         if (settingsVM.getTimerSetting())
-            Text(text = "Timer: " + stopwatch.formattedTime)
+            Text(text = "Timer: " + stopwatch.value.formattedTime)
         if (settingsVM.getScoreSetting())
-        Text(text = stringResource(R.string.score) + ": " + "100")      // TODO linkare vm
+        Text(text = stringResource(R.string.score) + ": " + activeGameVM.getScore())
     }
 }
 

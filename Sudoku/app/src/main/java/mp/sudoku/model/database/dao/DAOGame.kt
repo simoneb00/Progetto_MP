@@ -12,6 +12,8 @@ interface DAOGame {
     fun insertOne(game: Game)
     @Update
     fun updateOne(game: Game)
+    @Delete
+    fun deleteOne(game: Game)
     @Query("SELECT * FROM Game")
     fun getAll():LiveData<List<Game>>
     @Query("SELECT * FROM Game WHERE finished = 1")

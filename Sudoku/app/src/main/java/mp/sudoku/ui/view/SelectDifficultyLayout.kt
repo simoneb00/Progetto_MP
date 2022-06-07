@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.ui.view.components.DifficultyButton
 import mp.sudoku.ui.view.components.TopBar
+import mp.sudoku.viewmodel.ActiveGameVM
+import mp.sudoku.viewmodel.StopWatch
 
 @Preview(showBackground = true)
 @Composable
@@ -22,7 +24,13 @@ fun DifficultyLayout() {
         modifier = Modifier
             .fillMaxHeight()
     ) {
-        TopBar(includeBackButton = true, includeSettingsButton = true, includeGuideButton = true)
+        TopBar(
+            includeBackButton = true,
+            includeSettingsButton = true,
+            includeGuideButton = true,
+            activeGameVM = ActiveGameVM(),
+            stopWatch = StopWatch()
+        )
         DifficultyText()
         DifficultyButtons()
     }

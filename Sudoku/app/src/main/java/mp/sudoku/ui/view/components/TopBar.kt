@@ -1,6 +1,7 @@
 package mp.sudoku.ui.view.components
 
 import android.app.Activity
+import android.app.Application
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,19 +15,26 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import mp.sudoku.ui.view.ScreenRouter
+import mp.sudoku.viewmodel.ActiveGameVM
+import mp.sudoku.viewmodel.Adapter
+import mp.sudoku.viewmodel.GameVM
+import mp.sudoku.viewmodel.StopWatch
 
 @Composable
 fun TopBar(
     includeBackButton: Boolean = true,
     includeSettingsButton: Boolean = true,
     includeGuideButton: Boolean = true,
-    backgroundColor: Color = MaterialTheme.colors.background
+    backgroundColor: Color = MaterialTheme.colors.background,
+    activeGameVM: ActiveGameVM,
+    stopWatch: StopWatch
 ) {
 
     val activity = LocalContext.current as Activity?
@@ -36,7 +44,7 @@ fun TopBar(
             ScreenRouter.HOMESCREEN -> activity?.finish()
             ScreenRouter.DIFFICULTYSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
             ScreenRouter.RESUMESCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
-            ScreenRouter.GAMESCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.DIFFICULTYSCREEN)
+            ScreenRouter.GAMESCREEN -> updateGame(activity!!.applicationContext as Application,activeGameVM,stopWatch)
             ScreenRouter.GAMEDETAILSSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
             else -> ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value, source = ScreenRouter.currentScreen.value)
         }
@@ -56,7 +64,11 @@ fun TopBar(
                     ScreenRouter.HOMESCREEN -> activity?.finish()
                     ScreenRouter.DIFFICULTYSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
                     ScreenRouter.RESUMESCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
-                    ScreenRouter.GAMESCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.DIFFICULTYSCREEN)
+                    ScreenRouter.GAMESCREEN -> updateGame(
+                        activity!!.applicationContext as Application,
+                        activeGameVM,
+                        stopWatch
+                    )
                     ScreenRouter.GAMEDETAILSSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
                     else -> ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value, source = ScreenRouter.currentScreen.value)
                 }
@@ -104,6 +116,22 @@ fun TopBar(
             }
         }
     }
+}
+
+
+fun updateGame(application: Application, activeGameVM: ActiveGameVM, stopWatch: StopWatch) {
+    val game = GameVM(application)
+    val thisBoard = Adapter.boardListToPersistenceFormat(Adapter.hashMapToList(activeGameVM.gridState))
+    val thisNote = Adapter.hashMapToList(activeGameVM.gridState)
+
+
+    game.updateGame(
+        board = thisBoard,
+        noteBoard = Adapter.boardListToPersistenceFormat(thisNote),
+        timer = stopWatch.formattedTime
+        )
+
+    ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
 }
 
 

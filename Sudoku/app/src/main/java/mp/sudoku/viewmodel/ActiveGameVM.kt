@@ -168,5 +168,20 @@ class ActiveGameVM {
         }
         subGridState?.invoke(gridState)     // commit changes to the view
     }
+
+    fun incrementCounter() {
+        val game = CurrentGame.getInstance().getCurrent()
+        try {
+            game!!.hintCounter++
+            if(game.score-5 > 0)
+                game.score = game.score-5
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+    }
+
+    fun getScore(): Int {
+        return CurrentGame.getInstance().getCurrent()?.score ?: 100
+    }
 }
 

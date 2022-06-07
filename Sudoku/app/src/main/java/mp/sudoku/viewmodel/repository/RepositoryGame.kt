@@ -37,7 +37,17 @@ class RepositoryGame (private val daoGame: DAOGame){
     fun updateOne(game: Game?) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                //daoGame.updateOne(game)
+                daoGame.updateOne(game!!)
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun deleteOne(game: Game?) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                daoGame.deleteOne(game!!)
             }catch (e:Exception){
                 e.printStackTrace()
             }

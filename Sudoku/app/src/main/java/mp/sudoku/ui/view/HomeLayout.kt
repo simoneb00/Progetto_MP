@@ -19,7 +19,9 @@ import mp.sudoku.R
 import mp.sudoku.ui.theme.logoId
 import mp.sudoku.ui.view.components.NavigationButton
 import mp.sudoku.ui.view.components.TopBar
+import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.StatisticVM
+import mp.sudoku.viewmodel.StopWatch
 
 @Preview(showBackground = true)
 @Composable
@@ -31,8 +33,10 @@ fun HomeLayout() {
     ) {
         TopBar(
             includeBackButton = false,
+            includeSettingsButton = true,
             includeGuideButton = true,
-            includeSettingsButton = true
+            activeGameVM = ActiveGameVM(),
+            stopWatch = StopWatch()
         )
         Logo()
         Buttons()
