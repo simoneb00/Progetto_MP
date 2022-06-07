@@ -28,7 +28,7 @@ fun Grid(
 
     activeGameVM.initGrid(values)
 
-    var gridState = rememberSaveable() {
+    var gridState = rememberSaveable {
         mutableStateOf(activeGameVM.gridState, neverEqualPolicy())
     }
 

@@ -1,5 +1,6 @@
 package mp.sudoku.viewmodel
 
+import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.SudokuCell
 
 class ActiveGameVM {
@@ -86,6 +87,37 @@ class ActiveGameVM {
         if (checkIfFull()) subCompletedState?.invoke(true)     // if the grid is full, inform the view to show the "Check" button
 
         subGridState?.invoke(gridState)                        // commit grid changes to the view
+    }
+
+    fun getHint():Int{
+        var hint = 0
+        try{
+            hint = CurrentGame.getInstance().solution!![getSelectedCellY()][getSelectedCellX()]
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+        return hint
+    }
+
+
+    private fun getSelectedCellX():Int{
+        var x = 0
+        gridState.values.forEach {
+            if (it.isSelected) {        // the following operations are going to be applied only to the selected cell
+                x =  it.x
+            }
+        }
+        return x
+    }
+
+    private fun getSelectedCellY():Int{
+        var y = 0
+        gridState.values.forEach {
+            if (it.isSelected) {        // the following operations are going to be applied only to the selected cell
+                y =  it.y
+            }
+        }
+        return y
     }
 
     private fun checkIfFull(): Boolean {

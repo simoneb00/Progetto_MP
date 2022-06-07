@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import mp.sudoku.R
+import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.*
@@ -56,6 +57,7 @@ fun GameLayout(difficulty: String) {
         if(s.value != listOf(listOf(""))){
             GridButtons(difficulty, settingsVM)
             Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
+            gameVM.addGame(board = s.value, difficulty = difficulty)
         }
         else{
             CircularProgressIndicator(color = MaterialTheme.colors.secondary)
@@ -67,7 +69,6 @@ fun GameLayout(difficulty: String) {
                 val mData = gson.fromJson<VolleyGrid>(it, sType)
                 s.value = mData.board
             }
-            gameVM.addGame(board = s.value, difficulty = difficulty)
         }
         GameButtons(activeGameVM, settingsVM)
         NumberButtons(activeGameVM)
@@ -123,7 +124,9 @@ fun GameButtons(
         }
 
         if (settingsVM.getHintsSetting()) {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {
+                activeGameVM.updateGrid(activeGameVM.getHint())
+            }) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         imageVector = Icons.Filled.Lightbulb,

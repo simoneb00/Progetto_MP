@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import mp.sudoku.model.CurrentGame
-import mp.sudoku.model.Game
 import mp.sudoku.model.database.DBGame
 import mp.sudoku.model.volley.VolleySingleton
 import mp.sudoku.viewmodel.repository.RepositoryGame
@@ -31,23 +30,26 @@ class GameVM(application: Application) : AndroidViewModel(application) {
     }
 
     companion object {
-        fun solve(s: List<List<String>>) {
+        fun solve(board: List<List<String>>): List<List<Int>> {
             var adaptedGrid = ""
-            for (i in s) {
+            for (i in board) {
                 for (j in i) {
                     if (j.toInt() == 0)
                         adaptedGrid.plus(".").also { adaptedGrid = it }
                     else
                         adaptedGrid.plus(j).also { adaptedGrid = it }
                 }
+                adaptedGrid.plus("\n").also { adaptedGrid = it }
             }
+
+            val solver = SudokuSolver(adaptedGrid.trimIndent())
             try {
-                val solver = SudokuSolver(adaptedGrid)
-                println(solver.solveRecursive())
-                println(solver.getSudoku())
+                if(solver.solve() == Result.Open)
+                    solver.solveRecursive()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+            return solver.getSudoku()
         }
     }
 
@@ -71,13 +73,19 @@ class GameVM(application: Application) : AndroidViewModel(application) {
 
     //Game func
     fun addGame(board: List<List<String>>, difficulty: String){
-        val game = Game()
-        game.grid = board.toString()
-        game.difficulty = difficulty
-        game.lastUpdate = LocalDate.now().toString()
-        game.score = 100
+        CurrentGame.getInstance()
+        val game = CurrentGame.getInstance().getCurrent()
+        try{
+            game!!.grid = Adapter.boardListToPersistenceFormat(Adapter.changeStringToInt(board))
+            game.difficulty = difficulty
+            game.lastUpdate = LocalDate.now().toString()
+            game.score = 100
 
-        repGame.insertGame(game)
+            repGame.insertGame(game)
+            CurrentGame.getInstance().solution = solve(board)
+        }catch(e:Exception){
+            e.printStackTrace()
+        }
     }
 
     fun updateGame(board: Any?, noteBoard: Any?, timer: Any?, hintCounter: Any?, score: Any?) {

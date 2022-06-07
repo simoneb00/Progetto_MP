@@ -1,8 +1,10 @@
 package mp.sudoku.model
 
+import com.android.volley.toolbox.Volley
+
 class CurrentGame {
     private var current: Game? = null
-    private var solution: List<List<Int>>? = null
+    var solution: List<List<Int>>? = null
 
     companion object {
         var mInstance: CurrentGame? = null
@@ -17,10 +19,14 @@ class CurrentGame {
     }
 
     fun getCurrent(): Game? {
-        return current
+        if (current == null) {
+            current = Game()
+        }
+        return current!!
     }
 
     fun deleteCurrent(){
         current = null
     }
+
 }
