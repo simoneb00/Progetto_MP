@@ -9,6 +9,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -27,10 +28,12 @@ fun Grid(
 
     activeGameVM.initGrid(values)
 
-    var gridState by remember { mutableStateOf(activeGameVM.gridState, neverEqualPolicy()) }
+    var gridState = rememberSaveable() {
+        mutableStateOf(activeGameVM.gridState, neverEqualPolicy())
+    }
 
     activeGameVM.subGridState = {
-        gridState = it
+        gridState.value = it
     }
 
     BoxWithConstraints {
@@ -46,7 +49,7 @@ fun Grid(
                 .size(screenWidth - margin.dp)
         ) {
             val offset = (screenWidth - margin.dp).value / 9
-            SudokuTextFields(offset, activeGameVM, gridState = gridState)
+            SudokuTextFields(offset, activeGameVM, gridState = gridState.value)
             BoardGrid(offset)
         }
     }

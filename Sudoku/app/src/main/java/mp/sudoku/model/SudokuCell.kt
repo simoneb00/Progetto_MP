@@ -1,5 +1,9 @@
 package mp.sudoku.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 class SudokuCell(
     val x: Int,
     val y: Int,
@@ -9,4 +13,4 @@ class SudokuCell(
     var isReadOnly: Boolean,
     var isInEvidence: Boolean,
     var note: Int
-)
+) : Parcelable

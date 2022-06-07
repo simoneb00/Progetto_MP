@@ -1,6 +1,7 @@
 package mp.sudoku.ui.view.components
 
-import android.app.Application
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,7 +20,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import mp.sudoku.ui.view.ScreenRouter
-import mp.sudoku.viewmodel.GameVM
 
 @Composable
 fun TopBar(
@@ -28,12 +28,29 @@ fun TopBar(
     includeGuideButton: Boolean = true,
     backgroundColor: Color = MaterialTheme.colors.background
 ) {
-    val gameVM = GameVM(
-        LocalContext
-            .current.applicationContext as Application
-    )
 
+    val activity = LocalContext.current as Activity?
 
+    BackHandler {
+        if (ScreenRouter.currentScreen.value == ScreenRouter.HOMESCREEN) {
+            activity?.finish()
+        }
+        if (
+            ScreenRouter.currentScreen.value == ScreenRouter.DIFFICULTYSCREEN ||
+            ScreenRouter.currentScreen.value == ScreenRouter.RESUMESCREEN
+        ) {
+            ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
+        } else if (ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
+            ScreenRouter.navigateTo(destination = ScreenRouter.DIFFICULTYSCREEN)
+        } else if (ScreenRouter.currentScreen.value == ScreenRouter.GAMEDETAILSSCREEN) {
+            ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
+        } else {
+            ScreenRouter.navigateTo(
+                destination = ScreenRouter.previousScreen.value,
+                source = ScreenRouter.currentScreen.value
+            )
+        }
+    }
 
     ConstraintLayout(
         modifier = Modifier
@@ -51,7 +68,10 @@ fun TopBar(
                 ) {
                     ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
                 } else if (ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
-                    ScreenRouter.navigateTo(destination = ScreenRouter.DIFFICULTYSCREEN)
+                    // TODO
+                    ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
+                } else if (ScreenRouter.currentScreen.value == ScreenRouter.GAMEDETAILSSCREEN) {
+                    ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
                 } else {
                     ScreenRouter.navigateTo(
                         destination = ScreenRouter.previousScreen.value,
@@ -103,4 +123,5 @@ fun TopBar(
         }
     }
 }
+
 

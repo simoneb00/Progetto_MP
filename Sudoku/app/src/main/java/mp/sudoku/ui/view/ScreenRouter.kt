@@ -15,14 +15,14 @@ object ScreenRouter {
     var difficulty: MutableState<String> = mutableStateOf("easy")
     var game: Game = Game()
 
-    val HOMESCREEN = 1
-    val DIFFICULTYSCREEN = 2
-    val SETTINGSCREEN = 3
-    val STATSSCREEN = 4
-    val RULESSCREEN = 5
-    val GAMESCREEN = 6
-    val RESUMESCREEN = 7
-    val GAMEDETAILSSCREEN = 8
+    const val HOMESCREEN = 1
+    const val DIFFICULTYSCREEN = 2
+    const val SETTINGSCREEN = 3
+    const val STATSSCREEN = 4
+    const val RULESSCREEN = 5
+    const val GAMESCREEN = 6
+    const val RESUMESCREEN = 7
+    const val GAMEDETAILSSCREEN = 8
 
 
     fun navigateTo(
