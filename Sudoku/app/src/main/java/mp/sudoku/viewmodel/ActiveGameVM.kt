@@ -18,7 +18,7 @@ class ActiveGameVM {
         false                                              // true if user is inserting notes
 
 
-    fun initGrid(list: List<List<Int>>) {
+    fun initGrid(list: List<List<Int>>, isReadOnly: Boolean) {
         for (i in list.indices) {               // i = number of row
             for (j in list[i].indices) {        // j = number of element in the row
                 /*
@@ -28,16 +28,29 @@ class ActiveGameVM {
                 *   the fourth element of the seventh row will have key 74, and so on.
                 *
                 */
-                gridState[(j * 10 + i)] = SudokuCell(
-                    x = j,
-                    y = i,
-                    value = list[i][j],
-                    isSelected = false,
-                    nonet = findNonet(j, i),            // a nonet is a 3x3 sub-block
-                    isInEvidence = false,                  // the cell is on focus if it's placed on the same row/column/nonet of the selected cell
-                    isReadOnly = (list[i][j] != 0),     // the read only cells are those present in the initial grid
-                    note = 0
-                )
+                    if (!isReadOnly) {
+                        gridState[(j * 10 + i)] = SudokuCell(
+                            x = j,
+                            y = i,
+                            value = list[i][j],
+                            isSelected = false,
+                            nonet = findNonet(j, i),            // a nonet is a 3x3 sub-block
+                            isInEvidence = false,                  // the cell is on focus if it's placed on the same row/column/nonet of the selected cell
+                            isReadOnly = (list[i][j] != 0),     // the read only cells are those present in the initial grid
+                            note = 0
+                        )
+                    } else {
+                        gridState[(j * 10 + i)] = SudokuCell(
+                            x = j,
+                            y = i,
+                            value = list[i][j],
+                            isSelected = false,
+                            nonet = findNonet(j, i),
+                            isInEvidence = false,
+                            isReadOnly = true,
+                            note = 0
+                        )
+                    }
             }
         }
     }

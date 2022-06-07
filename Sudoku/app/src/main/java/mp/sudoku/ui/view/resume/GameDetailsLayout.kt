@@ -1,16 +1,28 @@
 package mp.sudoku.ui.view.resume
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MenuOpen
+import androidx.compose.material.icons.filled.OpenInFull
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.model.Game
 import mp.sudoku.ui.view.components.TopBar
+import mp.sudoku.ui.view.game.Grid
+import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.Adapter
 
 @Composable
@@ -19,11 +31,134 @@ fun GameDetailsLayout(game: Game) {
         TopBar()
         Title(game)
         GridPreview(game)
+        DetailsRow(game)
+    }
+}
+
+@Composable
+fun DetailsRow(game: Game) {
+
+    var animationPlayed by remember {
+        mutableStateOf(false)
+    }
+
+    var height = animateDpAsState(
+        targetValue = if (animationPlayed) 120.dp else 0.dp,
+        animationSpec = tween(
+            durationMillis = 1000,
+            delayMillis = 0
+        )
+    )
+
+    LaunchedEffect(key1 = true) {
+        animationPlayed = true
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp)
+    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp) //, end = 20.dp, start = 20.dp)
+                .height(height.value)
+        ) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(30.dp),
+                border = BorderStroke(0.5.dp, MaterialTheme.colors.secondary)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = "Difficulty:", modifier = Modifier.padding(start = 5.dp))
+                    Text(
+                        text = game.difficulty,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(end = 5.dp)
+                    )
+                }
+            }
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(30.dp),
+                border = BorderStroke(0.5.dp, MaterialTheme.colors.secondary)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = "Last Update:", modifier = Modifier.padding(start = 5.dp))
+                    Text(
+                        text = game.lastUpdate,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(end = 5.dp)
+                    )
+                }
+            }
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(30.dp),
+                border = BorderStroke(0.5.dp, MaterialTheme.colors.secondary)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = "Score:", modifier = Modifier.padding(start = 5.dp))
+                    Text(
+                        text = game.score.toString(),
+                        color = Color.Gray,
+                        modifier = Modifier.padding(end = 5.dp)
+                    )
+                }
+            }
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(30.dp),
+                border = BorderStroke(0.5.dp, MaterialTheme.colors.secondary)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = "Timer:", modifier = Modifier.padding(start = 5.dp))
+                    Text(
+                        text = game.timer,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(end = 5.dp)
+                    )
+                }
+            }
+        }
     }
 }
 
 @Composable
 fun GridPreview(game: Game) {
+    val boardStringList: List<List<String>> = Adapter.boardPersistenceFormatToList(game.grid)
+    val boardIntList: List<List<Int>> = Adapter.changeStringToInt(boardStringList)
+    val activeGameVM = ActiveGameVM()
+
+    Box(
+        modifier = Modifier
+            .padding(start = 50.dp, end = 50.dp, top = 20.dp)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Grid(values = boardIntList, activeGameVM = activeGameVM, isReadOnly = true)
+    }
 }
 
 @Composable

@@ -16,17 +16,17 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.model.SudokuCell
-import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.viewmodel.ActiveGameVM
 
 
 @Composable
 fun Grid(
     values: List<List<Int>>,
-    activeGameVM: ActiveGameVM
+    activeGameVM: ActiveGameVM,
+    isReadOnly: Boolean = false
 ) {
 
-    activeGameVM.initGrid(values)
+    activeGameVM.initGrid(values, isReadOnly)
 
     var gridState = rememberSaveable {
         mutableStateOf(activeGameVM.gridState, neverEqualPolicy())

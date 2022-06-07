@@ -20,6 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.model.Game
 import mp.sudoku.ui.view.components.TopBar
+import mp.sudoku.ui.view.game.Grid
+import mp.sudoku.viewmodel.ActiveGameVM
+import mp.sudoku.viewmodel.Adapter
 import mp.sudoku.viewmodel.StatisticVM
 
 @Preview
@@ -60,7 +63,14 @@ fun StartedGameCard(game: Game = Game()) {
         border = BorderStroke(2.dp, MaterialTheme.colors.secondary),
         shape = RoundedCornerShape(10.dp)
     ) {
+
+        val boardStringList: List<List<String>> = Adapter.boardPersistenceFormatToList(game.grid)
+        val boardIntList: List<List<Int>> = Adapter.changeStringToInt(boardStringList)
+        val activeGameVM = ActiveGameVM()
+
+
         Column(modifier = Modifier.padding(top = 5.dp, start = 10.dp, end = 10.dp, bottom = 5.dp)) {
+
             Row() {
                 Text(
                     text = "Game ${game.id}",
@@ -69,11 +79,20 @@ fun StartedGameCard(game: Game = Game()) {
                 )
             }
 
+            Box(
+                modifier = Modifier
+                    .padding(start = 50.dp, end = 50.dp, top = 10.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Grid(values = boardIntList, activeGameVM = activeGameVM, isReadOnly = true)
+            }
+
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 20.dp)
+                    .padding(end = 20.dp, top = 10.dp)
             ) {
                 Column() {
                     Text(text = "Difficulty:")
@@ -93,8 +112,8 @@ fun StartedGameCard(game: Game = Game()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 20.dp),
-                horizontalArrangement = Arrangement.Center
+                    .padding(top = 20.dp, start = 30.dp, end = 30.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(
                     onClick = {
@@ -104,7 +123,18 @@ fun StartedGameCard(game: Game = Game()) {
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
                     shape = RoundedCornerShape(10.dp)
                 ) {
-                    Text(text = " View details", fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                    Text(text = "Resume", fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                }
+
+                Button(
+                    onClick = {
+                        ScreenRouter.game = game
+                        ScreenRouter.navigateTo(destination = ScreenRouter.GAMEDETAILSSCREEN)
+                    },
+                    border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text(text = "Delete", fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                 }
             }
 
