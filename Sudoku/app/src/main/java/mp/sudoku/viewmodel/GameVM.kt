@@ -73,7 +73,6 @@ class GameVM(application: Application) : AndroidViewModel(application) {
 
     //Game func
     fun addGame(board: List<List<String>>, difficulty: String){
-        CurrentGame.getInstance()
         val game = CurrentGame.getInstance().getCurrent()
         try{
             game!!.grid = Adapter.boardListToPersistenceFormat(Adapter.changeStringToInt(board))
@@ -89,7 +88,14 @@ class GameVM(application: Application) : AndroidViewModel(application) {
     }
 
     fun updateGame(board: Any?, noteBoard: Any?, timer: Any?, hintCounter: Any?, score: Any?) {
-        repGame.updateOne(CurrentGame.getInstance().getCurrent())
+        val game = CurrentGame.getInstance().getCurrent()
+        try{
+            game!!.lastUpdate = LocalDate.now().toString()
+            repGame.updateOne(CurrentGame.getInstance().getCurrent())
+        }catch(e:Exception){
+            e.printStackTrace()
+        }
+
     }
 
 }

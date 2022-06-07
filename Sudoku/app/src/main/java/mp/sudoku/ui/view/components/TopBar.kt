@@ -32,23 +32,13 @@ fun TopBar(
     val activity = LocalContext.current as Activity?
 
     BackHandler {
-        if (ScreenRouter.currentScreen.value == ScreenRouter.HOMESCREEN) {
-            activity?.finish()
-        }
-        if (
-            ScreenRouter.currentScreen.value == ScreenRouter.DIFFICULTYSCREEN ||
-            ScreenRouter.currentScreen.value == ScreenRouter.RESUMESCREEN
-        ) {
-            ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
-        } else if (ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
-            ScreenRouter.navigateTo(destination = ScreenRouter.DIFFICULTYSCREEN)
-        } else if (ScreenRouter.currentScreen.value == ScreenRouter.GAMEDETAILSSCREEN) {
-            ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
-        } else {
-            ScreenRouter.navigateTo(
-                destination = ScreenRouter.previousScreen.value,
-                source = ScreenRouter.currentScreen.value
-            )
+        when (ScreenRouter.currentScreen.value) {
+            ScreenRouter.HOMESCREEN -> activity?.finish()
+            ScreenRouter.DIFFICULTYSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
+            ScreenRouter.RESUMESCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
+            ScreenRouter.GAMESCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.DIFFICULTYSCREEN)
+            ScreenRouter.GAMEDETAILSSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
+            else -> ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value, source = ScreenRouter.currentScreen.value)
         }
     }
 
@@ -62,21 +52,13 @@ fun TopBar(
 
         if (includeBackButton) {
             IconButton(onClick = {
-                if (
-                    ScreenRouter.currentScreen.value == ScreenRouter.DIFFICULTYSCREEN ||
-                    ScreenRouter.currentScreen.value == ScreenRouter.RESUMESCREEN
-                ) {
-                    ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
-                } else if (ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
-                    // TODO
-                    ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
-                } else if (ScreenRouter.currentScreen.value == ScreenRouter.GAMEDETAILSSCREEN) {
-                    ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
-                } else {
-                    ScreenRouter.navigateTo(
-                        destination = ScreenRouter.previousScreen.value,
-                        source = ScreenRouter.currentScreen.value
-                    )
+                when (ScreenRouter.currentScreen.value) {
+                    ScreenRouter.HOMESCREEN -> activity?.finish()
+                    ScreenRouter.DIFFICULTYSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
+                    ScreenRouter.RESUMESCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
+                    ScreenRouter.GAMESCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.DIFFICULTYSCREEN)
+                    ScreenRouter.GAMEDETAILSSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
+                    else -> ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value, source = ScreenRouter.currentScreen.value)
                 }
             },
                 modifier = Modifier
