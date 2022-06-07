@@ -26,6 +26,7 @@ import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.Adapter
 import mp.sudoku.viewmodel.GameVM
 import mp.sudoku.viewmodel.StopWatch
+import java.lang.Exception
 
 @Composable
 fun TopBar(
@@ -120,16 +121,21 @@ fun TopBar(
 
 
 fun updateGame(application: Application, activeGameVM: ActiveGameVM, stopWatch: StopWatch) {
-    val game = GameVM(application)
-    val thisBoard = Adapter.boardListToPersistenceFormat(Adapter.hashMapToList(activeGameVM.gridState))
-    val thisNote = Adapter.hashMapToList(activeGameVM.gridState)
+    try {
+        val game = GameVM(application)
+        val thisBoard = Adapter.boardListToPersistenceFormat(Adapter.hashMapToList(activeGameVM.gridState))
+        val thisNote = Adapter.hashMapToList(activeGameVM.gridState)
 
 
-    game.updateGame(
-        board = thisBoard,
-        noteBoard = Adapter.boardListToPersistenceFormat(thisNote),
-        timer = stopWatch.formattedTime
+        game.updateGame(
+            board = thisBoard,
+            noteBoard = Adapter.boardListToPersistenceFormat(thisNote),
+            timer = stopWatch.formattedTime
         )
+    }catch (e:Exception){
+        e.printStackTrace()
+    }
+
 
     ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
 }

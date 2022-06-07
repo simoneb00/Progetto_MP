@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import mp.sudoku.R
+import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.*
@@ -36,6 +37,7 @@ fun GameLayout(difficulty: String) {
     val settingsVM = SettingsVM(LocalContext.current.applicationContext)
     val activeGameVM = ActiveGameVM()
     var isCompleted by remember { mutableStateOf(activeGameVM.isCompleted, neverEqualPolicy()) }
+    var resume = false
 
     val gameVM = GameVM(
         LocalContext
@@ -44,6 +46,10 @@ fun GameLayout(difficulty: String) {
 
     val s = rememberSaveable {
         mutableStateOf(listOf(listOf("")))
+    }
+    if(CurrentGame.getInstance().getOnlyCurrent() != null){
+        s.value = gameVM.resumeGame()
+        resume = true
     }
 
     val stopwatch = rememberSaveable {
@@ -60,7 +66,8 @@ fun GameLayout(difficulty: String) {
         if(s.value != listOf(listOf(""))){
             GridButtons(difficulty,settingsVM,stopwatch,activeGameVM)
             Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
-            gameVM.addGame(board = s.value, difficulty = difficulty)
+            if(!resume)
+                gameVM.addGame(board = s.value, difficulty = difficulty)
         }
         else{
             CircularProgressIndicator(color = MaterialTheme.colors.secondary)
@@ -76,9 +83,9 @@ fun GameLayout(difficulty: String) {
         GameButtons(activeGameVM, settingsVM)
         NumberButtons(activeGameVM)
 
-        if (isCompleted) {
-            CheckButton()
-        }
+       // if (isCompleted) {
+            CheckButton(activeGameVM)
+        //}
     }
 }
 
@@ -199,7 +206,7 @@ fun GridButtons(
 }
 
 @Composable
-fun CheckButton() {
+fun CheckButton(activeGameVM: ActiveGameVM) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -207,7 +214,9 @@ fun CheckButton() {
         horizontalArrangement = Arrangement.Center
     ) {
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                      activeGameVM.checkGrid()
+            },
             border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
             shape = RoundedCornerShape(10.dp)
         ) {

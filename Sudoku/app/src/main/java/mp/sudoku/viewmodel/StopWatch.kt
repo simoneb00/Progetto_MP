@@ -22,7 +22,8 @@ import java.util.*
 * la variabile formattedTime restituisce il tempo in stringa del cronometro.
 * Utilizzare sempre la classe Stopwatch come parametro per il passaggio da uno scope ad un altro
 * */
-class StopWatch {
+@Parcelize
+class StopWatch : Parcelable {
     var formattedTime by mutableStateOf("")
 
     private var coroutineScope = CoroutineScope(Dispatchers.Main) //Do not change scope or it will broke

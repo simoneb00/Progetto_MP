@@ -3,9 +3,10 @@ package mp.sudoku.model
 import mp.sudoku.viewmodel.StopWatch
 
 class CurrentGame {
-    private var current: Game? = null
+    var current: Game? = null
     var solution: List<List<Int>>? = null
     var timer: StopWatch? = null
+
 
     companion object {
         var mInstance: CurrentGame? = null
@@ -19,6 +20,7 @@ class CurrentGame {
         }
     }
 
+    @JvmName("getCurrent1")
     fun getCurrent(): Game? {
         if (current == null) {
             current = Game()
@@ -27,6 +29,10 @@ class CurrentGame {
             timer = StopWatch()
         }
         return current!!
+    }
+
+    fun getOnlyCurrent(): Game? {
+        return current
     }
 
     fun deleteCurrent(){

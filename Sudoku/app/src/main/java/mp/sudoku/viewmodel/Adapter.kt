@@ -41,16 +41,23 @@ class Adapter {
              */
             val rows: MutableList<String> = board.split("*") as MutableList<String>
 
-            rows.removeAt(0)
-            rows.removeAt(rows.size - 1)
+            if (rows.size > 0 && rows[0] == "") {
+                rows.removeAt(0)
+            }
+            if (rows.size > 0 && rows[rows.size - 1] == "") {
+                rows.removeAt(rows.size - 1)
+            }
 
-            var values: MutableList<List<String>> =
+            var values: MutableList<MutableList<String>> =
                 mutableListOf()     // this creates an empty mutableList
 
             rows.forEach { row ->
-                val rowValues: List<String> =
-                    row.split(".")      // we get a list of strings (every value in the row)
+                var rowValues: MutableList<String> =
+                    row.split(".")
+                        .toMutableList()      // we get a list of strings (every value in the row)
                 values.add(rowValues)
+                if (rowValues.size > 9)
+                    rowValues.removeAt(rowValues.size - 1)
             }
 
             return values

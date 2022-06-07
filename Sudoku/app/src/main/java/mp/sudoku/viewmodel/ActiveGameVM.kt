@@ -1,5 +1,6 @@
 package mp.sudoku.viewmodel
 
+import androidx.compose.ui.graphics.Color
 import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.SudokuCell
 
@@ -28,29 +29,31 @@ class ActiveGameVM {
                 *   the fourth element of the seventh row will have key 74, and so on.
                 *
                 */
-                    if (!isReadOnly) {
-                        gridState[(j * 10 + i)] = SudokuCell(
-                            x = j,
-                            y = i,
-                            value = list[i][j],
-                            isSelected = false,
-                            nonet = findNonet(j, i),            // a nonet is a 3x3 sub-block
-                            isInEvidence = false,                  // the cell is on focus if it's placed on the same row/column/nonet of the selected cell
-                            isReadOnly = (list[i][j] != 0),     // the read only cells are those present in the initial grid
-                            note = 0
-                        )
-                    } else {
-                        gridState[(j * 10 + i)] = SudokuCell(
-                            x = j,
-                            y = i,
-                            value = list[i][j],
-                            isSelected = false,
-                            nonet = findNonet(j, i),
-                            isInEvidence = false,
-                            isReadOnly = true,
-                            note = 0
-                        )
-                    }
+                if (!isReadOnly) {
+                    gridState[(j * 10 + i)] = SudokuCell(
+                        x = j,
+                        y = i,
+                        value = list[i][j],
+                        isSelected = false,
+                        nonet = findNonet(j, i),            // a nonet is a 3x3 sub-block
+                        isInEvidence = false,                  // the cell is on focus if it's placed on the same row/column/nonet of the selected cell
+                        isReadOnly = (list[i][j] != 0),     // the read only cells are those present in the initial grid
+                        note = 0,
+                        color = Color.Black
+                    )
+                } else {
+                    gridState[(j * 10 + i)] = SudokuCell(
+                        x = j,
+                        y = i,
+                        value = list[i][j],
+                        isSelected = false,
+                        nonet = findNonet(j, i),
+                        isInEvidence = false,
+                        isReadOnly = true,
+                        note = 0,
+                        color = Color.Black
+                    )
+                }
             }
         }
     }
@@ -102,32 +105,32 @@ class ActiveGameVM {
         subGridState?.invoke(gridState)                        // commit grid changes to the view
     }
 
-    fun getHint():Int{
+    fun getHint(): Int {
         var hint = 0
-        try{
+        try {
             hint = CurrentGame.getInstance().solution!![getSelectedCellY()][getSelectedCellX()]
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
         return hint
     }
 
 
-    private fun getSelectedCellX():Int{
+    private fun getSelectedCellX(): Int {
         var x = 0
         gridState.values.forEach {
             if (it.isSelected) {        // the following operations are going to be applied only to the selected cell
-                x =  it.x
+                x = it.x
             }
         }
         return x
     }
 
-    private fun getSelectedCellY():Int{
+    private fun getSelectedCellY(): Int {
         var y = 0
         gridState.values.forEach {
             if (it.isSelected) {        // the following operations are going to be applied only to the selected cell
-                y =  it.y
+                y = it.y
             }
         }
         return y
@@ -150,10 +153,13 @@ class ActiveGameVM {
         gridState.values.forEach {
             it.isSelected = false
             it.isInEvidence = false
-            if (it.x == x && it.y == y)
+            if (it.x == x && it.y == y) {
                 it.isSelected = true        // mark the (x, y) cell as selected
-            if (it.x == x || it.y == y || it.nonet == gridState[x*10+y]?.nonet)
-                it.isInEvidence = true         // put every cell on the same row/column/nonet in evidence
+                it.color = Color.Black
+            }
+            if (it.x == x || it.y == y || it.nonet == gridState[x * 10 + y]?.nonet)
+                it.isInEvidence =
+                    true         // put every cell on the same row/column/nonet in evidence
 
         }
         subGridState?.invoke(gridState)     // commit changes to the view
@@ -173,15 +179,56 @@ class ActiveGameVM {
         val game = CurrentGame.getInstance().getCurrent()
         try {
             game!!.hintCounter++
-            if(game.score-5 > 0)
-                game.score = game.score-5
-        }catch (e:Exception){
+            if (game.score - 5 > 0)
+                game.score = game.score - 5
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     fun getScore(): Int {
         return CurrentGame.getInstance().getCurrent()?.score ?: 100
+    }
+
+    fun checkGrid() {
+        var linearSolution = listOf<Int>()
+        var linearGrid = listOf<Int>()
+        var correct = true
+
+        CurrentGame.getInstance().solution!!.forEach { i ->
+            for (j in i) {
+                linearSolution.plus(j).also { linearSolution = it }
+            }
+        }
+
+        Adapter.hashMapToList(gridState).forEach { i ->
+            for (j in i) {
+                linearGrid.plus(j).also { linearGrid = it }
+            }
+        }
+
+
+        (linearGrid.indices).forEach { i ->
+            if (linearGrid[i] != linearSolution[i] && linearGrid[i] != 0) {
+
+                gridState.values.forEach {
+                    if (it.x == i % 9 && it.y == i / 9)
+                        it.color = Color.Red
+                }
+                correct = false
+            }
+        }
+
+        gridState.values.forEach {
+            it.isSelected = false
+            it.isInEvidence = false
+        }
+
+        subGridState?.invoke(gridState)
+
+        if (!correct) {
+            println("Errore")
+        }
     }
 }
 

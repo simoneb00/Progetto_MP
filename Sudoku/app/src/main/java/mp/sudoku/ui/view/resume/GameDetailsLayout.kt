@@ -12,7 +12,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.Game
+import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.ui.view.game.Grid
 import mp.sudoku.viewmodel.ActiveGameVM
@@ -26,6 +28,12 @@ fun GameDetailsLayout(game: Game) {
         Title(game)
         GridPreview(game)
         DetailsRow(game)
+        Button(onClick = {
+            CurrentGame.getInstance().getCurrent()!!.grid = game.grid
+            ScreenRouter.navigateTo(ScreenRouter.RESUMESCREEN,ScreenRouter.GAMESCREEN)
+        }) {
+            Text(text = "Resume")
+        }
     }
 }
 
@@ -36,7 +44,7 @@ fun DetailsRow(game: Game) {
         mutableStateOf(false)
     }
 
-    var height = animateDpAsState(
+    val height = animateDpAsState(
         targetValue = if (animationPlayed) 120.dp else 0.dp,
         animationSpec = tween(
             durationMillis = 1000,

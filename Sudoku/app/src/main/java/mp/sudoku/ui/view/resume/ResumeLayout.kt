@@ -75,7 +75,7 @@ fun StartedGameCard(game: Game = Game()) {
 
         Column(modifier = Modifier.padding(top = 5.dp, start = 10.dp, end = 10.dp, bottom = 5.dp)) {
 
-            Row() {
+            Row {
                 Text(
                     text = "Game ${game.id}",
                     fontSize = 20.sp,
@@ -98,7 +98,7 @@ fun StartedGameCard(game: Game = Game()) {
                     .fillMaxWidth()
                     .padding(end = 20.dp, top = 10.dp)
             ) {
-                Column() {
+                Column {
                     Text(text = "Difficulty:")
                     Text(text = "Last Update:")
                     Text(text = "Score:")

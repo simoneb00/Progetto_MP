@@ -79,7 +79,6 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             game!!.grid = Adapter.boardListToPersistenceFormat(Adapter.changeStringToInt(board))
             game.difficulty = difficulty
             game.lastUpdate = LocalDate.now().toString()
-            game.score = 100
 
             repGame.insertGame(game)
             CurrentGame.getInstance().solution = solve(board)
@@ -96,10 +95,11 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             game.timer = timer
             game.lastUpdate = LocalDate.now().toString()
             repGame.updateOne(CurrentGame.getInstance().getCurrent())
+            CurrentGame.getInstance().deleteCurrent()
+            CurrentGame.getInstance().solution = null
         }catch(e:Exception){
             e.printStackTrace()
         }
-
     }
 
     fun deleteOne(game: Game) {
@@ -108,6 +108,18 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         }catch(e:Exception){
             e.printStackTrace()
         }
+    }
+
+    fun resumeGame( ): List<List<String>> {
+        var temp:List<List<String>> = listOf(listOf(""))
+        try {
+            temp = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().getCurrent()?.grid!!)
+            CurrentGame.getInstance().solution = solve(temp)
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
+        return temp
     }
 
 }
