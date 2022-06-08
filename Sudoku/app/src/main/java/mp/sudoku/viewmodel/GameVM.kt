@@ -88,12 +88,13 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateGame(board: String, noteBoard: String, timer: String) {
+    fun updateGame(board: String, noteBoard: String, timer: String,finished:Int = 0) {
         val game = CurrentGame.getInstance().getCurrent()
         try{
             game!!.grid = board
             game.noteGrid = noteBoard
             game.timer = timer
+            game.finished = finished
             game.lastUpdate = LocalDate.now().toString()
             repGame.updateOne(CurrentGame.getInstance().getCurrent())
             CurrentGame.getInstance().deleteCurrent()
