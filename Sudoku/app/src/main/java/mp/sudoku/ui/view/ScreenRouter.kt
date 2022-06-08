@@ -7,6 +7,7 @@ import mp.sudoku.model.Game
 import mp.sudoku.ui.view.ScreenRouter.game
 import mp.sudoku.ui.view.game.GameLayout
 import mp.sudoku.ui.view.resume.GameDetailsLayout
+import mp.sudoku.ui.view.resume.ResumeLayout
 
 
 object ScreenRouter {

@@ -225,10 +225,6 @@ class ActiveGameVM {
         }
 
         subGridState?.invoke(gridState)
-
-        if (!correct) {
-            println("Errore")
-        }
     }
 }
 

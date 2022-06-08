@@ -20,7 +20,7 @@ class SudokuSolver(data: String) {
     // computed properties for sudoku status
     private val statusCellsDone get() = sudoku.flatten().count { it != 0 }
     private val statusCellsOpen get() = 81 - statusCellsDone
-    private val statusCandidatesCount get() = candidates.flatten().sumBy { it.size }
+    private val statusCandidatesCount get() = candidates.flatten().sumOf { it.size }
     private val statusFailedCells get() = countFailedCells()
 
     // debugging
@@ -106,13 +106,13 @@ class SudokuSolver(data: String) {
             //debugPrintln("Possible choices to continue: ${choices.size} $choices")
 
             // try them out
-            for ((moveNo, move) in choices.withIndex()) {
+            for (move in choices) {
                // debugPrintln("Try recursively ${moveNo + 1} / ${choices.size}")
                 debugRecLevel++
                 // make backup of current state of sudoku
                 // (flatten gives a sufficiently 'deep copy' here)
                 val sudokuBackup = sudoku.flatten()
-                setCell(move.row, move.col, move.nmb, "Guess")
+                setCell(move.row, move.col, move.nmb)
                 // recursive call; result can only be
                 // .Failure or .Success, as .Open is
                 // handled internally
@@ -222,7 +222,7 @@ class SudokuSolver(data: String) {
             for (col in 0..8)
                 if (candidates[row][col].size == 1) {
                     val nmb = candidates[row][col].toList()[0]
-                    setCell(row, col, nmb, "Naked Single")
+                    setCell(row, col, nmb)
                     return true
                 }
 
@@ -231,7 +231,7 @@ class SudokuSolver(data: String) {
 
     // found solution for one cell:
     // update sudoku + candidates lists, optionally print sudoku
-    private fun setCell(row: Int, col: Int, nmb: Int, why: String = "unknown") {
+    private fun setCell(row: Int, col: Int, nmb: Int) {
         debugNoOfTries++
         sudoku[row][col] = nmb
         candidates[row][col] = mutableSetOf()
@@ -250,7 +250,7 @@ class SudokuSolver(data: String) {
                     for (col in 0..8)
                         if (candidates[row][col].contains(nmb)) {
                             // got it
-                            setCell(row, col, nmb, "Hidden Single Row")
+                            setCell(row, col, nmb)
                             return true
                         }
 
@@ -275,7 +275,7 @@ class SudokuSolver(data: String) {
                     for (row in 0..8)
                         if (candidates[row][col].contains(nmb)) {
                             // got it
-                            setCell(row, col, nmb, "Hidden Single Row")
+                            setCell(row, col, nmb)
                             return true
                         }
 
@@ -305,7 +305,7 @@ class SudokuSolver(data: String) {
                             for (col in colstart..colstart + 2)
                                 if (candidates[row][col].contains(nmb)) {
                                     // got it
-                                    setCell(row, col, nmb, "Hidden Single Box")
+                                    setCell(row, col, nmb)
                                     return true
                                 }
                 }
@@ -503,8 +503,4 @@ class SudokuSolver(data: String) {
         }
     }
 
-    // indent line according to recursion level (for debugging output)
-    private fun indent() {
-        print("  ".repeat(debugRecLevel))
-    }
 }

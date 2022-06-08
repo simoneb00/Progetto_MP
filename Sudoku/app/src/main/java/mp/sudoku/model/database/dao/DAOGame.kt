@@ -11,7 +11,7 @@ interface DAOGame {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertOne(game: Game)
     @Update
-    fun updateOne(game: Game)
+    fun updateOne(game:Game)
     @Delete
     fun deleteOne(game: Game)
     @Query("SELECT * FROM Game")

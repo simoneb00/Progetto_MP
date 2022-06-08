@@ -104,8 +104,7 @@ fun RulesLayout() {
 fun RuleCard(
     text: String,
     title: String,
-    subtitle: String,
-    textColor: Color = Color.Black
+    subtitle: String
 ) {
 
     /* animation */

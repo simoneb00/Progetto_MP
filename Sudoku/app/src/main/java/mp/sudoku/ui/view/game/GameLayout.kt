@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.KeyboardBackspace
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +40,8 @@ fun GameLayout(difficulty: String) {
     var isCompleted by remember { mutableStateOf(activeGameVM.isCompleted, neverEqualPolicy()) }
     var resume = false
 
+    val allGames by settingsVM.allGames.observeAsState(listOf())
+
     val gameVM = GameVM(
         LocalContext
             .current.applicationContext as Application
@@ -47,14 +50,16 @@ fun GameLayout(difficulty: String) {
     val s = rememberSaveable {
         mutableStateOf(listOf(listOf("")))
     }
-    if(CurrentGame.getInstance().getOnlyCurrent() != null){
+    val stopwatch = rememberSaveable {
+        mutableStateOf(StopWatch())
+    }
+
+    if (CurrentGame.getInstance().getOnlyCurrent() != null) {
         s.value = gameVM.resumeGame()
         resume = true
     }
 
-    val stopwatch = rememberSaveable {
-        mutableStateOf(StopWatch())
-    }
+
 
     activeGameVM.subCompletedState = {
         isCompleted = it
@@ -62,14 +67,16 @@ fun GameLayout(difficulty: String) {
 
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        TopBar(activeGameVM = activeGameVM, stopWatch = stopwatch.value)
-        if(s.value != listOf(listOf(""))){
-            GridButtons(difficulty,settingsVM,stopwatch,activeGameVM)
+        if (s.value != listOf(listOf(""))) {
+            TopBar(activeGameVM = activeGameVM, stopWatch = stopwatch.value)
+            GridButtons(difficulty, settingsVM, stopwatch.value, activeGameVM)
             Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
-            if(!resume)
-                gameVM.addGame(board = s.value, difficulty = difficulty)
-        }
-        else{
+            if (resume) {
+                stopwatch.value = CurrentGame.getInstance().timer
+            }else{
+                gameVM.addGame(board = s.value, difficulty = difficulty, id = allGames.size + 1)
+            }
+        } else {
             CircularProgressIndicator(color = MaterialTheme.colors.secondary)
             gameVM.loadData(
                 difficulty.lowercase(Locale.getDefault())
@@ -83,9 +90,9 @@ fun GameLayout(difficulty: String) {
         GameButtons(activeGameVM, settingsVM)
         NumberButtons(activeGameVM)
 
-       // if (isCompleted) {
+        if (isCompleted) {
             CheckButton(activeGameVM)
-        //}
+        }
     }
 }
 
@@ -184,11 +191,11 @@ fun NumberButtons(
 
 @Composable
 fun GridButtons(
-    difficulty: String, settingsVM: SettingsVM, stopwatch: MutableState<StopWatch>,
-    activeGameVM: ActiveGameVM) {
+    difficulty: String, settingsVM: SettingsVM, stopwatch: StopWatch,
+    activeGameVM: ActiveGameVM
+) {
 
-    if(stopwatch.value.formattedTime == "")
-        stopwatch.value.start()
+    stopwatch.start()
 
 
     Row(
@@ -197,11 +204,11 @@ fun GridButtons(
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = stringResource(R.string.difficulty) +  ": " + difficulty)
+        Text(text = stringResource(R.string.difficulty) + ": " + difficulty)
         if (settingsVM.getTimerSetting())
-            Text(text = "Timer: " + stopwatch.value.formattedTime)
+            Text(text = "Timer: " + stopwatch.formattedTime)
         if (settingsVM.getScoreSetting())
-        Text(text = stringResource(R.string.score) + ": " + activeGameVM.getScore())
+            Text(text = stringResource(R.string.score) + ": " + activeGameVM.getScore())
     }
 }
 
@@ -215,7 +222,7 @@ fun CheckButton(activeGameVM: ActiveGameVM) {
     ) {
         Button(
             onClick = {
-                      activeGameVM.checkGrid()
+                activeGameVM.checkGrid()
             },
             border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
             shape = RoundedCornerShape(10.dp)

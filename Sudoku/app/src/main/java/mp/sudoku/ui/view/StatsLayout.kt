@@ -33,7 +33,7 @@ import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.StatisticVM
 import mp.sudoku.viewmodel.StopWatch
 
-@SuppressLint("UnrememberedMutableState")
+@SuppressLint("UnrememberedMutableState", "NewApi")
 @Preview(showBackground = true)
 @Composable
 fun StatsLayout() {
@@ -63,8 +63,7 @@ fun StatsLayout() {
             includeSettingsButton = false,
             includeGuideButton = false,
             activeGameVM = ActiveGameVM(),
-            stopWatch = StopWatch(),
-            //backgroundColor = color.value
+            stopWatch = StopWatch()
         )
 
         Column(
@@ -219,7 +218,7 @@ fun TimeStatsLayout(bestTime: String, averageTime: String) {
             shape = RoundedCornerShape(3.dp),
             //backgroundColor = MaterialTheme.colors.surface
         ) {
-            Column() {
+            Column {
                 TimeStatsRow(
                     description = stringResource(R.string.best_time),
                     value = bestTime
@@ -261,7 +260,7 @@ fun ScoreStatsLayout(bestScore: Float, averageScore: Float) {
             shape = RoundedCornerShape(3.dp),
             //backgroundColor = MaterialTheme.colors.surface
         ) {
-            Column() {
+            Column {
                 ScoreStatsRow(description = stringResource(R.string.best_score), value = bestScore)
                 ScoreStatsRow(description = stringResource(R.string.av_score), value = averageScore)
 

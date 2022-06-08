@@ -1,4 +1,4 @@
-package mp.sudoku.ui.view
+package mp.sudoku.ui.view.resume
 
 import android.app.Application
 import androidx.compose.foundation.BorderStroke
@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.model.Game
+import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.ui.view.game.Grid
 import mp.sudoku.viewmodel.*
@@ -105,7 +106,7 @@ fun StartedGameCard(game: Game = Game()) {
                     Text(text = "Timer:")
                 }
 
-                Column() {
+                Column {
                     Text(text = game.difficulty, color = Color.Gray)
                     Text(text = game.lastUpdate, color = Color.Gray)
                     Text(text = game.score.toString(), color = Color.Gray)

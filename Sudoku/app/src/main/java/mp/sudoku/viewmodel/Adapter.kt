@@ -48,11 +48,11 @@ class Adapter {
                 rows.removeAt(rows.size - 1)
             }
 
-            var values: MutableList<MutableList<String>> =
+            val values: MutableList<MutableList<String>> =
                 mutableListOf()     // this creates an empty mutableList
 
             rows.forEach { row ->
-                var rowValues: MutableList<String> =
+                val rowValues: MutableList<String> =
                     row.split(".")
                         .toMutableList()      // we get a list of strings (every value in the row)
                 values.add(rowValues)
@@ -85,7 +85,7 @@ class Adapter {
         }
 
         fun hashMapToList(hashMap: HashMap<Int, SudokuCell>): List<List<Int>> {
-            var list: MutableList<MutableList<Int?>> = mutableListOf(
+            val list: MutableList<MutableList<Int?>> = mutableListOf(
                 mutableListOf(),
                 mutableListOf(),
                 mutableListOf(),

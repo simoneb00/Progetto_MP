@@ -5,7 +5,7 @@ import mp.sudoku.viewmodel.StopWatch
 class CurrentGame {
     var current: Game? = null
     var solution: List<List<Int>>? = null
-    var timer: StopWatch? = null
+    var timer: StopWatch = StopWatch()
 
 
     companion object {

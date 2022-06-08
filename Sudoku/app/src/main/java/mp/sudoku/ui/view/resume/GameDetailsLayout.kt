@@ -29,7 +29,7 @@ fun GameDetailsLayout(game: Game) {
         GridPreview(game)
         DetailsRow(game)
         Button(onClick = {
-            CurrentGame.getInstance().getCurrent()!!.grid = game.grid
+            CurrentGame.getInstance().current = game
             ScreenRouter.navigateTo(ScreenRouter.RESUMESCREEN,ScreenRouter.GAMESCREEN)
         }) {
             Text(text = "Resume")

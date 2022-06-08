@@ -5,11 +5,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.*
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 /*
@@ -24,16 +27,25 @@ import java.util.*
 * */
 @Parcelize
 class StopWatch : Parcelable {
-    var formattedTime by mutableStateOf("")
+    @IgnoredOnParcel
+    var formattedTime by mutableStateOf("00:00")
 
+    @IgnoredOnParcel
     private var coroutineScope = CoroutineScope(Dispatchers.Main) //Do not change scope or it will broke
+    @IgnoredOnParcel
     private var isActive = false
 
+    @IgnoredOnParcel
     private var timeMillis = 0L
+    @IgnoredOnParcel
     private var lastTimestamp = 0L
 
     fun start() {
         if(isActive) return
+
+
+        timeMillis = formatString(formattedTime)
+
 
         coroutineScope.launch {
             lastTimestamp = System.currentTimeMillis()
@@ -76,4 +88,13 @@ class StopWatch : Parcelable {
         )
         return localDateTime.format(formatter)
     }
+
+    private fun formatString(time: String): Long {
+        var millis = 0L
+        val temp = time.split(":")
+        millis+=temp[0].toInt()*60*1000L
+        millis+=temp[1].toInt()*1000L
+        return millis
+    }
+
 }

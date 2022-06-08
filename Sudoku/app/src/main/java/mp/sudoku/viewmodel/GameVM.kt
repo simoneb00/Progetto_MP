@@ -2,6 +2,7 @@ package mp.sudoku.viewmodel
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.AndroidViewModel
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
@@ -73,13 +74,13 @@ class GameVM(application: Application) : AndroidViewModel(application) {
     }
 
     //Game func
-    fun addGame(board: List<List<String>>, difficulty: String){
+    fun addGame(board: List<List<String>>, difficulty: String, id: Int){
         val game = CurrentGame.getInstance().getCurrent()
         try{
             game!!.grid = Adapter.boardListToPersistenceFormat(Adapter.changeStringToInt(board))
             game.difficulty = difficulty
             game.lastUpdate = LocalDate.now().toString()
-
+            game.id = id
             repGame.insertGame(game)
             CurrentGame.getInstance().solution = solve(board)
         }catch(e:Exception){
@@ -97,6 +98,7 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             repGame.updateOne(CurrentGame.getInstance().getCurrent())
             CurrentGame.getInstance().deleteCurrent()
             CurrentGame.getInstance().solution = null
+            CurrentGame.getInstance().timer = StopWatch()
         }catch(e:Exception){
             e.printStackTrace()
         }
@@ -110,11 +112,12 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun resumeGame( ): List<List<String>> {
+    fun resumeGame(): List<List<String>> {
         var temp:List<List<String>> = listOf(listOf(""))
         try {
             temp = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().getCurrent()?.grid!!)
             CurrentGame.getInstance().solution = solve(temp)
+            CurrentGame.getInstance().timer.formattedTime = CurrentGame.getInstance().current!!.timer
         }catch (e:Exception){
             e.printStackTrace()
         }

@@ -164,7 +164,7 @@ fun SettingCard(
                 .fillMaxWidth()
                 .padding(10.dp),
         ) {
-            Column() {
+            Column {
                 Text(text = title, fontSize = 15.sp)
                 Text(text = description, fontSize = 12.sp, color = Color.Gray)
             }
