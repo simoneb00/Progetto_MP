@@ -95,6 +95,10 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             game.noteGrid = noteBoard
             game.timer = timer
             game.finished = finished
+            if(finished == 1)
+            {
+                game.score = calculateScore(game)
+            }
             game.lastUpdate = LocalDate.now().toString()
             repGame.updateOne(CurrentGame.getInstance().getCurrent())
             CurrentGame.getInstance().deleteCurrent()
@@ -103,6 +107,12 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         }catch(e:Exception){
             e.printStackTrace()
         }
+    }
+
+    private fun calculateScore(game: Game): Int {
+        var score = game.score
+        //TODO
+        return score
     }
 
     fun deleteOne(game: Game) {

@@ -40,6 +40,28 @@ class StopWatch : Parcelable {
     @IgnoredOnParcel
     private var lastTimestamp = 0L
 
+    companion object{
+        fun formatTime(timeMillis: Long): String {
+            val localDateTime = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(timeMillis),
+                ZoneId.systemDefault()
+            )
+            val formatter = DateTimeFormatter.ofPattern(
+                "mm:ss",
+                Locale.getDefault()
+            )
+            return localDateTime.format(formatter)
+        }
+
+        fun formatString(time: String): Long {
+            var millis = 0L
+            val temp = time.split(":")
+            millis+=temp[0].toInt()*60*1000L
+            millis+=temp[1].toInt()*1000L
+            return millis
+        }
+    }
+
     fun start() {
         if(isActive) return
 
@@ -77,24 +99,6 @@ class StopWatch : Parcelable {
         isActive = false
     }
 
-    private fun formatTime(timeMillis: Long): String {
-        val localDateTime = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(timeMillis),
-            ZoneId.systemDefault()
-        )
-        val formatter = DateTimeFormatter.ofPattern(
-            "mm:ss",
-            Locale.getDefault()
-        )
-        return localDateTime.format(formatter)
-    }
 
-    private fun formatString(time: String): Long {
-        var millis = 0L
-        val temp = time.split(":")
-        millis+=temp[0].toInt()*60*1000L
-        millis+=temp[1].toInt()*1000L
-        return millis
-    }
 
 }
