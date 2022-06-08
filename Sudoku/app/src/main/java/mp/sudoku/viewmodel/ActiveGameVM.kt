@@ -18,6 +18,8 @@ class ActiveGameVM {
     internal var notesMode =
         false                                              // true if user is inserting notes
 
+    internal var buttonsNumbers: MutableList<Int> = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    internal var subButtonsNumbers: ((MutableList<Int>) -> Unit)? = null
 
     fun initGrid(list: List<List<Int>>, isReadOnly: Boolean) {
         for (i in list.indices) {               // i = number of row
@@ -105,6 +107,7 @@ class ActiveGameVM {
         subGridState?.invoke(gridState)                        // commit grid changes to the view
     }
 
+
     fun getHint(): Int {
         var hint = 0
         try {
@@ -150,6 +153,10 @@ class ActiveGameVM {
         x: Int,
         y: Int
     ) {
+
+        this.buttonsNumbers = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
+        subButtonsNumbers?.invoke(buttonsNumbers)
+
         gridState.values.forEach {
             it.isSelected = false
             it.isInEvidence = false
@@ -160,6 +167,9 @@ class ActiveGameVM {
             if (it.x == x || it.y == y || it.nonet == gridState[x * 10 + y]?.nonet)
                 it.isInEvidence =
                     true         // put every cell on the same row/column/nonet in evidence
+
+            if (it.nonet == gridState[x * 10 + y]?.nonet)
+                updateNumberButtons(valToRemove = it.value)
 
         }
         subGridState?.invoke(gridState)     // commit changes to the view
@@ -225,6 +235,11 @@ class ActiveGameVM {
         }
 
         subGridState?.invoke(gridState)
+    }
+
+    fun updateNumberButtons(valToRemove: Int) {
+        this.buttonsNumbers.remove(valToRemove)
+        subButtonsNumbers?.invoke(this.buttonsNumbers)
     }
 }
 
