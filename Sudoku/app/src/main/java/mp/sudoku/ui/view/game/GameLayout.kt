@@ -145,7 +145,7 @@ fun GameButtons(
         if (settingsVM.getHintsSetting()) {
             IconButton(onClick = {
                 activeGameVM.incrementCounter()
-                activeGameVM.updateGrid(activeGameVM.getHint())
+                activeGameVM.getHint()
             }) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(

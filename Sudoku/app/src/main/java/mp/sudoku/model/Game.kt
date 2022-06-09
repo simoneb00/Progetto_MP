@@ -41,4 +41,8 @@ class Game {
     @NotNull
     @ColumnInfo(defaultValue = "empty")
     var noteGrid: String = "empty"
+
+    @NotNull
+    @ColumnInfo(defaultValue = "empty")
+    var solvedGrid: String = "empty"
 }

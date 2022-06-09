@@ -114,6 +114,9 @@ class ActiveGameVM {
         var hint = 0
         try {
             hint = CurrentGame.getInstance().solution!![getSelectedCellY()][getSelectedCellX()]
+            println(CurrentGame.getInstance().solution)
+            println(hint)
+            updateGrid(hint)
         } catch (e: Exception) {
             e.printStackTrace()
         }

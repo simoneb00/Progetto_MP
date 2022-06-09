@@ -47,6 +47,7 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             try {
                 if(solver.solve() == Result.Open)
                     solver.solveRecursive()
+                println(solver.solve())
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -80,6 +81,7 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             game.difficulty = difficulty
             game.lastUpdate = LocalDate.now().toString()
             game.id = id
+            game.solvedGrid = Adapter.boardListToPersistenceFormat(solve(board))
             repGame.insertGame(game)
             CurrentGame.getInstance().solution = solve(board)
         }catch(e:Exception){
@@ -132,7 +134,8 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         var temp:List<List<String>> = listOf(listOf(""))
         try {
             temp = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().getCurrent()?.grid!!)
-            CurrentGame.getInstance().solution = solve(temp)
+            CurrentGame.getInstance().solution = Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(
+                CurrentGame.getInstance().getCurrent()!!.solvedGrid))
             CurrentGame.getInstance().timer.formattedTime = CurrentGame.getInstance().current!!.timer
         }catch (e:Exception){
             e.printStackTrace()
