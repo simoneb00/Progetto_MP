@@ -21,6 +21,9 @@ class ActiveGameVM {
     internal var buttonsNumbers: MutableList<Int> = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
     internal var subButtonsNumbers: ((MutableList<Int>) -> Unit)? = null
 
+    internal var isGridCorrect: Boolean = false
+    internal var subCorrectState: ((Boolean) -> Unit)? = null
+
     fun initGrid(list: List<List<Int>>, isReadOnly: Boolean) {
         for (i in list.indices) {               // i = number of row
             for (j in list[i].indices) {        // j = number of element in the row
@@ -60,6 +63,8 @@ class ActiveGameVM {
         }
     }
 
+
+
     /* this function, given x and y coordinates of the cell, computes its nonet of belonging */
     private fun findNonet(x: Int, y: Int): Int {
         when {
@@ -92,7 +97,7 @@ class ActiveGameVM {
     ) {
         gridState.values.forEach {
             if (it.isSelected) {        // the following operations are going to be applied only to the selected cell
-                if (!it.isReadOnly) {
+                //if (!it.isReadOnly) {
                     if (notesMode) {        // if notes mode is on and the user inserts a note on the cell, the previously present value (if any) is cancelled
                         it.value = 0
                         it.note = value
@@ -100,13 +105,14 @@ class ActiveGameVM {
                         it.note = 0
                         it.value = value
                     }
-                }
+                //}
             }
         }
 
-        if (checkIfFull()) subCompletedState?.invoke(true)     // if the grid is full, inform the view to show the "Check" button
+        println(Adapter.hashMapToList(gridState))
 
         subGridState?.invoke(gridState)                        // commit grid changes to the view
+        if (checkIfFull()) subCompletedState?.invoke(true)     // if the grid is full, inform the view to show the "Check" button
     }
 
 
@@ -151,6 +157,12 @@ class ActiveGameVM {
             if (it.value == 0) bool = false
         }
 
+        if (bool) {
+            val isCorrect = this.checkGrid()
+            this.isGridCorrect = isCorrect
+            subCorrectState?.invoke(isCorrect)
+        }
+
         return bool
     }
 
@@ -158,6 +170,8 @@ class ActiveGameVM {
         x: Int,
         y: Int
     ) {
+
+        println(Adapter.hashMapToList(gridState))
 
         this.buttonsNumbers = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
         subButtonsNumbers?.invoke(buttonsNumbers)
@@ -212,7 +226,8 @@ class ActiveGameVM {
         return CurrentGame.getInstance().getCurrent()?.score ?: 100
     }
 
-    fun checkGrid() {
+    /*
+    fun checkGrid(): Boolean {
         var linearSolution = listOf<Int>()
         var linearGrid = listOf<Int>()
         var correct = true
@@ -237,9 +252,11 @@ class ActiveGameVM {
                     if (it.x == i % 9 && it.y == i / 9)
                         it.color = Color.Red
                 }
+
                 correct = false
             }
         }
+
 
         gridState.values.forEach {
             it.isSelected = false
@@ -247,6 +264,23 @@ class ActiveGameVM {
         }
 
         subGridState?.invoke(gridState)
+
+        println("linear grid is:" + linearGrid)
+
+        return correct
+    }
+
+     */
+
+    fun checkGrid(): Boolean {
+        val linearSolution = CurrentGame.getInstance().solution
+        val linearGrid = Adapter.hashMapToList(gridState)
+
+        println("grid is: " + linearGrid)
+        println("solution is" + linearSolution)
+
+        return linearSolution == linearGrid
+
     }
 
     private fun updateNumberButtons(valToRemove: Int) {

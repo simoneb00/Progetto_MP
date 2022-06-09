@@ -1,6 +1,7 @@
 package mp.sudoku.ui.view.game
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Application
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
@@ -28,7 +29,9 @@ import com.google.gson.reflect.TypeToken
 import mp.sudoku.R
 import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.volley.VolleyGrid
+import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
+import mp.sudoku.ui.view.components.updateGame
 import mp.sudoku.viewmodel.*
 import java.util.*
 
@@ -40,6 +43,7 @@ fun GameLayout(difficulty: String) {
     val settingsVM = SettingsVM(LocalContext.current.applicationContext)
     val activeGameVM = ActiveGameVM()
     var isCompleted by remember { mutableStateOf(activeGameVM.isCompleted, neverEqualPolicy()) }
+    var isCorrect by remember { mutableStateOf(activeGameVM.isGridCorrect, neverEqualPolicy()) }
     var resume = false
 
     val allGames by settingsVM.allGames.observeAsState(listOf())
@@ -52,7 +56,7 @@ fun GameLayout(difficulty: String) {
     val s = rememberSaveable {
         mutableStateOf(listOf(listOf("")))
     }
-    val stopwatch = rememberSaveable {
+    val stopWatch = rememberSaveable {
         mutableStateOf(StopWatch())
     }
 
@@ -61,21 +65,23 @@ fun GameLayout(difficulty: String) {
         resume = true
     }
 
-
-
     activeGameVM.subCompletedState = {
         isCompleted = it
+    }
+
+    activeGameVM.subCorrectState = {
+        isCorrect = it
     }
 
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         if (s.value != listOf(listOf(""))) {
-            TopBar(activeGameVM = activeGameVM, stopWatch = stopwatch.value)
-            GridButtons(difficulty, settingsVM, stopwatch.value, activeGameVM)
+            TopBar(activeGameVM = activeGameVM, stopWatch = stopWatch.value)
+            GridButtons(difficulty, settingsVM, stopWatch.value, activeGameVM)
             Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
             if (resume) {
-                stopwatch.value = CurrentGame.getInstance().timer
-            }else{
+                stopWatch.value = CurrentGame.getInstance().timer
+            } else {
                 gameVM.addGame(board = s.value, difficulty = difficulty, id = allGames.size + 1)
             }
         } else {
@@ -93,7 +99,30 @@ fun GameLayout(difficulty: String) {
         NumberButtons(activeGameVM)
 
         if (isCompleted) {
-            CheckButton(activeGameVM)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    onClick = {
+                        if (isCorrect) {
+                            ScreenRouter.navigateTo(destination = ScreenRouter.WINPOPUP)
+                            gameVM.updateGame(
+                                board = CurrentGame.getInstance().getCurrent()!!.grid,
+                                noteBoard = "",
+                                timer = CurrentGame.getInstance().getCurrent()!!.timer,
+                                finished = 1
+                            )
+                        }
+                    },
+                    border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text(text = "Check", fontSize = 20.sp)
+                }
+            }
         }
     }
 }
@@ -212,14 +241,20 @@ fun GridButtons(
 
     stopwatch.start()
 
-    BoxWithConstraints (contentAlignment = Alignment.Center, modifier = Modifier.padding(top = 10.dp, bottom = 5.dp)) {
+    BoxWithConstraints(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.padding(top = 10.dp, bottom = 5.dp)
+    ) {
         val screenWidth = with(LocalDensity.current) {
             constraints.maxWidth.toDp()
         }
 
         val margin = 15
 
-        Row(modifier = Modifier.width(screenWidth - margin.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.width(screenWidth - margin.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = stringResource(R.string.difficulty) + ": " + difficulty)
             if (settingsVM.getTimerSetting())
                 Text(text = "Timer: " + stopwatch.formattedTime)
@@ -231,6 +266,7 @@ fun GridButtons(
 
 @Composable
 fun CheckButton(activeGameVM: ActiveGameVM) {
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -239,7 +275,7 @@ fun CheckButton(activeGameVM: ActiveGameVM) {
     ) {
         Button(
             onClick = {
-                activeGameVM.checkGrid()
+                println(activeGameVM.isGridCorrect)
             },
             border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
             shape = RoundedCornerShape(10.dp)

@@ -89,7 +89,7 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateGame(board: String, noteBoard: String, timer: String,finished:Int = 0) {
+    fun updateGame(board: String, noteBoard: String, timer: String, finished: Int = 0) {
         val game = CurrentGame.getInstance().getCurrent()
         try{
             game!!.grid = board

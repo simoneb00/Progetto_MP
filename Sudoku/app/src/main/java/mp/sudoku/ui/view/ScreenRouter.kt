@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import mp.sudoku.model.Game
 import mp.sudoku.ui.view.ScreenRouter.game
 import mp.sudoku.ui.view.game.GameLayout
+import mp.sudoku.ui.view.game.WinPopUp
 import mp.sudoku.ui.view.resume.GameDetailsLayout
 import mp.sudoku.ui.view.resume.ResumeLayout
 
@@ -24,6 +25,7 @@ object ScreenRouter {
     const val GAMESCREEN = 6
     const val RESUMESCREEN = 7
     const val GAMEDETAILSSCREEN = 8
+    const val WINPOPUP = 9
 
 
     fun navigateTo(
@@ -47,6 +49,7 @@ fun MainScreen() {
         6 -> GameLayout(ScreenRouter.difficulty.value)
         7 -> ResumeLayout()
         8 -> GameDetailsLayout(game = game)
+        9 -> WinPopUp()
     }
 }
 
