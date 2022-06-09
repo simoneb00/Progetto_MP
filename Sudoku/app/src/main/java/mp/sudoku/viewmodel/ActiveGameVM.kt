@@ -10,6 +10,9 @@ class ActiveGameVM {
     internal var subGridState: ((HashMap<Int, SudokuCell>) -> Unit)? =
         null     // this is useful to commit changes to the view
 
+    internal var subGridState1: ((HashMap<Int, SudokuCell>) -> Unit)? =
+        null     // this is useful to commit changes to the view
+
     internal var isCompleted =
         false                                            // true if grid is full
     internal var subCompletedState: ((Boolean) -> Unit)? =
@@ -109,9 +112,8 @@ class ActiveGameVM {
             }
         }
 
-        println(Adapter.hashMapToList(gridState))
-
         subGridState?.invoke(gridState)                        // commit grid changes to the view
+        subGridState1?.invoke(gridState)                        // commit grid changes to the view
         if (checkIfFull()) subCompletedState?.invoke(true)     // if the grid is full, inform the view to show the "Check" button
     }
 
@@ -171,8 +173,6 @@ class ActiveGameVM {
         y: Int
     ) {
 
-        println(Adapter.hashMapToList(gridState))
-
         this.buttonsNumbers = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
         subButtonsNumbers?.invoke(buttonsNumbers)
 
@@ -199,6 +199,7 @@ class ActiveGameVM {
 
         }
         subGridState?.invoke(gridState)     // commit changes to the view
+        subGridState1?.invoke(gridState)     // commit changes to the view
     }
 
     fun cancelCell() {
@@ -209,6 +210,7 @@ class ActiveGameVM {
             }
         }
         subGridState?.invoke(gridState)     // commit changes to the view
+        subGridState1?.invoke(gridState)     // commit changes to the view
     }
 
     fun incrementCounter() {
@@ -272,15 +274,11 @@ class ActiveGameVM {
 
      */
 
-    fun checkGrid(): Boolean {
+    private fun checkGrid(): Boolean {
         val linearSolution = CurrentGame.getInstance().solution
         val linearGrid = Adapter.hashMapToList(gridState)
 
-        println("grid is: " + linearGrid)
-        println("solution is" + linearSolution)
-
         return linearSolution == linearGrid
-
     }
 
     private fun updateNumberButtons(valToRemove: Int) {

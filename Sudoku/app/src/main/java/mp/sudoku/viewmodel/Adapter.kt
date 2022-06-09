@@ -24,6 +24,30 @@ class Adapter {
             return newList
         }
 
+        fun intListToStringList(intList: List<List<Int>>): List<List<String>> {
+            val stringList: MutableList<MutableList<String>> = mutableListOf(
+                mutableListOf(),
+                mutableListOf(),
+                mutableListOf(),
+                mutableListOf(),
+                mutableListOf(),
+                mutableListOf(),
+                mutableListOf(),
+                mutableListOf(),
+                mutableListOf(),
+            )
+
+            intList.forEach { list ->
+                val listIndex = intList.indexOf(list)
+                list.forEach { value ->
+                    val valueIndex = list.indexOf(value)
+                    stringList[listIndex].add(index = valueIndex, element = value.toString())
+                }
+            }
+
+            return stringList
+        }
+
         /*
         *   the board in persistence will be saved in the following format:
         *   *1.2.3.4.5.6.7.8.9*1.2.3.4.5.6.7.8.9*... (i.e. each row is wrapped into * and each value is separated by dots)

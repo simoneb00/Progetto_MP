@@ -3,7 +3,10 @@ package mp.sudoku.ui.view.game
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -16,6 +19,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -73,6 +77,14 @@ fun GameLayout(difficulty: String) {
         isCorrect = it
     }
 
+    val gridState = rememberSaveable {
+        mutableStateOf(activeGameVM.gridState, neverEqualPolicy())
+    }
+
+    activeGameVM.subGridState1 = {
+        gridState.value = it
+    }
+
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         if (s.value != listOf(listOf(""))) {
@@ -107,6 +119,8 @@ fun GameLayout(difficulty: String) {
             ) {
                 Button(
                     onClick = {
+                        println(s.value)
+
                         if (isCorrect) {
                             ScreenRouter.navigateTo(destination = ScreenRouter.WINPOPUP)
                             gameVM.updateGame(
@@ -116,6 +130,8 @@ fun GameLayout(difficulty: String) {
                                 finished = 1
                             )
                         }
+
+                        println("Observed Grid: ${Adapter.hashMapToList(gridState.value)}")
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
                     shape = RoundedCornerShape(10.dp)
@@ -264,23 +280,4 @@ fun GridButtons(
     }
 }
 
-@Composable
-fun CheckButton(activeGameVM: ActiveGameVM) {
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 20.dp),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Button(
-            onClick = {
-                println(activeGameVM.isGridCorrect)
-            },
-            border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
-            shape = RoundedCornerShape(10.dp)
-        ) {
-            Text(text = "Check", fontSize = 20.sp)
-        }
-    }
-}

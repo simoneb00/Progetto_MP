@@ -26,10 +26,11 @@ import mp.sudoku.viewmodel.StopWatch
 @Preview(showBackground = true)
 @Composable
 fun HomeLayout() {
+
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            //.verticalScroll(rememberScrollState())
+        //.verticalScroll(rememberScrollState())
     ) {
         TopBar(
             includeBackButton = false,
