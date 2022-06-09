@@ -1,14 +1,19 @@
 package mp.sudoku.ui.view.resume
 
+import android.app.Application
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,6 +24,7 @@ import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.ui.view.game.Grid
 import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.Adapter
+import mp.sudoku.viewmodel.GameVM
 import mp.sudoku.viewmodel.StopWatch
 
 @Composable
@@ -28,10 +34,50 @@ fun GameDetailsLayout(game: Game) {
         Title(game)
         GridPreview(game)
         DetailsRow(game)
+        ButtonsRow(game)
+        /*
         Button(onClick = {
             CurrentGame.getInstance().current = game
-            ScreenRouter.navigateTo(ScreenRouter.RESUMESCREEN,ScreenRouter.GAMESCREEN)
+            ScreenRouter.navigateTo(ScreenRouter.RESUMESCREEN, ScreenRouter.GAMESCREEN)
         }) {
+            Text(text = "Resume")
+        }
+
+         */
+    }
+}
+
+@Composable
+fun ButtonsRow(game: Game) {
+
+    val gameVM = GameVM(LocalContext.current.applicationContext as Application)
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp, top = 10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        IconButton(
+            onClick = {
+                gameVM.deleteOne(game)
+                ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "",
+                tint = MaterialTheme.colors.secondary
+            )
+        }
+        Button(
+            onClick = {
+                CurrentGame.getInstance().current = game
+                ScreenRouter.navigateTo(ScreenRouter.RESUMESCREEN, ScreenRouter.GAMESCREEN)
+            },
+            border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
+            shape = RoundedCornerShape(10.dp)
+        ) {
             Text(text = "Resume")
         }
     }
@@ -59,7 +105,7 @@ fun DetailsRow(game: Game) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp)
+            .padding(start = 20.dp, end = 20.dp, top = 10.dp)
     ) {
 
         Column(
@@ -68,81 +114,32 @@ fun DetailsRow(game: Game) {
                 .padding(top = 10.dp) //, end = 20.dp, start = 20.dp)
                 .height(height.value)
         ) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(30.dp),
-                border = BorderStroke(0.5.dp, MaterialTheme.colors.secondary)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "Difficulty:", modifier = Modifier.padding(start = 5.dp))
-                    Text(
-                        text = game.difficulty,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(end = 5.dp)
-                    )
-                }
-            }
+            DetailRowCard(name = "Difficulty", value = game.difficulty)
+            DetailRowCard(name = "Last Update", value = game.lastUpdate)
+            DetailRowCard(name = "Score", value = game.score.toString())
+            DetailRowCard(name = "Timer", value = game.timer)
+        }
+    }
+}
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(30.dp),
-                border = BorderStroke(0.5.dp, MaterialTheme.colors.secondary)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "Last Update:", modifier = Modifier.padding(start = 5.dp))
-                    Text(
-                        text = game.lastUpdate,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(end = 5.dp)
-                    )
-                }
-            }
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(30.dp),
-                border = BorderStroke(0.5.dp, MaterialTheme.colors.secondary)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "Score:", modifier = Modifier.padding(start = 5.dp))
-                    Text(
-                        text = game.score.toString(),
-                        color = Color.Gray,
-                        modifier = Modifier.padding(end = 5.dp)
-                    )
-                }
-            }
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(30.dp),
-                border = BorderStroke(0.5.dp, MaterialTheme.colors.secondary)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "Timer:", modifier = Modifier.padding(start = 5.dp))
-                    Text(
-                        text = game.timer,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(end = 5.dp)
-                    )
-                }
-            }
+@Composable
+fun DetailRowCard(name: String, value: String) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(30.dp),
+        border = BorderStroke(0.2.dp, MaterialTheme.colors.secondary)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = name, modifier = Modifier.padding(start = 5.dp))
+            Text(
+                text = value,
+                color = Color.Gray,
+                modifier = Modifier.padding(end = 5.dp)
+            )
         }
     }
 }

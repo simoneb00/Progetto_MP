@@ -108,14 +108,14 @@ fun SudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, Su
                     }
                 )
                 .clickable {
-                    if (!cell.isReadOnly)
+                    //if (!cell.isReadOnly)
                         vm.selectCell(cell.x, cell.y)
                 },
             contentAlignment = if (note == "") Alignment.Center else Alignment.TopStart
         ) {
             if (note == "") {
                 Text(
-                    text = text,color = cell.color
+                    text = text, color = MaterialTheme.colors.onPrimary
                 )
             } else {
                 Text(

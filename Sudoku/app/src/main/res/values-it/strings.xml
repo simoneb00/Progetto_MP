@@ -42,4 +42,5 @@
     <string name="theme">Tema</string>
     <string name="hints_setting_desc">Abilita o disabilita i suggerimenti durante la partita</string>
     <string name="difficulty">Difficoltà</string>
+    <string name="no_started_games_found">Non ci sono partite iniziate</string>
 </resources>

@@ -92,12 +92,14 @@ class ActiveGameVM {
     ) {
         gridState.values.forEach {
             if (it.isSelected) {        // the following operations are going to be applied only to the selected cell
-                if (notesMode) {        // if notes mode is on and the user inserts a note on the cell, the previously present value (if any) is cancelled
-                    it.value = 0
-                    it.note = value
-                } else {                // if notes mode is off and the user inserts a value on the cell, the previously present note (if any) is cancelled
-                    it.note = 0
-                    it.value = value
+                if (!it.isReadOnly) {
+                    if (notesMode) {        // if notes mode is on and the user inserts a note on the cell, the previously present value (if any) is cancelled
+                        it.value = 0
+                        it.note = value
+                    } else {                // if notes mode is off and the user inserts a value on the cell, the previously present note (if any) is cancelled
+                        it.note = 0
+                        it.value = value
+                    }
                 }
             }
         }
@@ -168,8 +170,15 @@ class ActiveGameVM {
                 it.isInEvidence =
                     true         // put every cell on the same row/column/nonet in evidence
 
+            if (gridState[x * 10 + y]?.value != 0) {
+                if (it.value == gridState[x * 10 + y]?.value)
+                    it.isInEvidence = true
+            }
+
             if (it.nonet == gridState[x * 10 + y]?.nonet)
                 updateNumberButtons(valToRemove = it.value)
+
+
 
         }
         subGridState?.invoke(gridState)     // commit changes to the view
