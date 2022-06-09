@@ -8,8 +8,6 @@ import mp.sudoku.model.Game
 import mp.sudoku.model.database.DBGame
 import mp.sudoku.viewmodel.repository.RepositoryGame
 import java.time.Duration
-import java.time.LocalTime
-import java.time.temporal.TemporalAmount
 import kotlin.time.toKotlinDuration
 
 /*
@@ -91,7 +89,7 @@ class StatisticVM(application: Application) {
 
             if (finishedGames.isNotEmpty()) {
                 for (g in finishedGames) {
-                    list += timeToLocalTime(g.timer)
+                    (list + timeToLocalTime(g.timer)).also { list = it }
                 }
 
                 var totalDuration: Duration = Duration.ofSeconds(0)

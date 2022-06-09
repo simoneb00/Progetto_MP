@@ -2,7 +2,6 @@ package mp.sudoku.viewmodel
 
 import android.app.Application
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.AndroidViewModel
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
@@ -103,6 +102,7 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             repGame.updateOne(CurrentGame.getInstance().getCurrent())
             CurrentGame.getInstance().deleteCurrent()
             CurrentGame.getInstance().solution = null
+            CurrentGame.getInstance().timer = StopWatch()
         }catch(e:Exception){
             e.printStackTrace()
         }
@@ -110,12 +110,12 @@ class GameVM(application: Application) : AndroidViewModel(application) {
 
     private fun calculateScore(game: Game): Int {
         var score = game.score
-        var constBonus = 20
+        val constBonus = 20
         score+=(10000/StopWatch.formatString(game.timer)).toInt()
         when(game.difficulty){
-            "easy" -> score+=(20*1)
-            "medium" -> score+=(20*2)
-            "hard" -> score+=(20*3)
+            "easy" -> score+=(constBonus*1)
+            "medium" -> score+=(constBonus*2)
+            "hard" -> score+=(constBonus*3)
         }
         return score
     }

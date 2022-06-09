@@ -246,7 +246,7 @@ class ActiveGameVM {
         subGridState?.invoke(gridState)
     }
 
-    fun updateNumberButtons(valToRemove: Int) {
+    private fun updateNumberButtons(valToRemove: Int) {
         this.buttonsNumbers.remove(valToRemove)
         subButtonsNumbers?.invoke(this.buttonsNumbers)
     }

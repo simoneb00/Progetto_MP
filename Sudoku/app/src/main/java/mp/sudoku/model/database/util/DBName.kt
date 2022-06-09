@@ -1,8 +1,8 @@
 package mp.sudoku.model.database.util
 
-class DBName() {
+class DBName {
     companion object{
-        val DBNAME:String = "sudoku.db"
+        const val DBNAME:String = "sudoku.db"
     }
 
 }

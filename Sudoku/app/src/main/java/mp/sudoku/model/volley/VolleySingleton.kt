@@ -13,7 +13,7 @@ class VolleySingleton {
     private var mRequestQueue: RequestQueue? = null
 
     companion object {
-        var mInstance: VolleySingleton? = null
+        private var mInstance: VolleySingleton? = null
 
         @Synchronized
         fun getInstance(): VolleySingleton {

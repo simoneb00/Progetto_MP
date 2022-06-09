@@ -9,7 +9,7 @@ class CurrentGame {
 
 
     companion object {
-        var mInstance: CurrentGame? = null
+        private var mInstance: CurrentGame? = null
 
         @Synchronized
         fun getInstance(): CurrentGame {
@@ -24,9 +24,6 @@ class CurrentGame {
     fun getCurrent(): Game? {
         if (current == null) {
             current = Game()
-        }
-        if(timer == null) {
-            timer = StopWatch()
         }
         return current!!
     }

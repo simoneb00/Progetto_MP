@@ -2,12 +2,14 @@ package mp.sudoku.ui.view.resume
 
 import android.app.Application
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -179,7 +181,7 @@ fun StartedGameCard1(game: Game = Game()) {
                 .fillMaxWidth()
                 .padding(start = 20.dp, end = 20.dp)
         ) {
-            Column() {
+            Column {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
