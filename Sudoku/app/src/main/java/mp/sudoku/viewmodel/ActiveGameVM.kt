@@ -67,7 +67,6 @@ class ActiveGameVM {
     }
 
 
-
     /* this function, given x and y coordinates of the cell, computes its nonet of belonging */
     private fun findNonet(x: Int, y: Int): Int {
         when {
@@ -101,13 +100,13 @@ class ActiveGameVM {
         gridState.values.forEach {
             if (it.isSelected) {        // the following operations are going to be applied only to the selected cell
                 //if (!it.isReadOnly) {
-                    if (notesMode) {        // if notes mode is on and the user inserts a note on the cell, the previously present value (if any) is cancelled
-                        it.value = 0
-                        it.note = value
-                    } else {                // if notes mode is off and the user inserts a value on the cell, the previously present note (if any) is cancelled
-                        it.note = 0
-                        it.value = value
-                    }
+                if (notesMode) {        // if notes mode is on and the user inserts a note on the cell, the previously present value (if any) is cancelled
+                    it.value = 0
+                    it.note = value
+                } else {                // if notes mode is off and the user inserts a value on the cell, the previously present note (if any) is cancelled
+                    it.note = 0
+                    it.value = value
+                }
                 //}
             }
         }
@@ -121,8 +120,9 @@ class ActiveGameVM {
     fun getHint(): Int {
         var hint = 0
         try {
-            hint = CurrentGame.getInstance().solution!![getSelectedCellY()][getSelectedCellX()]
-            println(CurrentGame.getInstance().solution)
+            hint =
+                Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.solvedGrid))[getSelectedCellY()][getSelectedCellX()]
+            println(CurrentGame.getInstance().current!!.solvedGrid)
             println(hint)
             updateGrid(hint)
         } catch (e: Exception) {
@@ -198,7 +198,6 @@ class ActiveGameVM {
                 updateNumberButtons(valToRemove = it.value)
 
 
-
         }
         subGridState?.invoke(gridState)     // commit changes to the view
         subGridState1?.invoke(gridState)     // commit changes to the view
@@ -230,52 +229,57 @@ class ActiveGameVM {
         return CurrentGame.getInstance().getCurrent()?.score ?: 100
     }
 
-    /*
+
     fun checkGrid(): Boolean {
         var linearSolution = listOf<Int>()
         var linearGrid = listOf<Int>()
         var correct = true
 
-        CurrentGame.getInstance().solution!!.forEach { i ->
-            for (j in i) {
-                linearSolution.plus(j).also { linearSolution = it }
-            }
-        }
-
-        Adapter.hashMapToList(gridState).forEach { i ->
-            for (j in i) {
-                linearGrid.plus(j).also { linearGrid = it }
-            }
-        }
-
-
-        (linearGrid.indices).forEach { i ->
-            if (linearGrid[i] != linearSolution[i] && linearGrid[i] != 0) {
-
-                gridState.values.forEach {
-                    if (it.x == i % 9 && it.y == i / 9)
-                        it.color = Color.Red
+        try {
+            CurrentGame.getInstance().solution!!.forEach { i ->
+                for (j in i) {
+                    linearSolution.plus(j).also { linearSolution = it }
                 }
-
-                correct = false
             }
+
+            Adapter.hashMapToList(gridState).forEach { i ->
+                for (j in i) {
+                    linearGrid.plus(j).also { linearGrid = it }
+                }
+            }
+
+
+            (linearGrid.indices).forEach { i ->
+                if (linearGrid[i] != linearSolution[i] && linearGrid[i] != 0) {
+
+                    gridState.values.forEach {
+                        if (it.x == i % 9 && it.y == i / 9)
+                            it.color = "Red"
+                    }
+
+                    correct = false
+                }
+            }
+
+
+            gridState.values.forEach {
+                it.isSelected = false
+                it.isInEvidence = false
+            }
+
+            subGridState?.invoke(gridState)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
 
-        gridState.values.forEach {
-            it.isSelected = false
-            it.isInEvidence = false
-        }
 
-        subGridState?.invoke(gridState)
-
-        println("linear grid is:" + linearGrid)
 
         return correct
     }
 
-     */
 
+/*
     fun checkGrid(): Boolean {
         val linearSolution = CurrentGame.getInstance().solution
         val linearGrid = Adapter.hashMapToList(gridState)
@@ -297,7 +301,7 @@ class ActiveGameVM {
             return isCorrect
         }
 
-    }
+    }*/
 
     private fun updateNumberButtons(valToRemove: Int) {
         this.buttonsNumbers.remove(valToRemove)

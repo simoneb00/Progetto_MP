@@ -50,7 +50,6 @@ fun RulesLayout() {
     TopBar(
         includeSettingsButton = false,
         includeGuideButton = false,
-        activeGameVM = ActiveGameVM(),
         stopWatch = StopWatch()
     )
 

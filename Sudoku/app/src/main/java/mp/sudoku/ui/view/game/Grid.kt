@@ -23,7 +23,7 @@ import mp.sudoku.model.SudokuCell
 import mp.sudoku.viewmodel.ActiveGameVM
 
 
-/*@SuppressLint("MutableCollectionMutableState")
+@SuppressLint("MutableCollectionMutableState")
 @Composable
 fun Grid(
     values: List<List<Int>>,
@@ -129,4 +129,4 @@ fun SudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, Su
             }
         }
     }
-}*/
+}

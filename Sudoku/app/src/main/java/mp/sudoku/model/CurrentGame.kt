@@ -33,7 +33,7 @@ class CurrentGame {
     }
 
     fun deleteCurrent(){
-        current = null
+        this.current = null
     }
 
 }

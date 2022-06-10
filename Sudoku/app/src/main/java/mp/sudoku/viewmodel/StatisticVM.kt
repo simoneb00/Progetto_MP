@@ -77,9 +77,6 @@ class StatisticVM(application: Application) {
             val minutes: Int = list[0].toInt()
             val seconds: Int = list[1].toInt()
 
-            println(time)
-            println(minutes * 60 + seconds)
-
             return (minutes * 60 + seconds)
         }
 

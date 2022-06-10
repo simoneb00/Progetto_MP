@@ -20,6 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import mp.sudoku.model.CurrentGame
+import mp.sudoku.model.SudokuCell
 import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.Adapter
@@ -32,8 +34,8 @@ fun TopBar(
     includeSettingsButton: Boolean = true,
     includeGuideButton: Boolean = true,
     backgroundColor: Color = MaterialTheme.colors.background,
-    activeGameVM: ActiveGameVM,
-    stopWatch: StopWatch
+    stopWatch: StopWatch,
+    gridState: HashMap<Int, SudokuCell> = HashMap()
 ) {
 
     val activity = LocalContext.current as Activity?
@@ -43,9 +45,18 @@ fun TopBar(
             ScreenRouter.HOMESCREEN -> activity?.finish()
             ScreenRouter.DIFFICULTYSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
             ScreenRouter.RESUMESCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
-            ScreenRouter.GAMESCREEN -> updateGame(activity!!.applicationContext as Application,activeGameVM,stopWatch)
+            ScreenRouter.GAMESCREEN -> updateGame(
+                activity!!.applicationContext as Application,
+                gridState,
+                stopWatch
+            )
             ScreenRouter.GAMEDETAILSSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
-            else -> ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value, source = ScreenRouter.currentScreen.value)
+            else -> {
+                ScreenRouter.navigateTo(
+                    destination = ScreenRouter.previousScreen.value,
+                    source = ScreenRouter.currentScreen.value
+                )
+            }
         }
     }
 
@@ -65,11 +76,14 @@ fun TopBar(
                     ScreenRouter.RESUMESCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
                     ScreenRouter.GAMESCREEN -> updateGame(
                         activity!!.applicationContext as Application,
-                        activeGameVM,
+                        gridState,
                         stopWatch
                     )
                     ScreenRouter.GAMEDETAILSSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
-                    else -> ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value, source = ScreenRouter.currentScreen.value)
+                    else -> ScreenRouter.navigateTo(
+                        destination = ScreenRouter.previousScreen.value,
+                        source = ScreenRouter.currentScreen.value
+                    )
                 }
             },
                 modifier = Modifier
@@ -118,20 +132,22 @@ fun TopBar(
 }
 
 
-fun updateGame(application: Application, activeGameVM: ActiveGameVM, stopWatch: StopWatch) {
+fun updateGame(application: Application, gridState: HashMap<Int, SudokuCell>, stopWatch: StopWatch) {
     try {
         val game = GameVM(application)
-        val thisBoard = Adapter.boardListToPersistenceFormat(Adapter.hashMapToList(activeGameVM.gridState))
-        val thisNote = Adapter.hashMapToList(activeGameVM.gridState)
+        val thisBoard =
+            Adapter.boardListToPersistenceFormat(Adapter.hashMapToList(gridState))
+        val thisNote = Adapter.hashMapToList(gridState)
 
+        ScreenRouter.game.value = listOf(listOf(""))
 
         game.updateGame(
             board = thisBoard,
             noteBoard = Adapter.boardListToPersistenceFormat(thisNote),
-            timer = stopWatch.formattedTime,
-            deleteCurrent = false
+            timer = stopWatch.formattedTime
         )
-    }catch (e:Exception){
+
+    } catch (e: Exception) {
         e.printStackTrace()
     }
 

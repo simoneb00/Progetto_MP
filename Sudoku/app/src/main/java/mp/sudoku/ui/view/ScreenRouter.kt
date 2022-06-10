@@ -3,20 +3,19 @@ package mp.sudoku.ui.view
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import mp.sudoku.model.Game
-import mp.sudoku.ui.view.ScreenRouter.game
-import mp.sudoku.ui.view.game.GameLayout1
-import mp.sudoku.ui.view.game.LostGamePopUp
+import mp.sudoku.ui.view.game.GameLayout
+import mp.sudoku.ui.view.game.TempGameLayout
 import mp.sudoku.ui.view.game.WonGamePopUp
 import mp.sudoku.ui.view.resume.GameDetailsLayout
 import mp.sudoku.ui.view.resume.ResumeLayout
 
 
 object ScreenRouter {
+    val game: MutableState<List<List<String>>> = mutableStateOf(listOf(listOf("")))
     var currentScreen: MutableState<Int> = mutableStateOf(1)
     var previousScreen: MutableState<Int> = mutableStateOf(1)
     var difficulty: MutableState<String> = mutableStateOf("easy")
-    var game: Game = Game()
+
 
     const val HOMESCREEN = 1
     const val DIFFICULTYSCREEN = 2
@@ -48,11 +47,11 @@ fun MainScreen() {
         3 -> SettingsLayout()
         4 -> StatsLayout()
         5 -> RulesLayout()
-        6 -> GameLayout1(ScreenRouter.difficulty.value)
+        6 -> TempGameLayout(ScreenRouter.difficulty.value)
         7 -> ResumeLayout()
-        8 -> GameDetailsLayout(game = game)
+        8 -> GameDetailsLayout()
         9 -> WonGamePopUp()
-        10 -> LostGamePopUp()
+        //10 -> LostGamePopUp()
     }
 }
 

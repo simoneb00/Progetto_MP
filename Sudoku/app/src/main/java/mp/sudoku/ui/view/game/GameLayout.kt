@@ -28,21 +28,26 @@ import com.google.gson.reflect.TypeToken
 import mp.sudoku.R
 import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.volley.VolleyGrid
-import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.*
 import java.util.*
 
 
-/*@SuppressLint("CoroutineCreationDuringComposition")
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun GameLayout(difficulty: String) {
+fun GameLayout(
+    difficulty: String,
+    gameGrid: List<List<String>> = listOf(listOf("")),
+    resume:Boolean = false
+) {
 
     val settingsVM = SettingsVM(LocalContext.current.applicationContext)
     val activeGameVM = ActiveGameVM()
     var isCompleted by remember { mutableStateOf(activeGameVM.isCompleted, neverEqualPolicy()) }
     var isCorrect by remember { mutableStateOf(activeGameVM.isGridCorrect, neverEqualPolicy()) }
-    var resume = false
+    val resume = rememberSaveable {
+        mutableStateOf(resume)
+    }
 
     val allGames by settingsVM.allGames.observeAsState(listOf())
 
@@ -52,16 +57,12 @@ fun GameLayout(difficulty: String) {
     )
 
     val s = rememberSaveable {
-        mutableStateOf(listOf(listOf("")))
+        mutableStateOf(gameGrid)
     }
     val stopWatch = rememberSaveable {
         mutableStateOf(StopWatch())
     }
 
-    if (CurrentGame.getInstance().getOnlyCurrent() != null) {
-        s.value = gameVM.resumeGame()
-        resume = true
-    }
 
     activeGameVM.subCompletedState = {
         isCompleted = it
@@ -75,6 +76,7 @@ fun GameLayout(difficulty: String) {
         mutableStateOf(activeGameVM.gridState, neverEqualPolicy())
     }
 
+
     activeGameVM.subGridState1 = {
         gridState.value = it
     }
@@ -82,19 +84,20 @@ fun GameLayout(difficulty: String) {
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         if (s.value != listOf(listOf(""))) {
-            TopBar(activeGameVM = activeGameVM, stopWatch = stopWatch.value)
+            TopBar(gridState = activeGameVM.gridState, stopWatch = stopWatch.value)
             GridButtons(difficulty, settingsVM, stopWatch.value, activeGameVM)
             if (!isCompleted)
                 Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
             else
                 Grid(values = Adapter.hashMapToList(gridState.value), activeGameVM = activeGameVM)
-            if (resume) {
+            if (resume.value) {
                 stopWatch.value = CurrentGame.getInstance().timer
             } else {
                 gameVM.addGame(board = s.value, difficulty = difficulty, id = allGames.size + 1)
+                resume.value = true
             }
         } else {
-            CircularProgressIndicator(color = MaterialTheme.colors.secondary)
+            CircularProgressIndicator(color = MaterialTheme.colors.secondary,modifier = Modifier.padding(top = 8.dp))
             gameVM.loadData(
                 difficulty.lowercase(Locale.getDefault())
             ) {
@@ -105,7 +108,19 @@ fun GameLayout(difficulty: String) {
             }
         }
         GameButtons(activeGameVM, settingsVM)
+
         NumberButtons(activeGameVM)
+
+        if (isCorrect && isCompleted) {
+            WonGamePopUp()
+            gameVM.updateGame(
+                board = CurrentGame.getInstance().getCurrent()!!.grid,
+                noteBoard = CurrentGame.getInstance().getCurrent()!!.grid,
+                timer = CurrentGame.getInstance().getCurrent()!!.timer,
+                finished = 1
+            )
+        }
+
 
         if (isCompleted) {
             Row(
@@ -116,21 +131,7 @@ fun GameLayout(difficulty: String) {
             ) {
                 Button(
                     onClick = {
-                        println(s.value)
-
-                        if (isCorrect) {
-                            ScreenRouter.navigateTo(destination = ScreenRouter.WONGAMEPOPUP)
-                            gameVM.updateGame(
-                                board = CurrentGame.getInstance().getCurrent()!!.grid,
-                                noteBoard = "",
-                                timer = CurrentGame.getInstance().getCurrent()!!.timer,
-                                finished = 1
-                            )
-                        } else {
-                            ScreenRouter.navigateTo(destination = ScreenRouter.LOSTGAMEPOPUP)
-                        }
-
-                        println("Observed Grid: ${Adapter.hashMapToList(gridState.value)}")
+                        isCorrect = activeGameVM.checkGrid()
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
                     shape = RoundedCornerShape(10.dp)
@@ -277,6 +278,6 @@ fun GridButtons(
                 Text(text = stringResource(R.string.score) + ": " + activeGameVM.getScore())
         }
     }
-}*/
+}
 
 

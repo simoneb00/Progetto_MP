@@ -28,7 +28,6 @@ import mp.sudoku.model.Game
 import mp.sudoku.ui.theme.isDarkModeOn
 import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
-import mp.sudoku.ui.view.game.Grid
 import mp.sudoku.ui.view.game.ReadOnlyGrid
 import mp.sudoku.viewmodel.*
 
@@ -40,13 +39,11 @@ fun ResumeLayout() {
             .current.applicationContext as Application
     )
 
-    val actVM = ActiveGameVM()
-
     val startedGames by statsVM.startedGames.observeAsState(listOf())
 
     if (startedGames.isEmpty()) {
         Column(modifier = Modifier.fillMaxSize()) {
-            TopBar(activeGameVM = actVM, stopWatch = StopWatch())
+            TopBar(stopWatch = StopWatch())
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
                     text = stringResource(R.string.no_started_games_found),
@@ -56,7 +53,7 @@ fun ResumeLayout() {
         }
     } else {
         Column(modifier = Modifier.fillMaxSize()) {
-            TopBar(activeGameVM = actVM, stopWatch = StopWatch())
+            TopBar(stopWatch = StopWatch())
 
             LazyColumn(
                 modifier = Modifier
@@ -87,12 +84,11 @@ fun StartedGameCard(game: Game = Game()) {
 
         val boardStringList: List<List<String>> = Adapter.boardPersistenceFormatToList(game.grid)
         val boardIntList: List<List<Int>> = Adapter.changeStringToInt(boardStringList)
+        val activeGameVM = ActiveGameVM()
         val gameVM = GameVM(
             LocalContext
                 .current.applicationContext as Application
         )
-        val activeGameVM = ActiveGameVM()
-
 
         Column(modifier = Modifier.padding(top = 5.dp, start = 10.dp, end = 10.dp, bottom = 5.dp)) {
 
@@ -121,7 +117,6 @@ fun StartedGameCard(game: Game = Game()) {
             ) {
                 Button(
                     onClick = {
-                        ScreenRouter.game = game
                         ScreenRouter.navigateTo(destination = ScreenRouter.GAMEDETAILSSCREEN)
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
@@ -132,7 +127,9 @@ fun StartedGameCard(game: Game = Game()) {
 
                 Button(
                     onClick = {
+                        ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(game.grid)
                         CurrentGame.getInstance().current = game
+                        gameVM.resumeGame()
                         ScreenRouter.navigateTo(ScreenRouter.RESUMESCREEN, ScreenRouter.GAMESCREEN)
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),

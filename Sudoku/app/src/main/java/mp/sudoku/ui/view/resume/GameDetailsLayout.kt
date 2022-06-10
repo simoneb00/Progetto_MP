@@ -21,7 +21,6 @@ import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.Game
 import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
-import mp.sudoku.ui.view.game.Grid
 import mp.sudoku.ui.view.game.ReadOnlyGrid
 import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.Adapter
@@ -29,22 +28,14 @@ import mp.sudoku.viewmodel.GameVM
 import mp.sudoku.viewmodel.StopWatch
 
 @Composable
-fun GameDetailsLayout(game: Game) {
+fun GameDetailsLayout() {
+    val game = CurrentGame.getInstance().getCurrent()
     Column(modifier = Modifier.fillMaxSize()) {
-        TopBar(activeGameVM = ActiveGameVM(), stopWatch = StopWatch())
-        Title(game)
+        TopBar(stopWatch = StopWatch())
+        Title(game!!)
         GridPreview(game)
         DetailsRow(game)
         ButtonsRow(game)
-        /*
-        Button(onClick = {
-            CurrentGame.getInstance().current = game
-            ScreenRouter.navigateTo(ScreenRouter.RESUMESCREEN, ScreenRouter.GAMESCREEN)
-        }) {
-            Text(text = "Resume")
-        }
-
-         */
     }
 }
 
@@ -74,6 +65,7 @@ fun ButtonsRow(game: Game) {
         Button(
             onClick = {
                 CurrentGame.getInstance().current = game
+                gameVM.resumeGame()
                 ScreenRouter.navigateTo(ScreenRouter.RESUMESCREEN, ScreenRouter.GAMESCREEN)
             },
             border = BorderStroke(1.dp, MaterialTheme.colors.secondary),

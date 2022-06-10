@@ -34,7 +34,6 @@ fun SettingsLayout() {
             includeBackButton = true,
             includeSettingsButton = false,
             includeGuideButton = false,
-            activeGameVM = ActiveGameVM(),
             stopWatch = StopWatch()
         )
 

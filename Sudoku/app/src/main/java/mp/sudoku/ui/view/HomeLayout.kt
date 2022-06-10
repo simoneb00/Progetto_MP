@@ -36,7 +36,6 @@ fun HomeLayout() {
             includeBackButton = false,
             includeSettingsButton = true,
             includeGuideButton = true,
-            activeGameVM = ActiveGameVM(),
             stopWatch = StopWatch()
         )
         Logo()

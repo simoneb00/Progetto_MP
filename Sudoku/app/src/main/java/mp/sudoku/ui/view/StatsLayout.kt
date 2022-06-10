@@ -37,7 +37,6 @@ import mp.sudoku.viewmodel.StopWatch
 @Preview(showBackground = true)
 @Composable
 fun StatsLayout() {
-
     /* parameters initialization */
     val viewModel = StatisticVM(
         LocalContext
@@ -62,7 +61,6 @@ fun StatsLayout() {
         TopBar(
             includeSettingsButton = false,
             includeGuideButton = false,
-            activeGameVM = ActiveGameVM(),
             stopWatch = StopWatch()
         )
 
@@ -216,7 +214,6 @@ fun TimeStatsLayout(bestTime: String, averageTime: String) {
                 .fillMaxWidth()
                 .padding(start = 5.dp, top = 5.dp, end = 5.dp),
             shape = RoundedCornerShape(3.dp),
-            //backgroundColor = MaterialTheme.colors.surface
         ) {
             Column {
                 TimeStatsRow(

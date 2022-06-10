@@ -47,7 +47,6 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             try {
                 if (solver.solve() == Result.Open)
                     solver.solveRecursive()
-                println(solver.solve())
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -81,7 +80,10 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             game.difficulty = difficulty
             game.lastUpdate = LocalDate.now().toString()
             game.id = id
-            game.solvedGrid = Adapter.boardListToPersistenceFormat(solve(board))
+            if(game.solvedGrid == "empty"){
+                game.solvedGrid = Adapter.boardListToPersistenceFormat(solve(board))
+                CurrentGame.getInstance().solution = Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(game.solvedGrid))
+            }
             repGame.insertGame(game)
             CurrentGame.getInstance().solution = solve(board)
         } catch (e: Exception) {
@@ -93,12 +95,13 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         board: String,
         noteBoard: String,
         timer: String,
-        finished: Int = 0,
-        deleteCurrent: Boolean = true
+        finished: Int = 0
     ) {
         val game = CurrentGame.getInstance().getCurrent()
         try {
             game!!.grid = board
+            println(game.id)
+
             game.noteGrid = noteBoard
             game.timer = timer
             game.finished = finished
@@ -107,11 +110,10 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             }
             game.lastUpdate = LocalDate.now().toString()
             repGame.updateOne(CurrentGame.getInstance().getCurrent())
-            if (deleteCurrent) {
-                CurrentGame.getInstance().deleteCurrent()
-                CurrentGame.getInstance().solution = null
-            }
-            CurrentGame.getInstance().timer = StopWatch()
+            CurrentGame.getInstance().current = null
+            CurrentGame.getInstance().solution = null
+            CurrentGame.getInstance().timer.pause()
+            CurrentGame.getInstance().timer.reset()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -120,7 +122,7 @@ class GameVM(application: Application) : AndroidViewModel(application) {
     private fun calculateScore(game: Game): Int {
         var score = game.score
         val constBonus = 20
-        score += (10000 / StopWatch.formatString(game.timer)).toInt()
+        score += (10000 / StopWatch.formatString(game.timer).toDouble()).toInt()
         when (game.difficulty) {
             "easy" -> score += (constBonus * 1)
             "medium" -> score += (constBonus * 2)
@@ -139,16 +141,17 @@ class GameVM(application: Application) : AndroidViewModel(application) {
 
     fun resumeGame(): List<List<String>> {
         var temp: List<List<String>> = listOf(listOf(""))
+        val game = CurrentGame.getInstance().getCurrent()
         try {
             temp =
-                Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().getCurrent()?.grid!!)
+                Adapter.boardPersistenceFormatToList(game?.grid!!)
             CurrentGame.getInstance().solution = Adapter.changeStringToInt(
                 Adapter.boardPersistenceFormatToList(
-                    CurrentGame.getInstance().getCurrent()!!.solvedGrid
+                    game.solvedGrid
                 )
             )
             CurrentGame.getInstance().timer.formattedTime =
-                CurrentGame.getInstance().current!!.timer
+                game.timer
         } catch (e: Exception) {
             e.printStackTrace()
         }

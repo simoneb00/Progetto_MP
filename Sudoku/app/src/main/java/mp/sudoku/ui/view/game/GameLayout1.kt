@@ -37,7 +37,7 @@ import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.*
 import java.util.*
 import kotlin.collections.HashMap
-
+/*
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun GameLayout1(difficulty: String) {
@@ -107,6 +107,7 @@ fun GameLayout1(difficulty: String) {
         }
         GameButtons(activeGameVM, settingsVM)
         NumberButtons(activeGameVM)
+
 
         if (isCompleted) {
             Row(
@@ -261,9 +262,7 @@ fun GridButtons(
     difficulty: String, settingsVM: SettingsVM, stopwatch: StopWatch,
     activeGameVM: ActiveGameVM
 ) {
-
     stopwatch.start()
-
     BoxWithConstraints(
         contentAlignment = Alignment.Center,
         modifier = Modifier.padding(top = 10.dp, bottom = 5.dp)
@@ -387,3 +386,4 @@ fun SudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, Su
         }
     }
 }
+*/

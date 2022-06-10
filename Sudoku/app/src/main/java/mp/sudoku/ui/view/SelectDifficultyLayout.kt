@@ -28,7 +28,6 @@ fun DifficultyLayout() {
             includeBackButton = true,
             includeSettingsButton = true,
             includeGuideButton = true,
-            activeGameVM = ActiveGameVM(),
             stopWatch = StopWatch()
         )
         DifficultyText()
