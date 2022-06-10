@@ -47,7 +47,7 @@ class ActiveGameVM {
                         isInEvidence = false,                  // the cell is on focus if it's placed on the same row/column/nonet of the selected cell
                         isReadOnly = (list[i][j] != 0),     // the read only cells are those present in the initial grid
                         note = 0,
-                        color = Color.Black
+                        color = "Black"
                     )
                 } else {
                     gridState[(j * 10 + i)] = SudokuCell(
@@ -59,7 +59,7 @@ class ActiveGameVM {
                         isInEvidence = false,
                         isReadOnly = true,
                         note = 0,
-                        color = Color.Black
+                        color = "Black"
                     )
                 }
             }
@@ -159,12 +159,14 @@ class ActiveGameVM {
             if (it.value == 0) bool = false
         }
 
-        if (bool) {
+        /*if (bool) {
             val isCorrect = this.checkGrid()
             this.isGridCorrect = isCorrect
             subCorrectState?.invoke(isCorrect)
         }
 
+
+         */
         return bool
     }
 
@@ -181,7 +183,7 @@ class ActiveGameVM {
             it.isInEvidence = false
             if (it.x == x && it.y == y) {
                 it.isSelected = true        // mark the (x, y) cell as selected
-                it.color = Color.Black
+                //it.color = Color.Black
             }
             if (it.x == x || it.y == y || it.nonet == gridState[x * 10 + y]?.nonet)
                 it.isInEvidence =
@@ -274,11 +276,27 @@ class ActiveGameVM {
 
      */
 
-    private fun checkGrid(): Boolean {
+    fun checkGrid(): Boolean {
         val linearSolution = CurrentGame.getInstance().solution
         val linearGrid = Adapter.hashMapToList(gridState)
 
-        return linearSolution == linearGrid
+        val isCorrect = linearSolution == linearGrid
+
+        if (isCorrect)
+            return isCorrect
+        else {
+            gridState.values.forEach { cell ->
+                println(linearSolution?.get(cell.x)?.get(cell.y))
+                if (cell.value != linearSolution?.get(cell.x)?.get(cell.y))
+                    cell.color = "Red"
+            }
+
+            subGridState?.invoke(gridState)
+            subGridState1?.invoke(gridState)
+
+            return isCorrect
+        }
+
     }
 
     private fun updateNumberButtons(valToRemove: Int) {

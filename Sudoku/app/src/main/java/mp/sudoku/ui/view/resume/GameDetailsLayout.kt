@@ -22,6 +22,7 @@ import mp.sudoku.model.Game
 import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.ui.view.game.Grid
+import mp.sudoku.ui.view.game.ReadOnlyGrid
 import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.Adapter
 import mp.sudoku.viewmodel.GameVM
@@ -156,7 +157,7 @@ fun GridPreview(game: Game) {
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        Grid(values = boardIntList, activeGameVM = activeGameVM, isReadOnly = true)
+        ReadOnlyGrid(values = boardIntList, activeGameVM = activeGameVM, isReadOnly = true)
     }
 }
 

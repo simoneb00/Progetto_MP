@@ -128,7 +128,8 @@ fun updateGame(application: Application, activeGameVM: ActiveGameVM, stopWatch: 
         game.updateGame(
             board = thisBoard,
             noteBoard = Adapter.boardListToPersistenceFormat(thisNote),
-            timer = stopWatch.formattedTime
+            timer = stopWatch.formattedTime,
+            deleteCurrent = false
         )
     }catch (e:Exception){
         e.printStackTrace()

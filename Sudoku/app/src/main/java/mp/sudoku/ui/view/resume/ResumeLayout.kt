@@ -29,6 +29,7 @@ import mp.sudoku.ui.theme.isDarkModeOn
 import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.ui.view.game.Grid
+import mp.sudoku.ui.view.game.ReadOnlyGrid
 import mp.sudoku.viewmodel.*
 
 @Preview
@@ -109,7 +110,7 @@ fun StartedGameCard(game: Game = Game()) {
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                Grid(values = boardIntList, activeGameVM = activeGameVM, isReadOnly = true)
+                ReadOnlyGrid(values = boardIntList, activeGameVM = activeGameVM, isReadOnly = true)
             }
 
             Row(
@@ -164,7 +165,7 @@ fun StartedGameCard1(game: Game = Game()) {
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        Grid(values = boardIntList, activeGameVM = activeGameVM, isReadOnly = true)
+        ReadOnlyGrid(values = boardIntList, activeGameVM = activeGameVM, isReadOnly = true)
     }
 
     Box(

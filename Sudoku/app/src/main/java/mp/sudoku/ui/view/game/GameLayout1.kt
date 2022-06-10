@@ -3,6 +3,9 @@ package mp.sudoku.ui.view.game
 import android.annotation.SuppressLint
 import android.app.Application
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -27,16 +30,17 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import mp.sudoku.R
 import mp.sudoku.model.CurrentGame
+import mp.sudoku.model.SudokuCell
 import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.*
 import java.util.*
+import kotlin.collections.HashMap
 
-
-/*@SuppressLint("CoroutineCreationDuringComposition")
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun GameLayout(difficulty: String) {
+fun GameLayout1(difficulty: String) {
 
     val settingsVM = SettingsVM(LocalContext.current.applicationContext)
     val activeGameVM = ActiveGameVM()
@@ -75,7 +79,7 @@ fun GameLayout(difficulty: String) {
         mutableStateOf(activeGameVM.gridState, neverEqualPolicy())
     }
 
-    activeGameVM.subGridState1 = {
+    activeGameVM.subGridState = {
         gridState.value = it
     }
 
@@ -84,10 +88,7 @@ fun GameLayout(difficulty: String) {
         if (s.value != listOf(listOf(""))) {
             TopBar(activeGameVM = activeGameVM, stopWatch = stopWatch.value)
             GridButtons(difficulty, settingsVM, stopWatch.value, activeGameVM)
-            if (!isCompleted)
-                Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
-            else
-                Grid(values = Adapter.hashMapToList(gridState.value), activeGameVM = activeGameVM)
+            Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM, gridState = gridState)
             if (resume) {
                 stopWatch.value = CurrentGame.getInstance().timer
             } else {
@@ -118,15 +119,22 @@ fun GameLayout(difficulty: String) {
                     onClick = {
                         println(s.value)
 
-                        if (isCorrect) {
+                        if (activeGameVM.checkGrid()) {
                             ScreenRouter.navigateTo(destination = ScreenRouter.WONGAMEPOPUP)
                             gameVM.updateGame(
                                 board = CurrentGame.getInstance().getCurrent()!!.grid,
                                 noteBoard = "",
                                 timer = CurrentGame.getInstance().getCurrent()!!.timer,
-                                finished = 1
+                                finished = 1,
+                                deleteCurrent = false
                             )
                         } else {
+                            gameVM.updateGame(
+                                board = CurrentGame.getInstance().getCurrent()!!.grid,
+                                noteBoard = "",
+                                timer = CurrentGame.getInstance().getCurrent()!!.timer,
+                                deleteCurrent = false
+                            )
                             ScreenRouter.navigateTo(destination = ScreenRouter.LOSTGAMEPOPUP)
                         }
 
@@ -277,6 +285,105 @@ fun GridButtons(
                 Text(text = stringResource(R.string.score) + ": " + activeGameVM.getScore())
         }
     }
-}*/
+}
+
+@SuppressLint("MutableCollectionMutableState")
+@Composable
+fun Grid(
+    values: List<List<Int>>,
+    activeGameVM: ActiveGameVM,
+    isReadOnly: Boolean = false,
+    gridState: MutableState<HashMap<Int, SudokuCell>>
+) {
+
+    activeGameVM.initGrid(values, isReadOnly)
+
+    BoxWithConstraints {
+        val screenWidth = with(LocalDensity.current) {
+            constraints.maxWidth.toDp()
+        }
+
+        val margin = 15
+
+        Box(
+            modifier = Modifier
+                .border(width = 2.dp, color = MaterialTheme.colors.secondary)
+                .size(screenWidth - margin.dp)
+        ) {
+            val offset = (screenWidth - margin.dp).value / 9
+            SudokuTextFields(offset, activeGameVM, gridState = gridState.value)
+            BoardGrid(offset)
+        }
+    }
+}
+
+@Composable
+fun BoardGrid(offset: Float) {
+
+    (1 until 9).forEach {
+        val width = if (it % 3 == 0) 3.dp else 1.dp
+        Divider(
+            modifier = Modifier
+                .absoluteOffset((offset * it).dp, 0.dp)
+                .fillMaxHeight()
+                .width(width)
+        )
+
+        val height = if (it % 3 == 0) 3.dp else 1.dp
+        Divider(
+            modifier = Modifier
+                .absoluteOffset(0.dp, (offset * it).dp)
+                .fillMaxWidth()
+                .height(height)
+        )
+    }
+}
+
+@Composable
+fun SudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, SudokuCell>) {
 
 
+    gridState.values.forEach { cell ->
+        var text = cell.value.toString()
+        var note = cell.note.toString()
+
+        if (text == "0") text = ""
+        if (note == "0") note = ""
+
+        Box(
+            modifier = Modifier
+                .absoluteOffset(
+                    (offset * (cell.x)).dp,
+                    (offset * (cell.y)).dp
+                )
+                .width(offset.dp)
+                .height(offset.dp)
+                .background(
+                    when {
+                        cell.isSelected -> MaterialTheme.colors.secondaryVariant
+                        cell.isInEvidence -> MaterialTheme.colors.primaryVariant
+                        else -> MaterialTheme.colors.surface
+                    }
+                )
+                .clickable {
+                    //if (!cell.isReadOnly)
+                    vm.selectCell(cell.x, cell.y)
+                },
+            contentAlignment = if (note == "") Alignment.Center else Alignment.TopStart
+        ) {
+            if (note == "") {
+                Text(
+                    text = text,
+                    color = if (cell.color == "Red") Color.Red else MaterialTheme.colors.onPrimary
+                )
+            } else {
+                Text(
+                    text = note,
+                    modifier = Modifier.padding(start = 5.dp, top = 5.dp),
+                    fontSize = 10.sp
+
+                )
+            }
+        }
+    }
+}

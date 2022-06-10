@@ -1,6 +1,7 @@
 package mp.sudoku.model
 
 import android.os.Parcelable
+import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import kotlinx.parcelize.Parcelize
 
@@ -14,5 +15,5 @@ class SudokuCell(
     var isReadOnly: Boolean,
     var isInEvidence: Boolean,
     var note: Int,
-    var color: Color
+    var color: String
 ) : Parcelable

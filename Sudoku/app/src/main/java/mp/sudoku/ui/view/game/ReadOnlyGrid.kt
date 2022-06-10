@@ -1,4 +1,3 @@
-
 package mp.sudoku.ui.view.game
 
 import android.annotation.SuppressLint
@@ -22,14 +21,9 @@ import androidx.compose.ui.unit.sp
 import mp.sudoku.model.SudokuCell
 import mp.sudoku.viewmodel.ActiveGameVM
 
-
-/*@SuppressLint("MutableCollectionMutableState")
+@SuppressLint("MutableCollectionMutableState")
 @Composable
-fun Grid(
-    values: List<List<Int>>,
-    activeGameVM: ActiveGameVM,
-    isReadOnly: Boolean = false
-) {
+fun ReadOnlyGrid(values: List<List<Int>>, activeGameVM: ActiveGameVM, isReadOnly: Boolean = false) {
 
     activeGameVM.initGrid(values, isReadOnly)
 
@@ -54,14 +48,14 @@ fun Grid(
                 .size(screenWidth - margin.dp)
         ) {
             val offset = (screenWidth - margin.dp).value / 9
-            SudokuTextFields(offset, activeGameVM, gridState = gridState.value)
-            BoardGrid(offset)
+            ROSudokuTextFields(offset, activeGameVM, gridState = gridState.value)
+            ROBoardGrid(offset)
         }
     }
 }
 
 @Composable
-fun BoardGrid(offset: Float) {
+fun ROBoardGrid(offset: Float) {
 
     (1 until 9).forEach {
         val width = if (it % 3 == 0) 3.dp else 1.dp
@@ -83,7 +77,7 @@ fun BoardGrid(offset: Float) {
 }
 
 @Composable
-fun SudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, SudokuCell>) {
+fun ROSudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, SudokuCell>) {
 
 
     gridState.values.forEach { cell ->
@@ -107,11 +101,7 @@ fun SudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, Su
                         cell.isInEvidence -> MaterialTheme.colors.primaryVariant
                         else -> MaterialTheme.colors.surface
                     }
-                )
-                .clickable {
-                    //if (!cell.isReadOnly)
-                        vm.selectCell(cell.x, cell.y)
-                },
+                ),
             contentAlignment = if (note == "") Alignment.Center else Alignment.TopStart
         ) {
             if (note == "") {
@@ -129,4 +119,4 @@ fun SudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, Su
             }
         }
     }
-}*/
+}
