@@ -117,6 +117,7 @@ fun StartedGameCard(game: Game = Game()) {
             ) {
                 Button(
                     onClick = {
+                        CurrentGame.getInstance().current = game
                         ScreenRouter.navigateTo(destination = ScreenRouter.GAMEDETAILSSCREEN)
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
