@@ -28,6 +28,7 @@ import com.google.gson.reflect.TypeToken
 import mp.sudoku.R
 import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.volley.VolleyGrid
+import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.*
 import java.util.*
@@ -38,7 +39,7 @@ import java.util.*
 fun GameLayout(
     difficulty: String,
     gameGrid: List<List<String>> = listOf(listOf("")),
-    resume:Boolean = false
+    resume: Boolean = false
 ) {
 
     val settingsVM = SettingsVM(LocalContext.current.applicationContext)
@@ -86,6 +87,9 @@ fun GameLayout(
         if (s.value != listOf(listOf(""))) {
             TopBar(gridState = activeGameVM.gridState, stopWatch = stopWatch.value)
             GridButtons(difficulty, settingsVM, stopWatch.value, activeGameVM)
+
+            println("creating grid")
+
             if (!isCompleted)
                 Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
             else
@@ -111,8 +115,9 @@ fun GameLayout(
 
         NumberButtons(activeGameVM)
 
+        /*
         if (isCorrect && isCompleted) {
-            WonGamePopUp()
+            ScreenRouter.navigateTo(destination = ScreenRouter.WONGAMEPOPUP)
             gameVM.updateGame(
                 board = CurrentGame.getInstance().getCurrent()!!.grid,
                 noteBoard = CurrentGame.getInstance().getCurrent()!!.grid,
@@ -120,6 +125,8 @@ fun GameLayout(
                 finished = 1
             )
         }
+
+         */
 
 
         if (isCompleted) {
@@ -131,7 +138,17 @@ fun GameLayout(
             ) {
                 Button(
                     onClick = {
-                        isCorrect = activeGameVM.checkGrid()
+                        if (activeGameVM.checkGrid(gridState.value)) {
+                            ScreenRouter.navigateTo(destination = ScreenRouter.WONGAMEPOPUP)
+                            gameVM.updateGame(
+                                board = CurrentGame.getInstance().getCurrent()!!.grid,
+                                noteBoard = CurrentGame.getInstance().getCurrent()!!.grid,
+                                timer = CurrentGame.getInstance().getCurrent()!!.timer,
+                                finished = 1
+                            )
+                        } else {
+                           // TODO
+                        }
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
                     shape = RoundedCornerShape(10.dp)

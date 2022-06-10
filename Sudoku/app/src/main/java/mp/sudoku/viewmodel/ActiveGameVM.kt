@@ -183,7 +183,6 @@ class ActiveGameVM {
             it.isInEvidence = false
             if (it.x == x && it.y == y) {
                 it.isSelected = true        // mark the (x, y) cell as selected
-                //it.color = Color.Black
             }
             if (it.x == x || it.y == y || it.nonet == gridState[x * 10 + y]?.nonet)
                 it.isInEvidence =
@@ -230,7 +229,7 @@ class ActiveGameVM {
     }
 
 
-    fun checkGrid(): Boolean {
+    /*fun checkGrid(): Boolean {
         var linearSolution = listOf<Int>()
         var linearGrid = listOf<Int>()
         var correct = true
@@ -273,35 +272,35 @@ class ActiveGameVM {
         }
 
 
-
-
         return correct
-    }
+    }*/
 
 
-/*
-    fun checkGrid(): Boolean {
+
+    fun checkGrid(grid: HashMap<Int, SudokuCell>): Boolean {
         val linearSolution = CurrentGame.getInstance().solution
-        val linearGrid = Adapter.hashMapToList(gridState)
+        val linearGrid = Adapter.hashMapToList(grid)
+
+        println("linear grid" + linearGrid)
+        println("linear solution" + linearSolution)
 
         val isCorrect = linearSolution == linearGrid
 
-        if (isCorrect)
-            return isCorrect
+        return if (isCorrect)
+            isCorrect
         else {
-            gridState.values.forEach { cell ->
-                println(linearSolution?.get(cell.x)?.get(cell.y))
-                if (cell.value != linearSolution?.get(cell.x)?.get(cell.y))
+            grid.values.forEach { cell ->
+                if (cell.value != linearSolution?.get(cell.y)?.get(cell.x))
                     cell.color = "Red"
             }
 
-            subGridState?.invoke(gridState)
-            subGridState1?.invoke(gridState)
+            subGridState?.invoke(grid)
+            subGridState1?.invoke(grid)
 
-            return isCorrect
+            isCorrect
         }
 
-    }*/
+    }
 
     private fun updateNumberButtons(valToRemove: Int) {
         this.buttonsNumbers.remove(valToRemove)
