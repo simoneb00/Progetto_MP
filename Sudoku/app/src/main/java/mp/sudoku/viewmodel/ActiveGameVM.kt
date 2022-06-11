@@ -302,6 +302,7 @@ class ActiveGameVM {
 
     }
 
+
     private fun updateNumberButtons(valToRemove: Int) {
         this.buttonsNumbers.remove(valToRemove)
         subButtonsNumbers?.invoke(this.buttonsNumbers)

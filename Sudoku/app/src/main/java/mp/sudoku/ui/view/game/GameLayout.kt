@@ -2,6 +2,8 @@ package mp.sudoku.ui.view.game
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.telephony.TelephonyCallback
+import android.view.accessibility.AccessibilityRecord
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -92,8 +94,15 @@ fun GameLayout(
 
             if (!isCompleted)
                 Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
-            else
+            else {
+                println("**************************************************************")
+                println(Adapter.intListToStringList(Adapter.hashMapToList(gridState.value)))
+                println("**************************************************************")
+                println(s.value)
+                s.value = Adapter.intListToStringList(Adapter.hashMapToList(gridState.value))
                 Grid(values = Adapter.hashMapToList(gridState.value), activeGameVM = activeGameVM)
+            }
+
             if (resume.value) {
                 stopWatch.value = CurrentGame.getInstance().timer
             } else {
@@ -128,8 +137,8 @@ fun GameLayout(
 
          */
 
-
         if (isCompleted) {
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -147,7 +156,7 @@ fun GameLayout(
                                 finished = 1
                             )
                         } else {
-                           // TODO
+                            isCompleted = false
                         }
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
