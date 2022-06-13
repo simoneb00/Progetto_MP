@@ -1,4 +1,3 @@
-
 package mp.sudoku.ui.view.game
 
 import android.annotation.SuppressLint
@@ -28,11 +27,22 @@ import mp.sudoku.viewmodel.ActiveGameVM
 @Composable
 fun Grid(
     values: List<List<Int>>,
+    notes: List<List<Int>> = listOf(
+        listOf(1, 0, 0, 0, 0, 0, 0, 0, 0),
+        listOf(0, 2, 0, 0, 0, 0, 0, 0, 0),
+        listOf(0, 0, 3, 0, 0, 0, 0, 0, 0),
+        listOf(0, 0, 0, 4, 0, 0, 0, 0, 0),
+        listOf(0, 0, 0, 0, 5, 0, 0, 0, 0),
+        listOf(0, 0, 0, 0, 0, 6, 0, 0, 0),
+        listOf(0, 0, 0, 0, 0, 0, 7, 0, 0),
+        listOf(0, 0, 0, 0, 0, 0, 0, 8, 0),
+        listOf(0, 0, 0, 0, 0, 0, 0, 0, 9)
+    ),
     activeGameVM: ActiveGameVM,
     isReadOnly: Boolean = false
 ) {
 
-    activeGameVM.initGrid(values, isReadOnly)
+    activeGameVM.initGrid(list = values, notes = notes, isReadOnly = isReadOnly)
 
     val gridState = rememberSaveable {
         mutableStateOf(activeGameVM.gridState, neverEqualPolicy())
@@ -111,7 +121,7 @@ fun SudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, Su
                 )
                 .clickable {
                     //if (!cell.isReadOnly)
-                        vm.selectCell(cell.x, cell.y)
+                    vm.selectCell(cell.x, cell.y)
                 },
             contentAlignment = if (note == "") Alignment.Center else Alignment.TopStart
         ) {

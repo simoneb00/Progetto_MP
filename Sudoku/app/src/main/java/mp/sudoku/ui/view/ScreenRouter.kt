@@ -26,7 +26,6 @@ object ScreenRouter {
     const val RESUMESCREEN = 7
     const val GAMEDETAILSSCREEN = 8
     const val WONGAMEPOPUP = 9
-    const val LOSTGAMEPOPUP = 10
 
 
     fun navigateTo(
@@ -51,7 +50,6 @@ fun MainScreen() {
         7 -> ResumeLayout()
         8 -> GameDetailsLayout()
         9 -> WonGamePopUp()
-        //10 -> LostGamePopUp()
     }
 }
 

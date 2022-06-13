@@ -1,33 +1,24 @@
 package mp.sudoku.viewmodel
 
-import androidx.compose.ui.graphics.Color
 import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.SudokuCell
 
 class ActiveGameVM {
 
     internal val gridState: HashMap<Int, SudokuCell> = HashMap()
-    internal var subGridState: ((HashMap<Int, SudokuCell>) -> Unit)? =
-        null     // this is useful to commit changes to the view
+    internal var subGridState: ((HashMap<Int, SudokuCell>) -> Unit)? = null   // this is useful to commit changes to the view (Grid)
+    internal var subGridState1: ((HashMap<Int, SudokuCell>) -> Unit)? = null  // this is useful to commit changes to the view (GameLayout)
 
-    internal var subGridState1: ((HashMap<Int, SudokuCell>) -> Unit)? =
-        null     // this is useful to commit changes to the view
+    internal var isCompleted = checkIfFull()               // true if grid is full
+    internal var subCompletedState: ((Boolean) -> Unit)? = null     // this is useful to commit changes to the view (GameLayout, to show "Check" button)
 
-    internal var isCompleted =
-        false                                            // true if grid is full
-    internal var subCompletedState: ((Boolean) -> Unit)? =
-        null                 // this is useful to commit changes to the view
+    internal var notesMode = false   // true if user is inserting notes
 
-    internal var notesMode =
-        false                                              // true if user is inserting notes
+    internal var buttonsNumbers: MutableList<Int> = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)    // buttons to insert numbers in the grid
+    internal var subButtonsNumbers: ((MutableList<Int>) -> Unit)? = null                        // to commit changes to the view (GameLayout, to know which buttons to show)
 
-    internal var buttonsNumbers: MutableList<Int> = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    internal var subButtonsNumbers: ((MutableList<Int>) -> Unit)? = null
 
-    internal var isGridCorrect: Boolean = false
-    internal var subCorrectState: ((Boolean) -> Unit)? = null
-
-    fun initGrid(list: List<List<Int>>, isReadOnly: Boolean) {
+    fun initGrid(list: List<List<Int>>, notes:List<List<Int>>, isReadOnly: Boolean) {
         for (i in list.indices) {               // i = number of row
             for (j in list[i].indices) {        // j = number of element in the row
                 /*
@@ -59,6 +50,24 @@ class ActiveGameVM {
                         isInEvidence = false,
                         isReadOnly = true,
                         note = 0,
+                        color = "Black"
+                    )
+                }
+            }
+        }
+
+        for (i in notes.indices) {
+            for (j in notes.indices) {
+                if (gridState[j * 10 + i]?.value == 0) {
+                    gridState[(j * 10 + i)] = SudokuCell(
+                        x = j,
+                        y = i,
+                        value = 0,
+                        isSelected = false,
+                        nonet = findNonet(j, i),            // a nonet is a 3x3 sub-block
+                        isInEvidence = false,                  // the cell is on focus if it's placed on the same row/column/nonet of the selected cell
+                        isReadOnly = (list[i][j] != 0),     // the read only cells are those present in the initial grid
+                        note = notes[i][j],
                         color = "Black"
                     )
                 }
@@ -97,6 +106,10 @@ class ActiveGameVM {
     fun updateGrid(
         value: Int
     ) {
+
+        updateNumberButtons(valToRemove = value)
+
+
         gridState.values.forEach {
             if (it.isSelected) {        // the following operations are going to be applied only to the selected cell
                 //if (!it.isReadOnly) {
@@ -111,8 +124,8 @@ class ActiveGameVM {
             }
         }
 
-        subGridState?.invoke(gridState)                        // commit grid changes to the view
-        subGridState1?.invoke(gridState)                        // commit grid changes to the view
+        subGridState?.invoke(gridState)                                 // commit grid changes to the view
+        subGridState1?.invoke(gridState)                                // commit grid changes to the view
         if (checkIfFull()) subCompletedState?.invoke(true)     // if the grid is full, inform the view to show the "Check" button
     }
 
@@ -203,12 +216,14 @@ class ActiveGameVM {
     }
 
     fun cancelCell() {
+
         gridState.values.forEach {
             if (it.isSelected) {
                 it.note = 0
                 it.value = 0
             }
         }
+
         subGridState?.invoke(gridState)     // commit changes to the view
         subGridState1?.invoke(gridState)     // commit changes to the view
     }

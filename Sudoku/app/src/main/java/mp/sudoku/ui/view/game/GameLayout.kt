@@ -2,8 +2,6 @@ package mp.sudoku.ui.view.game
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.telephony.TelephonyCallback
-import android.view.accessibility.AccessibilityRecord
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,11 +27,13 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import mp.sudoku.R
 import mp.sudoku.model.CurrentGame
+import mp.sudoku.model.SudokuCell
 import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.*
 import java.util.*
+import kotlin.collections.HashMap
 
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -46,8 +46,6 @@ fun GameLayout(
 
     val settingsVM = SettingsVM(LocalContext.current.applicationContext)
     val activeGameVM = ActiveGameVM()
-    var isCompleted by remember { mutableStateOf(activeGameVM.isCompleted, neverEqualPolicy()) }
-    var isCorrect by remember { mutableStateOf(activeGameVM.isGridCorrect, neverEqualPolicy()) }
     val resume = rememberSaveable {
         mutableStateOf(resume)
     }
@@ -66,13 +64,10 @@ fun GameLayout(
         mutableStateOf(StopWatch())
     }
 
+    var isCompleted by remember { mutableStateOf(activeGameVM.isCompleted, neverEqualPolicy()) }
 
     activeGameVM.subCompletedState = {
         isCompleted = it
-    }
-
-    activeGameVM.subCorrectState = {
-        isCorrect = it
     }
 
     val gridState = rememberSaveable {
@@ -90,8 +85,6 @@ fun GameLayout(
             TopBar(gridState = activeGameVM.gridState, stopWatch = stopWatch.value)
             GridButtons(difficulty, settingsVM, stopWatch.value, activeGameVM)
 
-            println("creating grid")
-
             //if (!isCompleted)
                 Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
             /*else {
@@ -104,8 +97,6 @@ fun GameLayout(
             }
 
              */
-
-            println("the solution is: " + CurrentGame.getInstance().solution)
 
             if (resume.value) {
                 stopWatch.value = CurrentGame.getInstance().timer
@@ -124,22 +115,9 @@ fun GameLayout(
                 s.value = mData.board
             }
         }
+
         GameButtons(activeGameVM, settingsVM)
-
         NumberButtons(activeGameVM)
-
-        /*
-        if (isCorrect && isCompleted) {
-            ScreenRouter.navigateTo(destination = ScreenRouter.WONGAMEPOPUP)
-            gameVM.updateGame(
-                board = CurrentGame.getInstance().getCurrent()!!.grid,
-                noteBoard = CurrentGame.getInstance().getCurrent()!!.grid,
-                timer = CurrentGame.getInstance().getCurrent()!!.timer,
-                finished = 1
-            )
-        }
-
-         */
 
         if (isCompleted) {
 
@@ -174,6 +152,7 @@ fun GameLayout(
         }
     }
 }
+
 
 @Composable
 fun GameButtons(
