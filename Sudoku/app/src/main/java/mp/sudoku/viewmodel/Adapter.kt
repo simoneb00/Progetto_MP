@@ -25,27 +25,30 @@ class Adapter {
         }
 
         fun intListToStringList(intList: List<List<Int>>): List<List<String>> {
-            val stringList: MutableList<MutableList<String>> = mutableListOf(
-                mutableListOf(),
-                mutableListOf(),
-                mutableListOf(),
-                mutableListOf(),
-                mutableListOf(),
-                mutableListOf(),
-                mutableListOf(),
-                mutableListOf(),
-                mutableListOf(),
-            )
+            println("*************************************************" +
+                    "Adapter" +
+                    "*************************************************")
 
-            intList.forEach { list ->
-                val listIndex = intList.indexOf(list)
-                list.forEach { value ->
-                    val valueIndex = list.indexOf(value)
-                    stringList[listIndex].add(index = valueIndex, element = value.toString())
+            println("int list: " + intList)
+
+            val newList: MutableList<List<String>> = mutableListOf()
+
+            try {
+                for ((count, i) in intList.withIndex()) {
+                    var tempList: List<String> = mutableListOf()
+                    for (j in i.indices) {
+                        if (intList[count][j] != 0)
+                            tempList.plus(intList[count][j].toString()).also { tempList = it }
+                    }
+                    newList.addAll(listOf(tempList))
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
 
-            return stringList
+            println("string list: " + newList)
+
+            return newList
         }
 
         /*

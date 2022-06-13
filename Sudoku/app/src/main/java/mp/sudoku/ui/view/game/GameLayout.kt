@@ -92,9 +92,9 @@ fun GameLayout(
 
             println("creating grid")
 
-            if (!isCompleted)
+            //if (!isCompleted)
                 Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
-            else {
+            /*else {
                 println("**************************************************************")
                 println(Adapter.intListToStringList(Adapter.hashMapToList(gridState.value)))
                 println("**************************************************************")
@@ -102,6 +102,10 @@ fun GameLayout(
                 s.value = Adapter.intListToStringList(Adapter.hashMapToList(gridState.value))
                 Grid(values = Adapter.hashMapToList(gridState.value), activeGameVM = activeGameVM)
             }
+
+             */
+
+            println("the solution is: " + CurrentGame.getInstance().solution)
 
             if (resume.value) {
                 stopWatch.value = CurrentGame.getInstance().timer
@@ -156,7 +160,9 @@ fun GameLayout(
                                 finished = 1
                             )
                         } else {
-                            isCompleted = false
+                            println(Adapter.hashMapToList(gridState.value))
+                            println("adapted string: " + Adapter.intListToStringList(Adapter.hashMapToList(gridState.value)))
+                            s.value = Adapter.intListToStringList(Adapter.hashMapToList(gridState.value))
                         }
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
