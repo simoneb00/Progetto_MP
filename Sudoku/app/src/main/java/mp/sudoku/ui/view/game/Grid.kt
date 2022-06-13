@@ -9,7 +9,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -51,6 +50,7 @@ fun Grid(
     activeGameVM.subGridState = {
         gridState.value = it
     }
+
 
     BoxWithConstraints {
         val screenWidth = with(LocalDensity.current) {
@@ -94,7 +94,11 @@ fun BoardGrid(offset: Float) {
 }
 
 @Composable
-fun SudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, SudokuCell>) {
+fun SudokuTextFields(
+    offset: Float,
+    vm: ActiveGameVM,
+    gridState: HashMap<Int, SudokuCell>
+) {
 
 
     gridState.values.forEach { cell ->
@@ -135,7 +139,6 @@ fun SudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, Su
                     text = note,
                     modifier = Modifier.padding(start = 5.dp, top = 5.dp),
                     fontSize = 10.sp
-
                 )
             }
         }

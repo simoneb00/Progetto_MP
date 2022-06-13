@@ -6,19 +6,39 @@ import mp.sudoku.model.SudokuCell
 class ActiveGameVM {
 
     internal val gridState: HashMap<Int, SudokuCell> = HashMap()
-    internal var subGridState: ((HashMap<Int, SudokuCell>) -> Unit)? = null   // this is useful to commit changes to the view (Grid)
-    internal var subGridState1: ((HashMap<Int, SudokuCell>) -> Unit)? = null  // this is useful to commit changes to the view (GameLayout)
+    internal var subGridState: ((HashMap<Int, SudokuCell>) -> Unit)? =
+        null   // this is useful to commit changes to the view (Grid)
+    internal var subGridState1: ((HashMap<Int, SudokuCell>) -> Unit)? =
+        null  // this is useful to commit changes to the view (GameLayout)
 
     internal var isCompleted = checkIfFull()               // true if grid is full
-    internal var subCompletedState: ((Boolean) -> Unit)? = null     // this is useful to commit changes to the view (GameLayout, to show "Check" button)
+    internal var subCompletedState: ((Boolean) -> Unit)? =
+        null     // this is useful to commit changes to the view (GameLayout, to show "Check" button)
 
     internal var notesMode = false   // true if user is inserting notes
 
-    internal var buttonsNumbers: MutableList<Int> = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)    // buttons to insert numbers in the grid
-    internal var subButtonsNumbers: ((MutableList<Int>) -> Unit)? = null                        // to commit changes to the view (GameLayout, to know which buttons to show)
+    internal var buttonsNumbers: MutableList<Int> =
+        mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)    // buttons to insert numbers in the grid
+    internal var subButtonsNumbers: ((MutableList<Int>) -> Unit)? =
+        null                        // to commit changes to the view (GameLayout, to know which buttons to show)
+
+    internal var notesState: MutableList<MutableList<Int>> = mutableListOf(
+        mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+    )
 
 
-    fun initGrid(list: List<List<Int>>, notes:List<List<Int>>, isReadOnly: Boolean) {
+    fun initGrid(list: List<List<Int>>, notes: List<List<Int>>, isReadOnly: Boolean) {
+
+        println(notesState)
+
         for (i in list.indices) {               // i = number of row
             for (j in list[i].indices) {        // j = number of element in the row
                 /*
@@ -57,7 +77,7 @@ class ActiveGameVM {
         }
 
         for (i in notes.indices) {
-            for (j in notes.indices) {
+            for (j in notes[i].indices) {
                 if (gridState[j * 10 + i]?.value == 0) {
                     gridState[(j * 10 + i)] = SudokuCell(
                         x = j,
@@ -70,9 +90,12 @@ class ActiveGameVM {
                         note = notes[i][j],
                         color = "Black"
                     )
+
+                    notesState[i][j] = notes[i][j]
                 }
             }
         }
+
     }
 
 
@@ -116,11 +139,14 @@ class ActiveGameVM {
                 if (notesMode) {        // if notes mode is on and the user inserts a note on the cell, the previously present value (if any) is cancelled
                     it.value = 0
                     it.note = value
+                    notesState[it.y][it.x] = value
+                    println(notesState)
                 } else {                // if notes mode is off and the user inserts a value on the cell, the previously present note (if any) is cancelled
                     it.note = 0
                     it.value = value
                 }
                 //}
+
             }
         }
 
@@ -221,6 +247,8 @@ class ActiveGameVM {
             if (it.isSelected) {
                 it.note = 0
                 it.value = 0
+                notesState[it.y][it.x] = 0
+                println(notesState)
             }
         }
 
@@ -289,7 +317,6 @@ class ActiveGameVM {
 
         return correct
     }*/
-
 
 
     fun checkGrid(grid: HashMap<Int, SudokuCell>): Boolean {
