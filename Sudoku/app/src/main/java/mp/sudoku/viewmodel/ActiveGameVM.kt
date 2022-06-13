@@ -11,7 +11,7 @@ class ActiveGameVM {
     internal var subGridState1: ((HashMap<Int, SudokuCell>) -> Unit)? =
         null  // this is useful to commit changes to the view (GameLayout)
 
-    internal var isCompleted = checkIfFull()               // true if grid is full
+    internal var isCompleted = false               // true if grid is full
     internal var subCompletedState: ((Boolean) -> Unit)? =
         null     // this is useful to commit changes to the view (GameLayout, to show "Check" button)
 
@@ -152,7 +152,7 @@ class ActiveGameVM {
 
         subGridState?.invoke(gridState)                                 // commit grid changes to the view
         subGridState1?.invoke(gridState)                                // commit grid changes to the view
-        if (checkIfFull()) subCompletedState?.invoke(true)     // if the grid is full, inform the view to show the "Check" button
+        if (checkIfFull()) subCompletedState?.invoke(true)      // if the grid is full, inform the view to show the "Check" button
     }
 
 

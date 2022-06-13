@@ -121,6 +121,8 @@ fun GameLayout(
 
         if (isCompleted) {
 
+            s.value = Adapter.intListToStringList(Adapter.hashMapToList(gridState.value))
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -129,6 +131,7 @@ fun GameLayout(
             ) {
                 Button(
                     onClick = {
+
                         if (activeGameVM.checkGrid(gridState.value)) {
                             ScreenRouter.navigateTo(destination = ScreenRouter.WONGAMEPOPUP)
                             gameVM.updateGame(
@@ -142,6 +145,8 @@ fun GameLayout(
                             println("adapted string: " + Adapter.intListToStringList(Adapter.hashMapToList(gridState.value)))
                             s.value = Adapter.intListToStringList(Adapter.hashMapToList(gridState.value))
                         }
+
+                        isCompleted = false
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
                     shape = RoundedCornerShape(10.dp)
@@ -152,7 +157,6 @@ fun GameLayout(
         }
     }
 }
-
 
 @Composable
 fun GameButtons(
