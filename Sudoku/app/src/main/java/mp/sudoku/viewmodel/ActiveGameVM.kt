@@ -162,6 +162,7 @@ class ActiveGameVM {
             hint =
                 Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.solvedGrid))[getSelectedCellY()][getSelectedCellX()]
             println(CurrentGame.getInstance().current!!.solvedGrid)
+            println(CurrentGame.getInstance().solution)
             println(hint)
             updateGrid(hint)
         } catch (e: Exception) {

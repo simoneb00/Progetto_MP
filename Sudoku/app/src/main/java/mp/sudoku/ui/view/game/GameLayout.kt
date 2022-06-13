@@ -82,11 +82,13 @@ fun GameLayout(
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         if (s.value != listOf(listOf(""))) {
+            println("s.value = " + s.value)
+            println("solution = " + CurrentGame.getInstance().solution)
             TopBar(gridState = activeGameVM.gridState, stopWatch = stopWatch.value)
             GridButtons(difficulty, settingsVM, stopWatch.value, activeGameVM)
 
             //if (!isCompleted)
-                Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
+            Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
             /*else {
                 println("**************************************************************")
                 println(Adapter.intListToStringList(Adapter.hashMapToList(gridState.value)))
@@ -178,7 +180,7 @@ fun GameButtons(
                     contentDescription = "",
                     tint = MaterialTheme.colors.secondary
                 )
-                Text(text = "Cancel")
+                Text(text = stringResource(R.string.cancel))
             }
         }
 
@@ -198,7 +200,7 @@ fun GameButtons(
                         Color.Red
                     } else MaterialTheme.colors.secondary
                 )
-                Text(text = "Notes")
+                Text(text = stringResource(R.string.notes))
             }
         }
 
@@ -213,7 +215,7 @@ fun GameButtons(
                         contentDescription = "",
                         tint = MaterialTheme.colors.secondary
                     )
-                    Text(text = "Hint")
+                    Text(text = stringResource(R.string.hint))
                 }
             }
         }

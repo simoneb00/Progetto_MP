@@ -42,5 +42,8 @@
     <string name="hints_setting_desc">Enable or disable hints during the game</string>
     <string name="difficulty">Difficulty</string>
     <string name="no_started_games_found">No started games found</string>
+    <string name="cancel">Cancel</string>
+    <string name="notes">Notes</string>
+    <string name="hint">Hint</string>
 
 </resources>
