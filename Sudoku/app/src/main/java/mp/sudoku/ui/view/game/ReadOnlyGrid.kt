@@ -25,17 +25,7 @@ import mp.sudoku.viewmodel.ActiveGameVM
 @Composable
 fun ReadOnlyGrid(
     values: List<List<Int>>,
-    notes: List<List<Int>> = listOf(
-        listOf(1, 0, 0, 0, 0, 0, 0, 0, 0),
-        listOf(0, 2, 0, 0, 0, 0, 0, 0, 0),
-        listOf(0, 0, 3, 0, 0, 0, 0, 0, 0),
-        listOf(0, 0, 0, 4, 0, 0, 0, 0, 0),
-        listOf(0, 0, 0, 0, 5, 0, 0, 0, 0),
-        listOf(0, 0, 0, 0, 0, 6, 0, 0, 0),
-        listOf(0, 0, 0, 0, 0, 0, 7, 0, 0),
-        listOf(0, 0, 0, 0, 0, 0, 0, 8, 0),
-        listOf(0, 0, 0, 0, 0, 0, 0, 0, 9)
-    ),
+    notes: List<List<Int>>,
     activeGameVM: ActiveGameVM,
     isReadOnly: Boolean = false
 ) {

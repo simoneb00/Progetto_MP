@@ -149,7 +149,7 @@ fun GridPreview(game: Game) {
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        ReadOnlyGrid(values = boardIntList, activeGameVM = activeGameVM, isReadOnly = true)
+        ReadOnlyGrid(values = boardIntList, notes = Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(game.noteGrid)),activeGameVM = activeGameVM, isReadOnly = true)
     }
 }
 

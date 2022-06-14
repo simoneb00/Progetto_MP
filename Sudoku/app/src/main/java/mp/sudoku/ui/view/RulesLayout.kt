@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.R
 import mp.sudoku.ui.view.components.TopBar
-import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.StopWatch
 
 

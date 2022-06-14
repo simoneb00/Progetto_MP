@@ -20,10 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.SudokuCell
 import mp.sudoku.ui.view.ScreenRouter
-import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.Adapter
 import mp.sudoku.viewmodel.GameVM
 import mp.sudoku.viewmodel.StopWatch
@@ -35,6 +33,7 @@ fun TopBar(
     includeGuideButton: Boolean = true,
     backgroundColor: Color = MaterialTheme.colors.background,
     stopWatch: StopWatch,
+    noteState: MutableList<MutableList<Int>> = mutableListOf(mutableListOf()),
     gridState: HashMap<Int, SudokuCell> = HashMap()
 ) {
 
@@ -48,6 +47,7 @@ fun TopBar(
             ScreenRouter.GAMESCREEN -> updateGame(
                 activity!!.applicationContext as Application,
                 gridState,
+                noteState,
                 stopWatch
             )
             ScreenRouter.GAMEDETAILSSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
@@ -77,6 +77,7 @@ fun TopBar(
                     ScreenRouter.GAMESCREEN -> updateGame(
                         activity!!.applicationContext as Application,
                         gridState,
+                        noteState,
                         stopWatch
                     )
                     ScreenRouter.GAMEDETAILSSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
@@ -132,18 +133,20 @@ fun TopBar(
 }
 
 
-fun updateGame(application: Application, gridState: HashMap<Int, SudokuCell>, stopWatch: StopWatch) {
+fun updateGame(
+    application: Application, gridState: HashMap<Int, SudokuCell>,
+    noteState: MutableList<MutableList<Int>>, stopWatch: StopWatch) {
     try {
         val game = GameVM(application)
         val thisBoard =
             Adapter.boardListToPersistenceFormat(Adapter.hashMapToList(gridState))
-        val thisNote = Adapter.hashMapToList(gridState)
+
 
         ScreenRouter.game.value = listOf(listOf(""))
 
         game.updateGame(
             board = thisBoard,
-            noteBoard = Adapter.boardListToPersistenceFormat(thisNote),
+            noteBoard = Adapter.boardListToPersistenceFormat(noteState),
             timer = stopWatch.formattedTime
         )
 

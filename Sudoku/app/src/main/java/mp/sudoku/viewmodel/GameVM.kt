@@ -77,6 +77,7 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         val game = CurrentGame.getInstance().getCurrent()
         try {
             game!!.grid = Adapter.boardListToPersistenceFormat(Adapter.changeStringToInt(board))
+            game.firstGrid = game.grid
             game.difficulty = difficulty
             game.lastUpdate = LocalDate.now().toString()
             game.id = id
@@ -101,7 +102,7 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         try {
             game!!.grid = board
             println(game.id)
-
+            println("Persistance notes:" + noteBoard)
             game.noteGrid = noteBoard
             game.timer = timer
             game.finished = finished

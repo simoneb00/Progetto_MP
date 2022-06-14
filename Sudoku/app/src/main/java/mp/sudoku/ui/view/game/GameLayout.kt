@@ -27,13 +27,11 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import mp.sudoku.R
 import mp.sudoku.model.CurrentGame
-import mp.sudoku.model.SudokuCell
 import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.*
 import java.util.*
-import kotlin.collections.HashMap
 
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -74,6 +72,17 @@ fun GameLayout(
         mutableStateOf(activeGameVM.gridState, neverEqualPolicy())
     }
 
+    var notes: List<List<Int>> = listOf(
+        listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+        listOf(0, 0, 0, 0, 0, 0, 0, 0, 0)
+    )
 
     activeGameVM.subGridState1 = {
         gridState.value = it
@@ -82,13 +91,22 @@ fun GameLayout(
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         if (s.value != listOf(listOf(""))) {
-            println("s.value = " + s.value)
-            println("solution = " + CurrentGame.getInstance().solution)
-            TopBar(gridState = activeGameVM.gridState, stopWatch = stopWatch.value)
+            TopBar(
+                gridState = activeGameVM.gridState, noteState = activeGameVM.notesState,
+                stopWatch = stopWatch.value)
             GridButtons(difficulty, settingsVM, stopWatch.value, activeGameVM)
 
             //if (!isCompleted)
-            Grid(values = Adapter.changeStringToInt(s.value), activeGameVM = activeGameVM)
+            if (CurrentGame.getInstance().getCurrent() != null && CurrentGame.getInstance().getCurrent()!!.noteGrid != "empty"){
+                notes = Adapter.changeStringToInt(
+                    Adapter.boardPersistenceFormatToList(
+                        CurrentGame.getInstance().getCurrent()!!.noteGrid
+                    )
+                )
+            }
+            Grid(
+                values = Adapter.changeStringToInt(s.value),notes = notes, activeGameVM = activeGameVM
+            )
             /*else {
                 println("**************************************************************")
                 println(Adapter.intListToStringList(Adapter.hashMapToList(gridState.value)))
@@ -107,7 +125,10 @@ fun GameLayout(
                 resume.value = true
             }
         } else {
-            CircularProgressIndicator(color = MaterialTheme.colors.secondary,modifier = Modifier.padding(top = 8.dp))
+            CircularProgressIndicator(
+                color = MaterialTheme.colors.secondary,
+                modifier = Modifier.padding(top = 8.dp)
+            )
             gameVM.loadData(
                 difficulty.lowercase(Locale.getDefault())
             ) {
@@ -144,8 +165,15 @@ fun GameLayout(
                             )
                         } else {
                             println(Adapter.hashMapToList(gridState.value))
-                            println("adapted string: " + Adapter.intListToStringList(Adapter.hashMapToList(gridState.value)))
-                            s.value = Adapter.intListToStringList(Adapter.hashMapToList(gridState.value))
+                            println(
+                                "adapted string: " + Adapter.intListToStringList(
+                                    Adapter.hashMapToList(
+                                        gridState.value
+                                    )
+                                )
+                            )
+                            s.value =
+                                Adapter.intListToStringList(Adapter.hashMapToList(gridState.value))
                         }
 
                         isCompleted = false

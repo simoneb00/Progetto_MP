@@ -19,7 +19,6 @@ import mp.sudoku.R
 import mp.sudoku.ui.theme.logoId
 import mp.sudoku.ui.view.components.NavigationButton
 import mp.sudoku.ui.view.components.TopBar
-import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.StatisticVM
 import mp.sudoku.viewmodel.StopWatch
 

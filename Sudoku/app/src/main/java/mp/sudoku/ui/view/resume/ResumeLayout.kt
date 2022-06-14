@@ -106,7 +106,7 @@ fun StartedGameCard(game: Game = Game()) {
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                ReadOnlyGrid(values = boardIntList, activeGameVM = activeGameVM, isReadOnly = true)
+                ReadOnlyGrid(values = boardIntList, activeGameVM = activeGameVM, notes = Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(game.noteGrid)),isReadOnly = true)
             }
 
             Row(
@@ -163,7 +163,7 @@ fun StartedGameCard1(game: Game = Game()) {
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        ReadOnlyGrid(values = boardIntList, activeGameVM = activeGameVM, isReadOnly = true)
+        ReadOnlyGrid(values = boardIntList,notes = Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(game.noteGrid)), activeGameVM = activeGameVM, isReadOnly = true)
     }
 
     Box(

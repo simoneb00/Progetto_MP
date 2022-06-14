@@ -37,8 +37,6 @@ class ActiveGameVM {
 
     fun initGrid(list: List<List<Int>>, notes: List<List<Int>>, isReadOnly: Boolean) {
 
-        println(notesState)
-
         for (i in list.indices) {               // i = number of row
             for (j in list[i].indices) {        // j = number of element in the row
                 /*
@@ -75,6 +73,7 @@ class ActiveGameVM {
                 }
             }
         }
+
 
         for (i in notes.indices) {
             for (j in notes[i].indices) {
