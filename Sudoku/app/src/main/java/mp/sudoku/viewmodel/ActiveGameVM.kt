@@ -6,22 +6,19 @@ import mp.sudoku.model.SudokuCell
 class ActiveGameVM {
 
     internal val gridState: HashMap<Int, SudokuCell> = HashMap()
-    internal var subGridState: ((HashMap<Int, SudokuCell>) -> Unit)? =
-        null   // this is useful to commit changes to the view (Grid)
-    internal var subGridState1: ((HashMap<Int, SudokuCell>) -> Unit)? =
-        null  // this is useful to commit changes to the view (GameLayout)
+    internal var subGridState: ((HashMap<Int, SudokuCell>) -> Unit)? = null   // this is useful to commit changes to the view (Grid)
+    internal var subGridState1: ((HashMap<Int, SudokuCell>) -> Unit)? = null  // this is useful to commit changes to the view (GameLayout)
 
-    internal var isCompleted = false               // true if grid is full
-    internal var subCompletedState: ((Boolean) -> Unit)? =
-        null     // this is useful to commit changes to the view (GameLayout, to show "Check" button)
+    internal var isCompleted = false                                // true if grid is full
+    internal var subCompletedState: ((Boolean) -> Unit)? = null     // this is useful to commit changes to the view (GameLayout, to show "Check" button)
 
     internal var notesMode = false   // true if user is inserting notes
 
-    internal var buttonsNumbers: MutableList<Int> =
-        mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)    // buttons to insert numbers in the grid
-    internal var subButtonsNumbers: ((MutableList<Int>) -> Unit)? =
-        null                        // to commit changes to the view (GameLayout, to know which buttons to show)
+    internal var buttonsNumbers: MutableList<Int> = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)    // buttons to insert numbers in the grid
+    internal var subButtonsNumbers: ((MutableList<Int>) -> Unit)? = null                        // to commit changes to the view (GameLayout, to know which buttons to show)
 
+
+    /* notesState - initialized empty - keeps track of the notes in the grid */
     internal var notesState: MutableList<MutableList<Int>> = mutableListOf(
         mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
         mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -35,7 +32,11 @@ class ActiveGameVM {
     )
 
 
-    fun initGrid(list: List<List<Int>>, notes: List<List<Int>>, isReadOnly: Boolean) {
+    fun initGrid(
+        list: List<List<Int>>,
+        initialGrid: List<List<Int>>,
+        notes: List<List<Int>>,
+        isReadOnly: Boolean) {
 
         for (i in list.indices) {               // i = number of row
             for (j in list[i].indices) {        // j = number of element in the row
@@ -54,7 +55,7 @@ class ActiveGameVM {
                         isSelected = false,
                         nonet = findNonet(j, i),            // a nonet is a 3x3 sub-block
                         isInEvidence = false,                  // the cell is on focus if it's placed on the same row/column/nonet of the selected cell
-                        isReadOnly = (list[i][j] != 0),     // the read only cells are those present in the initial grid
+                        isReadOnly = (initialGrid[i][j] != 0),     // the read only cells are those present in the initial grid
                         note = 0,
                         color = "Black"
                     )
@@ -75,6 +76,7 @@ class ActiveGameVM {
         }
 
 
+        /* populating grid with notes (if any) */
         for (i in notes.indices) {
             for (j in notes[i].indices) {
                 if (gridState[j * 10 + i]?.value == 0) {
@@ -83,14 +85,14 @@ class ActiveGameVM {
                         y = i,
                         value = 0,
                         isSelected = false,
-                        nonet = findNonet(j, i),            // a nonet is a 3x3 sub-block
-                        isInEvidence = false,                  // the cell is on focus if it's placed on the same row/column/nonet of the selected cell
-                        isReadOnly = (list[i][j] != 0),     // the read only cells are those present in the initial grid
+                        nonet = findNonet(j, i),
+                        isInEvidence = false,
+                        isReadOnly = false,
                         note = notes[i][j],
                         color = "Black"
                     )
 
-                    notesState[i][j] = notes[i][j]
+                    notesState[i][j] = notes[i][j]  // updating notesState, in order to keep track of notes
                 }
             }
         }
@@ -128,10 +130,6 @@ class ActiveGameVM {
     fun updateGrid(
         value: Int
     ) {
-
-        updateNumberButtons(valToRemove = value)
-
-
         gridState.values.forEach {
             if (it.isSelected) {        // the following operations are going to be applied only to the selected cell
                 //if (!it.isReadOnly) {
@@ -159,7 +157,8 @@ class ActiveGameVM {
         var hint = 0
         try {
             hint =
-                Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.solvedGrid))[getSelectedCellY()][getSelectedCellX()]
+                //Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.solvedGrid))[getSelectedCellY()][getSelectedCellX()]
+                CurrentGame.getInstance().solution?.get(getSelectedCellY())!![getSelectedCellX()]
             println(CurrentGame.getInstance().current!!.solvedGrid)
             println(CurrentGame.getInstance().solution)
             println(hint)
@@ -203,9 +202,8 @@ class ActiveGameVM {
             this.isGridCorrect = isCorrect
             subCorrectState?.invoke(isCorrect)
         }
-
-
          */
+
         return bool
     }
 
@@ -245,9 +243,10 @@ class ActiveGameVM {
 
         gridState.values.forEach {
             if (it.isSelected) {
+                // whether the cell contains a note or a value, its content is cancelled
                 it.note = 0
                 it.value = 0
-                notesState[it.y][it.x] = 0
+                notesState[it.y][it.x] = 0      // updating notes status
                 println(notesState)
             }
         }
@@ -320,17 +319,15 @@ class ActiveGameVM {
 
 
     fun checkGrid(grid: HashMap<Int, SudokuCell>): Boolean {
-        val linearSolution = CurrentGame.getInstance().solution
-        val linearGrid = Adapter.hashMapToList(grid)
-
-        println("linear grid" + linearGrid)
-        println("linear solution" + linearSolution)
+        val linearSolution = CurrentGame.getInstance().solution     // solved grid
+        val linearGrid = Adapter.hashMapToList(grid)                // input grid
 
         val isCorrect = linearSolution == linearGrid
 
         return if (isCorrect)
             isCorrect
         else {
+            /* marking wrong values in red */
             grid.values.forEach { cell ->
                 if (cell.value != linearSolution?.get(cell.y)?.get(cell.x))
                     cell.color = "Red"
@@ -346,7 +343,7 @@ class ActiveGameVM {
 
 
     private fun updateNumberButtons(valToRemove: Int) {
-        this.buttonsNumbers.remove(valToRemove)
+        this.buttonsNumbers.remove(valToRemove)             // removing button #valToRemove from the buttons in the view
         subButtonsNumbers?.invoke(this.buttonsNumbers)
     }
 }

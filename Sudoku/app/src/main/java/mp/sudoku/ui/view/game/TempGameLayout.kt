@@ -9,6 +9,6 @@ fun TempGameLayout(difficulty:String) {
         GameLayout(difficulty = difficulty,resume = false)
     }
     else{
-        GameLayout(difficulty = difficulty,ScreenRouter.game.value,resume = true)
+        GameLayout(difficulty = difficulty,ScreenRouter.game.value, resume = true)
     }
 }

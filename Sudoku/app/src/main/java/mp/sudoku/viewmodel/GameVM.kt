@@ -108,6 +108,7 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             game.finished = finished
             if (finished == 1) {
                 game.score = calculateScore(game)
+                println("calculated score: " + game.score)
             }
             game.lastUpdate = LocalDate.now().toString()
             repGame.updateOne(CurrentGame.getInstance().getCurrent())
@@ -122,6 +123,9 @@ class GameVM(application: Application) : AndroidViewModel(application) {
 
     private fun calculateScore(game: Game): Int {
         var score = game.score
+
+        println("starting score = $score")
+
         val constBonus = 20
         score += (10000 / StopWatch.formatString(game.timer).toDouble()).toInt()
         when (game.difficulty) {

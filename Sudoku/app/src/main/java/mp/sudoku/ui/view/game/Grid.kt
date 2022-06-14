@@ -18,8 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.SudokuCell
 import mp.sudoku.viewmodel.ActiveGameVM
+import mp.sudoku.viewmodel.Adapter
 
 
 @SuppressLint("MutableCollectionMutableState")
@@ -28,10 +30,30 @@ fun Grid(
     values: List<List<Int>>,
     notes: List<List<Int>>,
     activeGameVM: ActiveGameVM,
-    isReadOnly: Boolean = false
+    isReadOnly: Boolean = false,
+    resume: Boolean
 ) {
 
-    activeGameVM.initGrid(list = values, notes = notes, isReadOnly = isReadOnly)
+    if (resume) {
+        activeGameVM.initGrid(
+            list = values,
+            notes = notes,
+            isReadOnly = isReadOnly,
+            initialGrid = Adapter.changeStringToInt(
+                Adapter.boardPersistenceFormatToList(
+                    CurrentGame.getInstance().current?.firstGrid ?: ""
+                )
+            )
+        )
+    } else {
+        activeGameVM.initGrid(
+            list = values,
+            notes = notes,
+            isReadOnly = isReadOnly,
+            initialGrid = values
+        )
+    }
+
 
     val gridState = rememberSaveable {
         mutableStateOf(activeGameVM.gridState, neverEqualPolicy())
@@ -114,8 +136,8 @@ fun SudokuTextFields(
                     }
                 )
                 .clickable {
-                    //if (!cell.isReadOnly)
-                    vm.selectCell(cell.x, cell.y)
+                    if (!cell.isReadOnly)
+                        vm.selectCell(cell.x, cell.y)
                 },
             contentAlignment = if (note == "") Alignment.Center else Alignment.TopStart
         ) {

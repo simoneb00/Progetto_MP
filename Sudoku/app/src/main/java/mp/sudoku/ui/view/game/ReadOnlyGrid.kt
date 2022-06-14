@@ -30,7 +30,22 @@ fun ReadOnlyGrid(
     isReadOnly: Boolean = false
 ) {
 
-    activeGameVM.initGrid(values, notes, isReadOnly)
+    activeGameVM.initGrid(
+        list = values,
+        notes = notes,
+        isReadOnly = isReadOnly,
+        initialGrid = listOf(
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
+            listOf(0, 0, 0, 0, 0, 0, 0, 0, 0)
+        )
+    )
 
     val gridState = rememberSaveable {
         mutableStateOf(activeGameVM.gridState, neverEqualPolicy())

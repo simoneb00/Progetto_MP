@@ -93,11 +93,14 @@ fun GameLayout(
         if (s.value != listOf(listOf(""))) {
             TopBar(
                 gridState = activeGameVM.gridState, noteState = activeGameVM.notesState,
-                stopWatch = stopWatch.value)
+                stopWatch = stopWatch.value
+            )
             GridButtons(difficulty, settingsVM, stopWatch.value, activeGameVM)
 
             //if (!isCompleted)
-            if (CurrentGame.getInstance().getCurrent() != null && CurrentGame.getInstance().getCurrent()!!.noteGrid != "empty"){
+            if (CurrentGame.getInstance().getCurrent() != null && CurrentGame.getInstance()
+                    .getCurrent()!!.noteGrid != "empty"
+            ) {
                 notes = Adapter.changeStringToInt(
                     Adapter.boardPersistenceFormatToList(
                         CurrentGame.getInstance().getCurrent()!!.noteGrid
@@ -105,7 +108,10 @@ fun GameLayout(
                 )
             }
             Grid(
-                values = Adapter.changeStringToInt(s.value),notes = notes, activeGameVM = activeGameVM
+                values = Adapter.changeStringToInt(s.value),
+                notes = notes,
+                activeGameVM = activeGameVM,
+                resume = resume.value
             )
             /*else {
                 println("**************************************************************")
@@ -154,8 +160,18 @@ fun GameLayout(
             ) {
                 Button(
                     onClick = {
-
                         if (activeGameVM.checkGrid(gridState.value)) {
+
+                            println(
+                                "current board: " + CurrentGame.getInstance().getCurrent()!!.grid
+                            )
+                            println(
+                                "current timer: " + CurrentGame.getInstance().getCurrent()!!.timer
+                            )
+                            println(
+                                "current score: " + CurrentGame.getInstance().getCurrent()!!.score
+                            )
+
                             ScreenRouter.navigateTo(destination = ScreenRouter.WONGAMEPOPUP)
                             gameVM.updateGame(
                                 board = CurrentGame.getInstance().getCurrent()!!.grid,
@@ -164,6 +180,7 @@ fun GameLayout(
                                 finished = 1
                             )
                         } else {
+                            /*
                             println(Adapter.hashMapToList(gridState.value))
                             println(
                                 "adapted string: " + Adapter.intListToStringList(
@@ -174,6 +191,8 @@ fun GameLayout(
                             )
                             s.value =
                                 Adapter.intListToStringList(Adapter.hashMapToList(gridState.value))
+
+                             */
                         }
 
                         isCompleted = false
