@@ -102,9 +102,12 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         try {
             game!!.grid = board
             println(game.id)
-            println("Persistance notes:" + noteBoard)
+            println("Persistence notes:" + noteBoard)
             game.noteGrid = noteBoard
             game.timer = timer
+
+            println("timer before calculating score: " + timer)
+
             game.finished = finished
             if (finished == 1) {
                 game.score = calculateScore(game)
@@ -127,7 +130,13 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         println("starting score = $score")
 
         val constBonus = 20
+
+        println("non formatted time: " + game.timer)
+        println("formatted time: " + StopWatch.formatString(game.timer).toDouble())
+
         score += (10000 / StopWatch.formatString(game.timer).toDouble()).toInt()
+
+
         when (game.difficulty) {
             "easy" -> score += (constBonus * 1)
             "medium" -> score += (constBonus * 2)

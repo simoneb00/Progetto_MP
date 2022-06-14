@@ -27,11 +27,13 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import mp.sudoku.R
 import mp.sudoku.model.CurrentGame
+import mp.sudoku.model.SudokuCell
 import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.*
 import java.util.*
+import kotlin.collections.HashMap
 
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -176,7 +178,8 @@ fun GameLayout(
                             gameVM.updateGame(
                                 board = CurrentGame.getInstance().getCurrent()!!.grid,
                                 noteBoard = CurrentGame.getInstance().getCurrent()!!.grid,
-                                timer = CurrentGame.getInstance().getCurrent()!!.timer,
+                                //timer = CurrentGame.getInstance().getCurrent()!!.timer,
+                                timer = stopWatch.value.formattedTime,
                                 finished = 1
                             )
                         } else {
@@ -196,6 +199,7 @@ fun GameLayout(
                         }
 
                         isCompleted = false
+
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
                     shape = RoundedCornerShape(10.dp)
@@ -206,6 +210,7 @@ fun GameLayout(
         }
     }
 }
+
 
 @Composable
 fun GameButtons(
