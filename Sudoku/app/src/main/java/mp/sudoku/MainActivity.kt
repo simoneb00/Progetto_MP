@@ -1,6 +1,7 @@
 package mp.sudoku
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,8 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import mp.sudoku.model.CurrentGame
+import mp.sudoku.model.Game
 import mp.sudoku.ui.theme.SudokuTheme
 import mp.sudoku.ui.view.MainScreen
+import mp.sudoku.ui.view.ScreenRouter
+import mp.sudoku.viewmodel.GameVM
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("CoroutineCreationDuringComposition")
@@ -26,6 +32,31 @@ class MainActivity : ComponentActivity() {
                     MainScreen()
                 }
             }
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (!hasFocus && ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
+            println("game info:" +
+                    CurrentGame.getInstance().current?.grid + '\n' +
+                    CurrentGame.getInstance().current?.score + '\n' +
+                    CurrentGame.getInstance().current?.noteGrid + '\n' +
+                    CurrentGame.getInstance().current?.timer + '\n'
+            )
+
+            val gameVM = GameVM(ScreenRouter.application)
+
+            if (CurrentGame.getInstance().current?.grid != null) {
+
+                gameVM.updateGame(
+                    board = CurrentGame.getInstance().current?.grid!!,
+                    noteBoard = CurrentGame.getInstance().current?.noteGrid!!,
+                    timer = CurrentGame.getInstance().current?.timer!!,
+                    finished = 0
+                )
+            }
+
         }
     }
 }

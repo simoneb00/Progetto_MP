@@ -1,8 +1,10 @@
 package mp.sudoku.ui.view
 
+import android.app.Application
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import mp.sudoku.ui.view.game.GameLayout
 import mp.sudoku.ui.view.game.TempGameLayout
 import mp.sudoku.ui.view.game.WonGamePopUp
@@ -15,6 +17,7 @@ object ScreenRouter {
     var currentScreen: MutableState<Int> = mutableStateOf(1)
     var previousScreen: MutableState<Int> = mutableStateOf(1)
     var difficulty: MutableState<String> = mutableStateOf("easy")
+    lateinit var application: Application
 
 
     const val HOMESCREEN = 1
@@ -27,7 +30,6 @@ object ScreenRouter {
     const val GAMEDETAILSSCREEN = 8
     const val WONGAMEPOPUP = 9
 
-
     fun navigateTo(
         source: Int = currentScreen.value,
         destination: Int
@@ -35,11 +37,20 @@ object ScreenRouter {
         currentScreen.value = destination
         previousScreen.value = source
     }
+
+}
+
+@Composable
+fun GetCurrentContext() {
+    ScreenRouter.application = LocalContext.current.applicationContext as Application
 }
 
 
 @Composable
 fun MainScreen() {
+
+    GetCurrentContext()
+
     when (ScreenRouter.currentScreen.value) {
         1 -> HomeLayout()
         2 -> DifficultyLayout()

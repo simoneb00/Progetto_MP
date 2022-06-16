@@ -103,7 +103,6 @@ class ActiveGameVM {
                 }
             }
         }
-
     }
 
 
@@ -145,7 +144,11 @@ class ActiveGameVM {
                     it.value = 0
                     it.note = value
                     notesState[it.y][it.x] = value
+
                     println(notesState)
+
+                    CurrentGame.getInstance().current?.noteGrid = Adapter.boardListToPersistenceFormat(notesState)
+
                 } else {                // if notes mode is off and the user inserts a value on the cell, the previously present note (if any) is cancelled
                     it.note = 0
                     it.value = value
@@ -155,6 +158,7 @@ class ActiveGameVM {
             }
         }
 
+        CurrentGame.getInstance().current?.grid = Adapter.boardListToPersistenceFormat(Adapter.hashMapToList(gridState))
         subGridState?.invoke(gridState)                                 // commit grid changes to the view
         subGridState1?.invoke(gridState)                                // commit grid changes to the view
         if (checkIfFull()) subCompletedState?.invoke(true)      // if the grid is full, inform the view to show the "Check" button

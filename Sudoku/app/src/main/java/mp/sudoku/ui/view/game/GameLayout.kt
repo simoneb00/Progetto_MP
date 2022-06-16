@@ -35,7 +35,6 @@ import mp.sudoku.viewmodel.*
 import java.util.*
 import kotlin.collections.HashMap
 
-
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun GameLayout(
@@ -93,6 +92,7 @@ fun GameLayout(
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         if (s.value != listOf(listOf(""))) {
+
             TopBar(
                 gridState = activeGameVM.gridState, noteState = activeGameVM.notesState,
                 stopWatch = stopWatch.value

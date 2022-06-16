@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import kotlinx.coroutines.*
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import mp.sudoku.model.CurrentGame
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -61,6 +62,9 @@ class StopWatch : Parcelable {
     }
 
     fun start() {
+
+        CurrentGame.getInstance().current?.timer = this.formattedTime
+
         if(isActive) return
 
 
