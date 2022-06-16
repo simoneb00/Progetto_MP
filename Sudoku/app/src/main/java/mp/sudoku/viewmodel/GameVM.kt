@@ -96,7 +96,8 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         board: String,
         noteBoard: String,
         timer: String,
-        finished: Int = 0
+        finished: Int = 0,
+        cancel: Boolean = true
     ) {
         val game = CurrentGame.getInstance().getCurrent()
         try {
@@ -105,6 +106,7 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             println("Persistence notes:" + noteBoard)
             game.noteGrid = noteBoard
             game.timer = timer
+            game.solvedGrid = Adapter.boardListToPersistenceFormat(CurrentGame.getInstance().solution!!)
 
             println("timer before calculating score: " + timer)
 
@@ -115,10 +117,12 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             }
             game.lastUpdate = LocalDate.now().toString()
             repGame.updateOne(CurrentGame.getInstance().getCurrent())
-            CurrentGame.getInstance().current = null
-            CurrentGame.getInstance().solution = null
             CurrentGame.getInstance().timer.pause()
-            CurrentGame.getInstance().timer.reset()
+            if (cancel) {
+                CurrentGame.getInstance().current = null
+                CurrentGame.getInstance().solution = null
+                CurrentGame.getInstance().timer.reset()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -159,6 +163,8 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         try {
             temp =
                 Adapter.boardPersistenceFormatToList(game?.grid!!)
+            println("id partita: " + game.id)
+            println("griglia risolta: " + game.solvedGrid)
             CurrentGame.getInstance().solution = Adapter.changeStringToInt(
                 Adapter.boardPersistenceFormatToList(
                     game.solvedGrid

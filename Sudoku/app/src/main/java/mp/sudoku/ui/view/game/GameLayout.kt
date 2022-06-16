@@ -22,18 +22,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import mp.sudoku.R
 import mp.sudoku.model.CurrentGame
-import mp.sudoku.model.SudokuCell
 import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.*
 import java.util.*
-import kotlin.collections.HashMap
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
@@ -59,9 +58,11 @@ fun GameLayout(
     val s = rememberSaveable {
         mutableStateOf(gameGrid)
     }
+
     val stopWatch = rememberSaveable {
         mutableStateOf(StopWatch())
     }
+
 
     var isCompleted by remember { mutableStateOf(activeGameVM.isCompleted, neverEqualPolicy()) }
 
@@ -129,7 +130,13 @@ fun GameLayout(
             if (resume.value) {
                 stopWatch.value = CurrentGame.getInstance().timer
             } else {
-                gameVM.addGame(board = s.value, difficulty = difficulty, id = allGames.size + 1)
+                var maxId = 0
+                allGames.forEach { game ->
+                    if (game.id > maxId)
+                        maxId = game.id
+                }
+
+                gameVM.addGame(board = s.value, difficulty = difficulty, id = maxId + 1)
                 resume.value = true
             }
         } else {
@@ -340,11 +347,17 @@ fun GridButtons(
             modifier = Modifier.width(screenWidth - margin.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = stringResource(R.string.difficulty) + ": " + difficulty)
-            if (settingsVM.getTimerSetting())
+            when (difficulty) {
+                "easy" -> Text(stringResource(id = R.string.easy))
+                "medium" -> Text(stringResource(id = R.string.medium))
+                "hard" -> Text(stringResource(id = R.string.hard))
+            }
+            if (settingsVM.getTimerSetting()) {
                 Text(text = "Timer: " + stopwatch.formattedTime)
-            if (settingsVM.getScoreSetting())
+        }
+            if (settingsVM.getScoreSetting()) {
                 Text(text = stringResource(R.string.score) + ": " + activeGameVM.getScore())
+            }
         }
     }
 }

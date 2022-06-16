@@ -25,9 +25,11 @@ class Adapter {
         }
 
         fun intListToStringList(intList: List<List<Int>>): List<List<String>> {
-            println("*************************************************" +
-                    "Adapter" +
-                    "*************************************************")
+            println(
+                "*************************************************" +
+                        "Adapter" +
+                        "*************************************************"
+            )
 
             println("int list: " + intList)
 
@@ -78,13 +80,20 @@ class Adapter {
             val values: MutableList<MutableList<String>> =
                 mutableListOf()     // this creates an empty mutableList
 
-            rows.forEach { row ->
-                val rowValues: MutableList<String> =
-                    row.split(".")
-                        .toMutableList()      // we get a list of strings (every value in the row)
-                values.add(rowValues)
-                if (rowValues.size > 9)
-                    rowValues.removeAt(rowValues.size - 1)
+            if (board != "empty") {
+
+                try {
+                    rows.forEach { row ->
+                        val rowValues: MutableList<String> =
+                            row.split(".")
+                                .toMutableList()      // we get a list of strings (every value in the row)
+                        values.add(rowValues)
+                        if (rowValues.size > 9)
+                            rowValues.removeAt(rowValues.size - 1)
+                    }
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                }
             }
 
             return values

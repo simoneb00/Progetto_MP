@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.ui.view.ScreenRouter
@@ -31,10 +32,11 @@ fun NavigationButton(text: String, destination: Int) {
 }
 
 @Composable
-fun DifficultyButton(text: String, destination: Int) {
+fun DifficultyButton(text: String, destination: Int, difficulty: String) {
     Button(
         onClick = {
-            ScreenRouter.difficulty.value = text; ScreenRouter.navigateTo(destination = destination)
+            ScreenRouter.difficulty.value = difficulty;
+            ScreenRouter.navigateTo(destination = destination)
         },
         colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),
         modifier = Modifier.size(height = 50.dp, width = 250.dp),

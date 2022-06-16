@@ -43,4 +43,12 @@
     <string name="hints_setting_desc">Abilita o disabilita i suggerimenti durante la partita</string>
     <string name="difficulty">Difficoltà</string>
     <string name="no_started_games_found">Non ci sono partite iniziate</string>
+    <string name="cancel">Cancella</string>
+    <string name="notes">Note</string>
+    <string name="hint">Suggerimento</string>
+    <string name="select_difficulty">Seleziona la difficoltà</string>
+    <string name="easy">Facile</string>
+    <string name="medium">Medio</string>
+    <string name="hard">Difficile</string>
+    <string name="no_games_found">Nessuna partita trovata</string>
 </resources>

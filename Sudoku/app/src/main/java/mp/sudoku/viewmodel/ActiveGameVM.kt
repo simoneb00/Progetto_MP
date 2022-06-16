@@ -1,5 +1,7 @@
 package mp.sudoku.viewmodel
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.SudokuCell
 
@@ -172,7 +174,7 @@ class ActiveGameVM {
                     //Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.solvedGrid))[getSelectedCellY()][getSelectedCellX()]
                 CurrentGame.getInstance().solution?.get(getSelectedCellY())!![getSelectedCellX()]
             println(CurrentGame.getInstance().current!!.solvedGrid)
-            println(CurrentGame.getInstance().solution)
+            println("griglia giusta: " + CurrentGame.getInstance().solution)
             println(hint)
             updateGrid(hint)
         } catch (e: Exception) {

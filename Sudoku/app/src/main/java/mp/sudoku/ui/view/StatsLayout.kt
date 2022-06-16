@@ -48,8 +48,11 @@ fun StatsLayout() {
     val numFinishedGames = finishedGames.size
     val numGames = allGames.size
 
-    val bestTime: String = StatisticVM.getBestTime(finishedGames)
-    val averageTime: String = StatisticVM.getAvgTime(finishedGames)
+    var bestTime: String = StatisticVM.getBestTime(finishedGames)
+    if (bestTime.isEmpty()) bestTime = stringResource(R.string.no_games_found)
+    var averageTime: String = StatisticVM.getAvgTime(finishedGames)
+    if (averageTime.isEmpty()) averageTime = stringResource(R.string.no_games_found)
+
 
     val bestScore: Float = StatisticVM.getMaxScore(finishedGames)
     val averageScore: Float = StatisticVM.getAvgScore(finishedGames)

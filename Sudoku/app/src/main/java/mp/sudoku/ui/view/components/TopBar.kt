@@ -20,6 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import mp.sudoku.model.CurrentGame
+import mp.sudoku.model.Game
 import mp.sudoku.model.SudokuCell
 import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.viewmodel.Adapter
@@ -51,6 +53,18 @@ fun TopBar(
                 stopWatch
             )
             ScreenRouter.GAMEDETAILSSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
+            ScreenRouter.SETTINGSCREEN -> {
+                if (ScreenRouter.previousScreen.value == ScreenRouter.GAMESCREEN) {
+                    ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.grid)
+                }
+                ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value)
+            }
+            ScreenRouter.RULESSCREEN -> {
+                if (ScreenRouter.previousScreen.value == ScreenRouter.GAMESCREEN) {
+                    ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.grid)
+                }
+                ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value)
+            }
             else -> {
                 ScreenRouter.navigateTo(
                     destination = ScreenRouter.previousScreen.value,
@@ -81,10 +95,24 @@ fun TopBar(
                         stopWatch
                     )
                     ScreenRouter.GAMEDETAILSSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
-                    else -> ScreenRouter.navigateTo(
-                        destination = ScreenRouter.previousScreen.value,
-                        source = ScreenRouter.currentScreen.value
-                    )
+                    ScreenRouter.SETTINGSCREEN -> {
+                        if (ScreenRouter.previousScreen.value == ScreenRouter.GAMESCREEN) {
+                            ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.grid)
+                        }
+                        ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value)
+                    }
+                    ScreenRouter.RULESSCREEN -> {
+                        if (ScreenRouter.previousScreen.value == ScreenRouter.GAMESCREEN) {
+                            ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.grid)
+                        }
+                        ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value)
+                    }
+                    else -> {
+                        ScreenRouter.navigateTo(
+                            destination = ScreenRouter.previousScreen.value,
+                            source = ScreenRouter.currentScreen.value
+                        )
+                    }
                 }
             },
                 modifier = Modifier
@@ -101,7 +129,20 @@ fun TopBar(
         }
 
         if (includeGuideButton) {
-            IconButton(onClick = { ScreenRouter.navigateTo(destination = ScreenRouter.RULESSCREEN) },
+            IconButton(onClick = {
+                if (ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
+                    val gameVM = GameVM(ScreenRouter.application)
+                    CurrentGame.getInstance().timer.pause()
+                    gameVM.updateGame(
+                        board = CurrentGame.getInstance().current?.grid!!,
+                        noteBoard = CurrentGame.getInstance().current?.noteGrid!!,
+                        timer = CurrentGame.getInstance().current?.timer!!,
+                        finished = 0,
+                        cancel = false
+                    )
+                }
+                ScreenRouter.navigateTo(destination = ScreenRouter.RULESSCREEN)
+            },
                 modifier = Modifier
                     .size(30.dp)
                     .constrainAs(guideButton) {
@@ -116,7 +157,21 @@ fun TopBar(
         }
 
         if (includeSettingsButton) {
-            IconButton(onClick = { ScreenRouter.navigateTo(destination = ScreenRouter.SETTINGSCREEN) },
+            IconButton(onClick = {
+                if (ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
+                    println("id: " + CurrentGame.getInstance().current?.id)
+                    val gameVM = GameVM(ScreenRouter.application)
+                    CurrentGame.getInstance().timer.pause()
+                    gameVM.updateGame(
+                        board = CurrentGame.getInstance().current?.grid!!,
+                        noteBoard = CurrentGame.getInstance().current?.noteGrid!!,
+                        timer = CurrentGame.getInstance().current?.timer!!,
+                        finished = 0,
+                        cancel = false
+                    )
+                }
+                ScreenRouter.navigateTo(destination = ScreenRouter.SETTINGSCREEN)
+            },
                 modifier = Modifier
                     .size(30.dp)
                     .constrainAs(settingsButton) {
@@ -135,7 +190,8 @@ fun TopBar(
 
 fun updateGame(
     application: Application, gridState: HashMap<Int, SudokuCell>,
-    noteState: MutableList<MutableList<Int>>, stopWatch: StopWatch) {
+    noteState: MutableList<MutableList<Int>>, stopWatch: StopWatch
+) {
     try {
         val game = GameVM(application)
         val thisBoard =

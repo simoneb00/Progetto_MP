@@ -8,10 +8,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import mp.sudoku.R
 import mp.sudoku.ui.view.components.DifficultyButton
 import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.StopWatch
@@ -37,7 +39,7 @@ fun DifficultyLayout() {
 @Composable
 fun DifficultyText() {
     Row(modifier = Modifier.fillMaxWidth().padding(top = 100.dp), horizontalArrangement = Arrangement.Center) {
-        Text(text = "Select Difficulty", fontSize = 30.sp, fontWeight = FontWeight.SemiBold ,color = MaterialTheme.colors.secondary)
+        Text(text = stringResource(R.string.select_difficulty), fontSize = 30.sp, fontWeight = FontWeight.SemiBold ,color = MaterialTheme.colors.secondary)
     }
 }
 
@@ -67,8 +69,8 @@ fun DifficultyButtons() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        DifficultyButton(text = "Easy", destination = ScreenRouter.GAMESCREEN)
-        DifficultyButton(text = "Medium", destination = ScreenRouter.GAMESCREEN)
-        DifficultyButton(text = "Hard", destination = ScreenRouter.GAMESCREEN)
+        DifficultyButton(text = stringResource(R.string.easy), destination = ScreenRouter.GAMESCREEN, difficulty = "easy")
+        DifficultyButton(text = stringResource(R.string.medium), destination = ScreenRouter.GAMESCREEN, difficulty = "medium")
+        DifficultyButton(text = stringResource(R.string.hard), destination = ScreenRouter.GAMESCREEN, difficulty = "hard")
     }
 }
