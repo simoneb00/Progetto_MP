@@ -7,9 +7,10 @@ import com.android.volley.toolbox.Volley
 
 
 
-
+/*
+Classe singleton che ha la responsabilità di ottenere un coda volley, in modo da avere una sola coda per tutta la vita dell'app
+ */
 class VolleySingleton {
-
     private var mRequestQueue: RequestQueue? = null
 
     companion object {

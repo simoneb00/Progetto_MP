@@ -3,9 +3,7 @@ package mp.sudoku.viewmodel
 import android.app.Application
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.LiveData
-import mp.sudoku.R
 import mp.sudoku.model.Game
 import mp.sudoku.model.database.DBGame
 import mp.sudoku.viewmodel.repository.RepositoryGame

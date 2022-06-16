@@ -32,25 +32,75 @@ class GameVM(application: Application) : AndroidViewModel(application) {
 
     companion object {
         fun solve(board: List<List<String>>): List<List<Int>> {
-            var adaptedGrid = ""
-            for (i in board) {
-                for (j in i) {
-                    if (j.toInt() == 0)
-                        adaptedGrid.plus(".").also { adaptedGrid = it }
-                    else
-                        adaptedGrid.plus(j).also { adaptedGrid = it }
-                }
-                adaptedGrid.plus("\n").also { adaptedGrid = it }
-            }
-
-            val solver = SudokuSolver(adaptedGrid.trimIndent())
             try {
+                var adaptedGrid = ""
+                for (i in board) {
+                    for (j in i) {
+                        if (j.toInt() == 0)
+                            adaptedGrid.plus(".").also { adaptedGrid = it }
+                        else
+                            adaptedGrid.plus(j).also { adaptedGrid = it }
+                    }
+                    adaptedGrid.plus("\n").also { adaptedGrid = it }
+                }
+
+                val solver = SudokuSolver(adaptedGrid.trimIndent())
                 if (solver.solve() == Result.Open)
                     solver.solveRecursive()
+                return solver.getSudoku()
             } catch (e: Exception) {
                 e.printStackTrace()
+                return listOf(listOf())
             }
-            return solver.getSudoku()
+
+        }
+
+        fun validateGrid(board: List<List<String>>): Boolean {
+            var valid = true
+            try {
+                for (row in board) {
+                    for (col in row) {
+                        if (!checkRow(col, row)) {
+                            valid = false
+                        }
+                        if (!checkColumn(board, col.toInt(), row.indexOf(col))) {
+                            valid = false
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                valid = false
+            }
+            return valid
+        }
+
+        private fun checkColumn(board: List<List<String>>, number: Int, index: Int): Boolean {
+            var valid = true
+            var count = 0
+
+            for (row in board) {
+                if (row[index].toInt() == number) {
+                    count++
+                }
+            }
+            if (count > 1)
+                valid = false
+            return valid
+        }
+
+        private fun checkRow(s: String, row: List<String>): Boolean {
+            var valid = true
+            var count = 0
+
+            for (num in row) {
+                if (num == s)
+                    count++
+            }
+            if (count > 1)
+                valid = false
+
+            return valid
         }
     }
 
@@ -81,9 +131,10 @@ class GameVM(application: Application) : AndroidViewModel(application) {
             game.difficulty = difficulty
             game.lastUpdate = LocalDate.now().toString()
             game.id = id
-            if(game.solvedGrid == "empty"){
+            if (game.solvedGrid == "empty") {
                 game.solvedGrid = Adapter.boardListToPersistenceFormat(solve(board))
-                CurrentGame.getInstance().solution = Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(game.solvedGrid))
+                CurrentGame.getInstance().solution =
+                    Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(game.solvedGrid))
             }
             repGame.insertGame(game)
             CurrentGame.getInstance().solution = solve(board)
@@ -102,18 +153,14 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         val game = CurrentGame.getInstance().getCurrent()
         try {
             game!!.grid = board
-            println(game.id)
-            println("Persistence notes:" + noteBoard)
             game.noteGrid = noteBoard
             game.timer = timer
-            game.solvedGrid = Adapter.boardListToPersistenceFormat(CurrentGame.getInstance().solution!!)
-
-            println("timer before calculating score: " + timer)
+            game.solvedGrid =
+                Adapter.boardListToPersistenceFormat(CurrentGame.getInstance().solution!!)
 
             game.finished = finished
             if (finished == 1) {
                 game.score = calculateScore(game)
-                println("calculated score: " + game.score)
             }
             game.lastUpdate = LocalDate.now().toString()
             repGame.updateOne(CurrentGame.getInstance().getCurrent())
@@ -131,12 +178,7 @@ class GameVM(application: Application) : AndroidViewModel(application) {
     private fun calculateScore(game: Game): Int {
         var score = game.score
 
-        println("starting score = $score")
-
         val constBonus = 20
-
-        println("non formatted time: " + game.timer)
-        println("formatted time: " + StopWatch.formatString(game.timer).toDouble())
 
         score += (10000 / StopWatch.formatString(game.timer).toDouble()).toInt()
 
@@ -163,8 +205,6 @@ class GameVM(application: Application) : AndroidViewModel(application) {
         try {
             temp =
                 Adapter.boardPersistenceFormatToList(game?.grid!!)
-            println("id partita: " + game.id)
-            println("griglia risolta: " + game.solvedGrid)
             CurrentGame.getInstance().solution = Adapter.changeStringToInt(
                 Adapter.boardPersistenceFormatToList(
                     game.solvedGrid

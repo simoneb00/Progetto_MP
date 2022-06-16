@@ -22,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -34,18 +33,18 @@ import mp.sudoku.ui.view.components.TopBar
 import mp.sudoku.viewmodel.*
 import java.util.*
 
-@SuppressLint("CoroutineCreationDuringComposition")
+@SuppressLint("CoroutineCreationDuringComposition", "MutableCollectionMutableState")
 @Composable
 fun GameLayout(
     difficulty: String,
     gameGrid: List<List<String>> = listOf(listOf("")),
-    resume: Boolean = false
+    isResume: Boolean = false
 ) {
 
     val settingsVM = SettingsVM(LocalContext.current.applicationContext)
     val activeGameVM = ActiveGameVM()
     val resume = rememberSaveable {
-        mutableStateOf(resume)
+        mutableStateOf(isResume)
     }
 
     val allGames by settingsVM.allGames.observeAsState(listOf())
@@ -100,7 +99,6 @@ fun GameLayout(
             )
             GridButtons(difficulty, settingsVM, stopWatch.value, activeGameVM)
 
-            //if (!isCompleted)
             if (CurrentGame.getInstance().getCurrent() != null && CurrentGame.getInstance()
                     .getCurrent()!!.noteGrid != "empty"
             ) {
@@ -116,16 +114,7 @@ fun GameLayout(
                 activeGameVM = activeGameVM,
                 resume = resume.value
             )
-            /*else {
-                println("**************************************************************")
-                println(Adapter.intListToStringList(Adapter.hashMapToList(gridState.value)))
-                println("**************************************************************")
-                println(s.value)
-                s.value = Adapter.intListToStringList(Adapter.hashMapToList(gridState.value))
-                Grid(values = Adapter.hashMapToList(gridState.value), activeGameVM = activeGameVM)
-            }
 
-             */
 
             if (resume.value) {
                 stopWatch.value = CurrentGame.getInstance().timer
@@ -169,18 +158,8 @@ fun GameLayout(
             ) {
                 Button(
                     onClick = {
-                        if (activeGameVM.checkGrid(gridState.value)) {
-
-                            println(
-                                "current board: " + CurrentGame.getInstance().getCurrent()!!.grid
-                            )
-                            println(
-                                "current timer: " + CurrentGame.getInstance().getCurrent()!!.timer
-                            )
-                            println(
-                                "current score: " + CurrentGame.getInstance().getCurrent()!!.score
-                            )
-
+                        if (activeGameVM.checkGrid(gridState.value) || GameVM.validateGrid(Adapter.intListToStringList(Adapter.hashMapToList(gridState.value)))) {
+                            println(GameVM.validateGrid(Adapter.intListToStringList(Adapter.hashMapToList(gridState.value))))
                             ScreenRouter.navigateTo(destination = ScreenRouter.WONGAMEPOPUP)
                             gameVM.updateGame(
                                 board = CurrentGame.getInstance().getCurrent()!!.grid,
@@ -189,20 +168,6 @@ fun GameLayout(
                                 timer = stopWatch.value.formattedTime,
                                 finished = 1
                             )
-                        } else {
-                            /*
-                            println(Adapter.hashMapToList(gridState.value))
-                            println(
-                                "adapted string: " + Adapter.intListToStringList(
-                                    Adapter.hashMapToList(
-                                        gridState.value
-                                    )
-                                )
-                            )
-                            s.value =
-                                Adapter.intListToStringList(Adapter.hashMapToList(gridState.value))
-
-                             */
                         }
 
                         isCompleted = false

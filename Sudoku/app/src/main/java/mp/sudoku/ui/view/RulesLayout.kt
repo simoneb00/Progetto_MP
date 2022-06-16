@@ -27,25 +27,6 @@ import mp.sudoku.viewmodel.StopWatch
 
 @Composable
 fun RulesLayout() {
-
-    /* background color transition animation
-
-    var animationPlayed by remember {
-        mutableStateOf(false)
-    }
-    val color = animateColorAsState(
-        targetValue = if (animationPlayed) BackgroundWhite else Color.White,
-        animationSpec = tween(
-            durationMillis = 1000,
-            delayMillis = 0
-        )
-    )
-    LaunchedEffect(key1 = true) {
-        animationPlayed = true
-    }
-
-     end of animation */
-
     TopBar(
         includeSettingsButton = false,
         includeGuideButton = false,
@@ -55,14 +36,18 @@ fun RulesLayout() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 30.dp)
-            //.background(color = color.value)
-                ,
+            .padding(top = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         val image: Painter = painterResource(id = R.drawable.rules)
-        Image(painter = image, contentDescription = "Rules Image", modifier = Modifier.size(300.dp).background(color = Color.White))
+        Image(
+            painter = image,
+            contentDescription = "Rules Image",
+            modifier = Modifier
+                .size(300.dp)
+                .background(color = Color.White)
+        )
 
         Column(
             modifier = Modifier
@@ -123,21 +108,27 @@ fun RuleCard(
 
     Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 15.dp)) {
 
-        Text(text = title, fontSize = 17.sp, fontWeight = FontWeight.Bold,
-            //color = MaterialTheme.colors.secondary
+        Text(
+            text = title, fontSize = 17.sp, fontWeight = FontWeight.Bold,
+
             )        /* Rule no. * */
 
-        Text(text = subtitle, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colors.secondary)     /* short description of the rule */
+        Text(
+            text = subtitle,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colors.secondary
+        )     /* short description of the rule */
 
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                //.background(color = Color.White)
                 .height(height = height.value)
         ) {
-            Text(text = text, fontSize = 15.sp,
-                //color = textColor,
-                modifier = Modifier.padding(5.dp))       /* long description of the rule */
+            Text(
+                text = text, fontSize = 15.sp,
+                modifier = Modifier.padding(5.dp)
+            )       /* long description of the rule */
         }
     }
 

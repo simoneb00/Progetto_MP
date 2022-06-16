@@ -40,7 +40,7 @@ class StopWatch : Parcelable {
     private var lastTimestamp = 0L
 
     companion object{
-        fun formatTime(timeMillis: Long): String {
+        fun formatTime(timeMillis: Long): String { //usefull fun to change from millisec to formatted time
             val localDateTime = LocalDateTime.ofInstant(
                 Instant.ofEpochMilli(timeMillis),
                 ZoneId.systemDefault()
@@ -52,7 +52,7 @@ class StopWatch : Parcelable {
             return localDateTime.format(formatter)
         }
 
-        fun formatString(time: String): Long {
+        fun formatString(time: String): Long { //usefull fun to change from formatted time to millisec
             var millis = 0L
             val temp = time.split(":")
             millis+=temp[0].toInt()*60*1000L
@@ -62,7 +62,6 @@ class StopWatch : Parcelable {
     }
 
     fun start() {
-
         CurrentGame.getInstance().current?.timer = this.formattedTime
 
         if(isActive) return
@@ -79,11 +78,6 @@ class StopWatch : Parcelable {
                 timeMillis += System.currentTimeMillis() - lastTimestamp
                 lastTimestamp = System.currentTimeMillis()
                 formattedTime = formatTime(timeMillis)
-                if(timeMillis>1000000000000)
-                {
-                    this@StopWatch.isActive = false
-                    //TODO verifica se aumenta ad un'ora
-                }
             }
         }
     }

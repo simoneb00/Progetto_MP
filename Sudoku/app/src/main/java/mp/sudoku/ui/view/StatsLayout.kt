@@ -176,7 +176,7 @@ fun GamesStatsLayout(
             shape = RoundedCornerShape(3.dp),
             //backgroundColor = Color.White
         ) {
-            Column() {
+            Column {
                 GameStatsRow(
                     description = stringResource(R.string.games_played),
                     value = numGames
@@ -268,61 +268,6 @@ fun ScoreStatsLayout(bestScore: Float, averageScore: Float) {
         }
 
     }
-}
-
-@Composable
-fun StatsRow(description: String, intValue: Float = (-1).toFloat(), floatValue: String = "") {
-
-
-    var animationPlayed by remember {
-        mutableStateOf(false)
-    }
-    val dividerWidth = animateDpAsState(
-        targetValue = if (animationPlayed) 400.dp else 0.dp,
-        animationSpec = tween(
-            durationMillis = 1000,
-            delayMillis = 0
-        )
-    )
-    LaunchedEffect(key1 = true) {
-        animationPlayed = true
-    }
-
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .padding(top = 2.dp, start = 10.dp, end = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = description,
-            fontSize = 15.sp,
-            //color = Color.Black
-        )
-        if (intValue >= 0)
-            Text(
-                text = intValue.toString(),
-                fontSize = 15.sp,
-                color = Color.DarkGray,
-                fontWeight = FontWeight.Bold
-            )
-        else
-            Text(
-                text = "$floatValue",
-                fontSize = 15.sp,
-                color = Color.DarkGray,
-                fontWeight = FontWeight.Bold
-            )
-    }
-    Divider(
-        color = Color.LightGray,
-        thickness = 1.dp,
-        modifier = Modifier.width(dividerWidth.value),
-        startIndent = 10.dp
-    )
 }
 
 @Composable
@@ -446,8 +391,7 @@ fun ScoreStatsRow(description: String, value: Float = 0f) {
     ) {
         Text(
             text = description,
-            fontSize = 15.sp,
-            //color = Color.Black
+            fontSize = 15.sp
         )
 
         Text(

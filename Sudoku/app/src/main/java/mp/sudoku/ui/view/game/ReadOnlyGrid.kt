@@ -3,7 +3,6 @@ package mp.sudoku.ui.view.game
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
@@ -68,7 +67,7 @@ fun ReadOnlyGrid(
                 .size(screenWidth - margin.dp)
         ) {
             val offset = (screenWidth - margin.dp).value / 9
-            ROSudokuTextFields(offset, activeGameVM, gridState = gridState.value)
+            ROSudokuTextFields(offset, gridState = gridState.value)
             ROBoardGrid(offset)
         }
     }
@@ -97,7 +96,7 @@ fun ROBoardGrid(offset: Float) {
 }
 
 @Composable
-fun ROSudokuTextFields(offset: Float, vm: ActiveGameVM, gridState: HashMap<Int, SudokuCell>) {
+fun ROSudokuTextFields(offset: Float, gridState: HashMap<Int, SudokuCell>) {
 
 
     gridState.values.forEach { cell ->

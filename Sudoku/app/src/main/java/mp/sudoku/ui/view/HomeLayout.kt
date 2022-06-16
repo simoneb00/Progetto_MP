@@ -29,7 +29,6 @@ fun HomeLayout() {
     Column(
         modifier = Modifier
             .fillMaxHeight()
-        //.verticalScroll(rememberScrollState())
     ) {
         TopBar(
             includeBackButton = false,

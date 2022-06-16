@@ -21,7 +21,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import mp.sudoku.model.CurrentGame
-import mp.sudoku.model.Game
 import mp.sudoku.model.SudokuCell
 import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.viewmodel.Adapter

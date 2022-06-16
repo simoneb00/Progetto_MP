@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalContext
-import mp.sudoku.ui.view.game.GameLayout
 import mp.sudoku.ui.view.game.TempGameLayout
 import mp.sudoku.ui.view.game.WonGamePopUp
 import mp.sudoku.ui.view.resume.GameDetailsLayout

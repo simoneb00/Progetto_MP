@@ -6,9 +6,9 @@ import mp.sudoku.ui.view.ScreenRouter
 @Composable
 fun TempGameLayout(difficulty:String) {
     if(ScreenRouter.previousScreen.value == ScreenRouter.DIFFICULTYSCREEN){
-        GameLayout(difficulty = difficulty,resume = false)
+        GameLayout(difficulty = difficulty,isResume = false)
     }
     else{
-        GameLayout(difficulty = difficulty,ScreenRouter.game.value, resume = true)
+        GameLayout(difficulty = difficulty,ScreenRouter.game.value, isResume = true)
     }
 }

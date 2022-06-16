@@ -5,7 +5,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -143,96 +142,5 @@ fun StartedGameCard(game: Game = Game()) {
 
         }
 
-    }
-}
-
-@Composable
-fun StartedGameCard1(game: Game = Game()) {
-
-    val boardStringList: List<List<String>> = Adapter.boardPersistenceFormatToList(game.grid)
-    val boardIntList: List<List<Int>> = Adapter.changeStringToInt(boardStringList)
-    val gameVM = GameVM(
-        LocalContext
-            .current.applicationContext as Application
-    )
-    val activeGameVM = ActiveGameVM()
-
-    Box(
-        modifier = Modifier
-            .padding(start = 25.dp, end = 25.dp, top = 10.dp)
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        ReadOnlyGrid(values = boardIntList,notes = Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(game.noteGrid)), activeGameVM = activeGameVM, isReadOnly = true)
-    }
-
-    Box(
-        modifier = Modifier
-            .padding(start = 32.dp, end = 32.dp)
-            .fillMaxWidth()
-        //.height(75.dp)
-        ,
-        contentAlignment = Alignment.Center
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 20.dp, end = 20.dp)
-        ) {
-            Column {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "Difficulty: ", modifier = Modifier.padding(start = 5.dp))
-                    Text(
-                        text = game.difficulty,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(end = 5.dp)
-                    )
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "Score: ", modifier = Modifier.padding(start = 5.dp))
-                    Text(
-                        text = game.score.toString(),
-                        color = Color.Gray,
-                        modifier = Modifier.padding(end = 5.dp)
-                    )
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "Timer: ", modifier = Modifier.padding(start = 5.dp))
-                    Text(
-                        text = game.timer,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(end = 5.dp)
-                    )
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "Last Update: ", modifier = Modifier.padding(start = 5.dp))
-                    Text(
-                        text = game.lastUpdate,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(end = 5.dp)
-                    )
-                }
-            }
-
-            Button(
-                onClick = {
-                    CurrentGame.getInstance().current = game
-                    ScreenRouter.navigateTo(ScreenRouter.RESUMESCREEN, ScreenRouter.GAMESCREEN)
-                },
-                border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
-                shape = RoundedCornerShape(10.dp)
-            ) {
-                Text(text = "Resume", fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
-            }
-        }
     }
 }

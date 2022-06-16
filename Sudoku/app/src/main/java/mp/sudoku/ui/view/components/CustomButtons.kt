@@ -3,10 +3,12 @@ package mp.sudoku.ui.view.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.ui.view.ScreenRouter
@@ -35,7 +37,7 @@ fun NavigationButton(text: String, destination: Int) {
 fun DifficultyButton(text: String, destination: Int, difficulty: String) {
     Button(
         onClick = {
-            ScreenRouter.difficulty.value = difficulty;
+            ScreenRouter.difficulty.value = difficulty
             ScreenRouter.navigateTo(destination = destination)
         },
         colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),

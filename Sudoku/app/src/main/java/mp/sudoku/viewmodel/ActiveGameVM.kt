@@ -1,7 +1,5 @@
 package mp.sudoku.viewmodel
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.SudokuCell
 

@@ -5,6 +5,9 @@ import androidx.room.*
 import mp.sudoku.model.Game
 
 
+/*
+* Classer DAO che ha la responsabilità di chiamare le query utilizzando Room
+*/
 @Dao
 interface DAOGame {
     @Insert(onConflict = OnConflictStrategy.IGNORE)

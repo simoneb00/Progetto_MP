@@ -3,6 +3,10 @@ package mp.sudoku.model.database.sharedpreferences
 import android.content.Context
 import android.content.SharedPreferences
 
+/*
+ * Classe che ha la responsabilità di salvare in memoria le shared preferences relative ai settings dell'applicazione
+ */
+
 class SettingsSharedPreferences(context: Context) {
 
     private val sharedPrefs: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
