@@ -14,9 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import mp.sudoku.R
 import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.Game
 import mp.sudoku.ui.view.ScreenRouter
@@ -64,6 +66,7 @@ fun ButtonsRow(game: Game) {
         }
         Button(
             onClick = {
+                ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(game.grid)
                 CurrentGame.getInstance().current = game
                 gameVM.resumeGame()
                 ScreenRouter.navigateTo(ScreenRouter.RESUMESCREEN, ScreenRouter.GAMESCREEN)
@@ -71,7 +74,7 @@ fun ButtonsRow(game: Game) {
             border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
             shape = RoundedCornerShape(10.dp)
         ) {
-            Text(text = "Resume")
+            Text(text = stringResource(R.string.resume))
         }
     }
 }
@@ -79,6 +82,7 @@ fun ButtonsRow(game: Game) {
 @Composable
 fun DetailsRow(game: Game) {
 
+    /* details table animation */
     var animationPlayed by remember {
         mutableStateOf(false)
     }
@@ -107,9 +111,17 @@ fun DetailsRow(game: Game) {
                 .padding(top = 10.dp) //, end = 20.dp, start = 20.dp)
                 .height(height.value)
         ) {
-            DetailRowCard(name = "Difficulty", value = game.difficulty)
-            DetailRowCard(name = "Last Update", value = game.lastUpdate)
-            DetailRowCard(name = "Score", value = game.score.toString())
+            DetailRowCard(
+                name = stringResource(R.string.difficulty),
+                value = when(game.difficulty.lowercase()) {
+                    "easy" -> stringResource(R.string.easy)
+                    "medium" -> stringResource(R.string.medium)
+                    "hard" -> stringResource(R.string.hard)
+                    else -> ""
+                }
+            )
+            DetailRowCard(name = stringResource(R.string.last_update), value = game.lastUpdate)
+            DetailRowCard(name = stringResource(R.string.score), value = game.score.toString())
             DetailRowCard(name = "Timer", value = game.timer)
         }
     }
@@ -162,7 +174,7 @@ fun Title(game: Game) {
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Game ${game.id}",
+            text = stringResource(R.string.game) + " " + game.id,
             fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colors.secondary

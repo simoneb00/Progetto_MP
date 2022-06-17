@@ -51,4 +51,10 @@
     <string name="medium">Medio</string>
     <string name="hard">Difficile</string>
     <string name="no_games_found">Nessuna partita trovata</string>
+    <string name="check">Verifica</string>
+    <string name="game">Partita</string>
+    <string name="view_details">Vedi Dettagli</string>
+    <string name="last_update">Ultima Modifica</string>
+    <string name="you_won">Hai Vinto!</string>
+    <string name="return_to_home">Ritorna alla Home</string>
 </resources>

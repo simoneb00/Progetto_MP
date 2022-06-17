@@ -70,8 +70,6 @@ fun StatsLayout() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                //.background(color = color.value)
-                //.background(color = BackgroundWhite)
                 .verticalScroll(rememberScrollState())      // to make the column scrollable
                 .padding(top = 10.dp)
         ) {
@@ -138,7 +136,6 @@ fun CircularProgressIndicator(
 
         Text(
             text = (curPercentage.value * number).toInt().toString() + "%",
-            //color = Color.Black,
             fontSize = fontSize,
             fontWeight = FontWeight.Bold
         )
@@ -297,8 +294,7 @@ fun GameStatsRow(description: String, value: Int = 0) {
     ) {
         Text(
             text = description,
-            fontSize = 15.sp,
-            //color = Color.Black
+            fontSize = 15.sp
         )
 
         Text(
@@ -344,8 +340,7 @@ fun TimeStatsRow(description: String, value: String = "") {
     ) {
         Text(
             text = description,
-            fontSize = 15.sp,
-            //color = Color.Black
+            fontSize = 15.sp
         )
 
         Text(

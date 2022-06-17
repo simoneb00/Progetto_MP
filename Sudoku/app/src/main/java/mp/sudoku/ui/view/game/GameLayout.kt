@@ -43,11 +43,10 @@ fun GameLayout(
 
     val settingsVM = SettingsVM(LocalContext.current.applicationContext)
     val activeGameVM = ActiveGameVM()
-    val resume = rememberSaveable {
-        mutableStateOf(isResume)
-    }
 
-    val allGames by settingsVM.allGames.observeAsState(listOf())
+    val resume = rememberSaveable { mutableStateOf(isResume) }      // true if the game has been resumed
+
+    val allGames by settingsVM.allGames.observeAsState(listOf())    // list of every started game
 
     val gameVM = GameVM(
         LocalContext
@@ -63,16 +62,34 @@ fun GameLayout(
     }
 
 
+    /*
+    *   this variable observes activeGameVM's variable isCompleted,
+    *   in order to know when the grid is full and, therefore, show the check button
+    */
     var isCompleted by remember { mutableStateOf(activeGameVM.isCompleted, neverEqualPolicy()) }
 
+    /* this is useful to get changes when activeGameVM updates isCompleted status */
     activeGameVM.subCompletedState = {
         isCompleted = it
     }
 
+    /*
+    *   The following variable keeps track of the sudoku grid's state, so the values (or notes) inserted by the user
+    *   It is initialized to activeGameVM's gridState, because activeGameVM has the responsibility to create and update gridState
+    */
     val gridState = rememberSaveable {
         mutableStateOf(activeGameVM.gridState, neverEqualPolicy())
     }
 
+    /* this is useful to get changes when activeGameVM modifies gridStates */
+    activeGameVM.subGridState1 = {
+        gridState.value = it
+    }
+
+    /*
+    *   This variable keeps track of all notes in the grid.
+    *   It is initialized at 0 (no notes), in case of a new game
+    */
     var notes: List<List<Int>> = listOf(
         listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
         listOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -85,29 +102,37 @@ fun GameLayout(
         listOf(0, 0, 0, 0, 0, 0, 0, 0, 0)
     )
 
-    activeGameVM.subGridState1 = {
-        gridState.value = it
-    }
 
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         if (s.value != listOf(listOf(""))) {
 
+            /*
+            *   TopBar needs the parameters gridState, notesState and stopWatch in order to save the current game in persistence,
+            *   if the user clicks on the back button
+             */
             TopBar(
-                gridState = activeGameVM.gridState, noteState = activeGameVM.notesState,
+                gridState = activeGameVM.gridState,
+                noteState = activeGameVM.notesState,
                 stopWatch = stopWatch.value
             )
+
+            /* this function creates the row located above the grid, containing difficulty, timer and score values */
             GridButtons(difficulty, settingsVM, stopWatch.value, activeGameVM)
 
-            if (CurrentGame.getInstance().getCurrent() != null && CurrentGame.getInstance()
-                    .getCurrent()!!.noteGrid != "empty"
-            ) {
+            /* if the game has been resumed, the following updates 'notes' variable */
+            if (CurrentGame.getInstance().getCurrent() != null && CurrentGame.getInstance().getCurrent()!!.noteGrid != "empty") {
                 notes = Adapter.changeStringToInt(
                     Adapter.boardPersistenceFormatToList(
                         CurrentGame.getInstance().getCurrent()!!.noteGrid
                     )
                 )
             }
+
+            /*
+            *   The following displays the grid, initialized with 's.value' values and notes provided by the variable 'notes'
+            *   Moreover, it passes to Grid function the boolean resume, in order to make it know if the game has been resumed or not
+            */
             Grid(
                 values = Adapter.changeStringToInt(s.value),
                 notes = notes,
@@ -143,11 +168,15 @@ fun GameLayout(
             }
         }
 
+        /* the following function creates three buttons (delete, notes, hint) and displays them beneath the grid */
         GameButtons(activeGameVM, settingsVM)
+
+        /* the following function creates and displays the buttons that the user must use to insert numbers in the grid */
         NumberButtons(activeGameVM)
 
         if (isCompleted) {
 
+            /* We're updating s.value to the completed grid, so when it will be rebuilt, its values will be up to date */
             s.value = Adapter.intListToStringList(Adapter.hashMapToList(gridState.value))
 
             Row(
@@ -156,27 +185,38 @@ fun GameLayout(
                     .padding(top = 20.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
+
+                /* Check button */
                 Button(
                     onClick = {
                         if (activeGameVM.checkGrid(gridState.value) || GameVM.validateGrid(Adapter.intListToStringList(Adapter.hashMapToList(gridState.value)))) {
-                            println(GameVM.validateGrid(Adapter.intListToStringList(Adapter.hashMapToList(gridState.value))))
+                            /* We enter this if statement only if the grid is correct. There are two possibilities:
+                            *   1) The previously computed solution and the contents of the grid coincide
+                            *   2) The previously computed solution and the contents of the grid do not coincide, but the grid is correct anyways
+                            *
+                            *   The second possibility could occur because some generated grids may have more than one solution
+                            */
                             ScreenRouter.navigateTo(destination = ScreenRouter.WONGAMEPOPUP)
+
+                            /* the following invocation saves the completed game in persistence */
                             gameVM.updateGame(
                                 board = CurrentGame.getInstance().getCurrent()!!.grid,
                                 noteBoard = CurrentGame.getInstance().getCurrent()!!.grid,
-                                //timer = CurrentGame.getInstance().getCurrent()!!.timer,
                                 timer = stopWatch.value.formattedTime,
                                 finished = 1
                             )
                         }
 
+                        /*  Whether the game is correct or not, isCompleted value is put false, so the user can modify the grid
+                        *   (this statement only makes sense if the game is incorrect, because we need to make the user able to revise and correct the grid)
+                        */
                         isCompleted = false
 
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
                     shape = RoundedCornerShape(10.dp)
                 ) {
-                    Text(text = "Check", fontSize = 20.sp)
+                    Text(text = stringResource(R.string.check), fontSize = 20.sp)
                 }
             }
         }
@@ -208,6 +248,9 @@ fun GameButtons(
             }
         }
 
+        /*  The notes button will be, alternatively, red (notes mode on) or black (notes mode off).
+         *  We need the following variable to update the color of the button
+        */
         var isRed by remember {
             mutableStateOf(false)
         }
@@ -230,6 +273,9 @@ fun GameButtons(
 
         if (settingsVM.getHintsSetting()) {
             IconButton(onClick = {
+                /*  activeGameVM keeps a counter of hints requested
+                *   (for future implementation, setting to make user able to decide how many hints he can request)
+                */
                 activeGameVM.incrementCounter()
                 activeGameVM.getHint()
             }) {
@@ -252,10 +298,12 @@ fun NumberButtons(
     activeGameVM: ActiveGameVM
 ) {
 
+    /* The following variable keeps track of which numbers (buttons) to show */
     val numbers = rememberSaveable {
         mutableStateOf(activeGameVM.buttonsNumbers)
     }
 
+    /* The following statement allows to get changes from activeGameVM, as regards which numbers to show */
     activeGameVM.subButtonsNumbers = { numbers.value = it }
 
     Row(
@@ -267,6 +315,7 @@ fun NumberButtons(
         for (i in 1..9) {
 
             if (numbers.value.contains(i)) {
+                /* we enter this if statement if the i-th button must be showed, so if it's possible to insert the number i into the grid */
                 Button(
                     onClick = {
                         activeGameVM.updateGrid(value = i)
@@ -284,6 +333,7 @@ fun NumberButtons(
                     )
                 }
             } else {
+                /* we enter this if statement if the i-th button must not be showed, so it's replaced by a spacer of the same size */
                 Spacer(modifier = Modifier.size(height = 60.dp, width = 35.dp))
             }
         }
@@ -302,6 +352,8 @@ fun GridButtons(
         contentAlignment = Alignment.Center,
         modifier = Modifier.padding(top = 10.dp, bottom = 5.dp)
     ) {
+
+        /* the following is the exact width of the screen */
         val screenWidth = with(LocalDensity.current) {
             constraints.maxWidth.toDp()
         }

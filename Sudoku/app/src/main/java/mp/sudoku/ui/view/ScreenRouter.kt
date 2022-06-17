@@ -39,6 +39,7 @@ object ScreenRouter {
 
 }
 
+/* this function is useful to get the current application, in non-composable functions */
 @Composable
 fun GetCurrentContext() {
     ScreenRouter.application = LocalContext.current.applicationContext as Application

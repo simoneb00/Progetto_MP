@@ -38,7 +38,7 @@ fun ResumeLayout() {
             .current.applicationContext as Application
     )
 
-    val startedGames by statsVM.startedGames.observeAsState(listOf())
+    val startedGames by statsVM.startedGames.observeAsState(listOf())   // list of all started games
 
     if (startedGames.isEmpty()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -61,7 +61,6 @@ fun ResumeLayout() {
             ) {
                 items(startedGames) { game ->
                     StartedGameCard(game)
-                    //StartedGameCard1(game)
                 }
             }
         }
@@ -75,25 +74,20 @@ fun StartedGameCard(game: Game = Game()) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 10.dp),
-        //.height(75.dp)
-        backgroundColor = MaterialTheme.colors.primary,
-        //border = BorderStroke(2.dp, MaterialTheme.colors.secondary),
-        //shape = RoundedCornerShape(10.dp)
+        backgroundColor = MaterialTheme.colors.primary
     ) {
-
+        /* the two following statements retrieve the grid content */
         val boardStringList: List<List<String>> = Adapter.boardPersistenceFormatToList(game.grid)
         val boardIntList: List<List<Int>> = Adapter.changeStringToInt(boardStringList)
+
         val activeGameVM = ActiveGameVM()
-        val gameVM = GameVM(
-            LocalContext
-                .current.applicationContext as Application
-        )
+        val gameVM = GameVM(LocalContext.current.applicationContext as Application)
 
         Column(modifier = Modifier.padding(top = 5.dp, start = 10.dp, end = 10.dp, bottom = 5.dp)) {
 
             Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Game ${game.id}",
+                    text = stringResource(R.string.game) + " " + game.id,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -105,7 +99,12 @@ fun StartedGameCard(game: Game = Game()) {
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                ReadOnlyGrid(values = boardIntList, activeGameVM = activeGameVM, notes = Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(game.noteGrid)),isReadOnly = true)
+                ReadOnlyGrid(
+                    values = boardIntList,
+                    activeGameVM = activeGameVM,
+                    notes = Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(game.noteGrid)),
+                    isReadOnly = true
+                )
             }
 
             Row(
@@ -119,10 +118,13 @@ fun StartedGameCard(game: Game = Game()) {
                         CurrentGame.getInstance().current = game
                         ScreenRouter.navigateTo(destination = ScreenRouter.GAMEDETAILSSCREEN)
                     },
-                    border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
-                    //shape = RoundedCornerShape(10.dp)
+                    border = BorderStroke(1.dp, MaterialTheme.colors.secondary)
                 ) {
-                    Text(text = "View Details", fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                    Text(
+                        text = stringResource(R.string.view_details),
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
 
                 Button(
@@ -132,10 +134,13 @@ fun StartedGameCard(game: Game = Game()) {
                         gameVM.resumeGame()
                         ScreenRouter.navigateTo(ScreenRouter.RESUMESCREEN, ScreenRouter.GAMESCREEN)
                     },
-                    border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
-                    //shape = RoundedCornerShape(10.dp)
+                    border = BorderStroke(1.dp, MaterialTheme.colors.secondary)
                 ) {
-                    Text(text = "Resume", fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                    Text(
+                        text = stringResource(R.string.resume),
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
 
             }

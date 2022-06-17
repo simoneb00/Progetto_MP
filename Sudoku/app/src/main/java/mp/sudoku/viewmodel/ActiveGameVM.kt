@@ -139,28 +139,26 @@ class ActiveGameVM {
 
         gridState.values.forEach {
             if (it.isSelected) {        // the following operations are going to be applied only to the selected cell
-                //if (!it.isReadOnly) {
                 if (notesMode) {        // if notes mode is on and the user inserts a note on the cell, the previously present value (if any) is cancelled
                     it.value = 0
                     it.note = value
                     notesState[it.y][it.x] = value
 
-                    println(notesState)
-
+                    /* the following updates CurrentGame's notes status */
                     CurrentGame.getInstance().current?.noteGrid = Adapter.boardListToPersistenceFormat(notesState)
 
                 } else {                // if notes mode is off and the user inserts a value on the cell, the previously present note (if any) is cancelled
                     it.note = 0
                     it.value = value
                 }
-                //}
 
             }
         }
 
+        /* the following updates CurrentGame's grid status */
         CurrentGame.getInstance().current?.grid = Adapter.boardListToPersistenceFormat(Adapter.hashMapToList(gridState))
-        subGridState?.invoke(gridState)                                 // commit grid changes to the view
-        subGridState1?.invoke(gridState)                                // commit grid changes to the view
+        subGridState?.invoke(gridState)     // commit changes to the view (Grid)
+        subGridState1?.invoke(gridState)     // commit changes to the view (GameLayout)
         if (checkIfFull()) subCompletedState?.invoke(true)      // if the grid is full, inform the view to show the "Check" button
     }
 
@@ -168,13 +166,8 @@ class ActiveGameVM {
     fun getHint(): Int {
         var hint = 0
         try {
-            hint =
-                    //Adapter.changeStringToInt(Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.solvedGrid))[getSelectedCellY()][getSelectedCellX()]
-                CurrentGame.getInstance().solution?.get(getSelectedCellY())!![getSelectedCellX()]
-            println(CurrentGame.getInstance().current!!.solvedGrid)
-            println("griglia giusta: " + CurrentGame.getInstance().solution)
-            println(hint)
-            updateGrid(hint)
+            hint = CurrentGame.getInstance().solution?.get(getSelectedCellY())!![getSelectedCellX()]    // the hint is taken from the solved grid
+            updateGrid(hint)    // showing hint on the grid
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -209,13 +202,6 @@ class ActiveGameVM {
             if (it.value == 0) bool = false
         }
 
-        /*if (bool) {
-            val isCorrect = this.checkGrid()
-            this.isGridCorrect = isCorrect
-            subCorrectState?.invoke(isCorrect)
-        }
-         */
-
         return bool
     }
 
@@ -224,31 +210,34 @@ class ActiveGameVM {
         y: Int
     ) {
 
+        /* restore every value on the number buttons bar and commit changes to the view */
         this.buttonsNumbers = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
         subButtonsNumbers?.invoke(buttonsNumbers)
 
         gridState.values.forEach {
+            /* the following two statements 'deselect' every cell */
             it.isSelected = false
             it.isInEvidence = false
+
             if (it.x == x && it.y == y) {
                 it.isSelected = true        // mark the (x, y) cell as selected
             }
             if (it.x == x || it.y == y || it.nonet == gridState[x * 10 + y]?.nonet)
-                it.isInEvidence =
-                    true         // put every cell on the same row/column/nonet in evidence
+                it.isInEvidence = true         // put every cell on the same row/column/nonet in evidence
 
             if (gridState[x * 10 + y]?.value != 0) {
                 if (it.value == gridState[x * 10 + y]?.value)
-                    it.isInEvidence = true
+                    it.isInEvidence = true      // put every cell containing the same value in evidence
             }
 
+            /* remove from the number buttons every value contained in the selected nonet */
             if (it.nonet == gridState[x * 10 + y]?.nonet)
                 updateNumberButtons(valToRemove = it.value)
 
 
         }
-        subGridState?.invoke(gridState)     // commit changes to the view
-        subGridState1?.invoke(gridState)     // commit changes to the view
+        subGridState?.invoke(gridState)     // commit changes to the view (Grid)
+        subGridState1?.invoke(gridState)     // commit changes to the view (GameLayout)
     }
 
     fun cancelCell() {
@@ -259,20 +248,22 @@ class ActiveGameVM {
                 it.note = 0
                 it.value = 0
                 notesState[it.y][it.x] = 0      // updating notes status
-                println(notesState)
             }
         }
 
-        subGridState?.invoke(gridState)     // commit changes to the view
-        subGridState1?.invoke(gridState)     // commit changes to the view
+        subGridState?.invoke(gridState)     // commit changes to the view (Grid)
+        subGridState1?.invoke(gridState)     // commit changes to the view (GameLayout)
     }
 
     fun incrementCounter() {
         val game = CurrentGame.getInstance().getCurrent()
         try {
             game!!.hintCounter++
+
+            /* score decreased by 5 for each hint requested (minimum score is 5) */
             if (game.score - 5 > 0)
                 game.score = game.score - 5
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -281,53 +272,6 @@ class ActiveGameVM {
     fun getScore(): Int {
         return CurrentGame.getInstance().getCurrent()?.score ?: 100
     }
-
-
-    /*fun checkGrid(): Boolean {
-        var linearSolution = listOf<Int>()
-        var linearGrid = listOf<Int>()
-        var correct = true
-
-        try {
-            CurrentGame.getInstance().solution!!.forEach { i ->
-                for (j in i) {
-                    linearSolution.plus(j).also { linearSolution = it }
-                }
-            }
-
-            Adapter.hashMapToList(gridState).forEach { i ->
-                for (j in i) {
-                    linearGrid.plus(j).also { linearGrid = it }
-                }
-            }
-
-
-            (linearGrid.indices).forEach { i ->
-                if (linearGrid[i] != linearSolution[i] && linearGrid[i] != 0) {
-
-                    gridState.values.forEach {
-                        if (it.x == i % 9 && it.y == i / 9)
-                            it.color = "Red"
-                    }
-
-                    correct = false
-                }
-            }
-
-
-            gridState.values.forEach {
-                it.isSelected = false
-                it.isInEvidence = false
-            }
-
-            subGridState?.invoke(gridState)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-
-        return correct
-    }*/
 
 
     fun checkGrid(grid: HashMap<Int, SudokuCell>): Boolean {
@@ -345,11 +289,10 @@ class ActiveGameVM {
                     cell.color = "Red"
             }
 
-            subGridState?.invoke(grid)
-            subGridState1?.invoke(grid)
+            subGridState?.invoke(gridState)     // commit changes to the view (Grid)
+            subGridState1?.invoke(gridState)     // commit changes to the view (GameLayout)
 
             isCorrect
-
         }
     }
 

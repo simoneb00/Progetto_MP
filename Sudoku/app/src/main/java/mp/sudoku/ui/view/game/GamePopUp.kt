@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
@@ -50,7 +51,7 @@ fun WonGamePopUp() {
                         .padding(top = 10.dp)
                         .fillMaxWidth(), horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(text = "You Won!", fontSize = 25.sp)
+                    Text(text = stringResource(R.string.you_won), fontSize = 25.sp)
                 }
 
                 Row(
@@ -65,7 +66,7 @@ fun WonGamePopUp() {
                         },
                         border = BorderStroke(1.dp, MaterialTheme.colors.secondary)
                     ) {
-                        Text(text = "Return to Home")
+                        Text(text = stringResource(R.string.return_to_home))
                     }
                 }
             }

@@ -34,6 +34,7 @@ fun Grid(
     resume: Boolean
 ) {
 
+    /* if the game has been resumed, retrieve the initial grid, else the initial grid is the given grid (values) */
     if (resume) {
         activeGameVM.initGrid(
             list = values,
@@ -54,11 +55,12 @@ fun Grid(
         )
     }
 
-
+    /* this values observes activeGameVM's value gridState */
     val gridState = rememberSaveable {
         mutableStateOf(activeGameVM.gridState, neverEqualPolicy())
     }
 
+    /* the following makes possible to get gridState's updates */
     activeGameVM.subGridState = {
         gridState.value = it
     }
@@ -77,7 +79,10 @@ fun Grid(
                 .size(screenWidth - margin.dp)
         ) {
             val offset = (screenWidth - margin.dp).value / 9
+
+            /* SudokuTextFields are the updatable 'boxes' that contain the values in the grid */
             SudokuTextFields(offset, activeGameVM, gridState = gridState.value)
+            /* BoardGrid creates the grid's structure */
             BoardGrid(offset)
         }
     }
@@ -87,7 +92,11 @@ fun Grid(
 fun BoardGrid(offset: Float) {
 
     (1 until 9).forEach {
+
+        /* the lines that divide two sub-blocks are thicker */
         val width = if (it % 3 == 0) 3.dp else 1.dp
+
+        /* horizontal lines */
         Divider(
             modifier = Modifier
                 .absoluteOffset((offset * it).dp, 0.dp)
@@ -95,7 +104,10 @@ fun BoardGrid(offset: Float) {
                 .width(width)
         )
 
+        /* the lines that divide two sub-blocks are thicker */
         val height = if (it % 3 == 0) 3.dp else 1.dp
+
+        /* vertical lines */
         Divider(
             modifier = Modifier
                 .absoluteOffset(0.dp, (offset * it).dp)
@@ -136,15 +148,15 @@ fun SudokuTextFields(
                     }
                 )
                 .clickable {
-                    if (!cell.isReadOnly)
+                    if (!cell.isReadOnly)  // if the cell is readOnly (initial values cells) it is not clickable at all
                         vm.selectCell(cell.x, cell.y)
                 },
-            contentAlignment = if (note == "") Alignment.Center else Alignment.TopStart
+            contentAlignment = if (note == "") Alignment.Center else Alignment.TopStart // notes are smaller and aligned at top start
         ) {
             if (note == "") {
                 Text(
                     text = text,
-                    color = if (cell.color == "Red") Color.Red else MaterialTheme.colors.onPrimary
+                    color = if (cell.color == "Red") Color.Red else MaterialTheme.colors.onPrimary  // red color is used to show wrong values when the grid is checked
                 )
             } else {
                 Text(

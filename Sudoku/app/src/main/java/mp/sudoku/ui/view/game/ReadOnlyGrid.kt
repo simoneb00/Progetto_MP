@@ -20,6 +20,10 @@ import androidx.compose.ui.unit.sp
 import mp.sudoku.model.SudokuCell
 import mp.sudoku.viewmodel.ActiveGameVM
 
+
+/*
+*   The following function (and all the functions related) creates and shows a read only grid, similarly to the function Grid (and related)
+*/
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun ReadOnlyGrid(
