@@ -174,13 +174,13 @@ fun GamesStatsLayout(
             //backgroundColor = Color.White
         ) {
             Column {
-                GameStatsRow(
+                StatsRow(
                     description = stringResource(R.string.games_played),
-                    value = numGames
+                    games = numGames
                 )
-                GameStatsRow(
+                StatsRow(
                     description = stringResource(R.string.games_won),
-                    value = numFinishedGames
+                    games = numFinishedGames
                 )
             }
 
@@ -215,13 +215,13 @@ fun TimeStatsLayout(bestTime: String, averageTime: String) {
             shape = RoundedCornerShape(3.dp),
         ) {
             Column {
-                TimeStatsRow(
+                StatsRow(
                     description = stringResource(R.string.best_time),
-                    value = bestTime
+                    time = bestTime
                 )
-                TimeStatsRow(
+                StatsRow(
                     description = stringResource(R.string.av_time),
-                    value = averageTime
+                    time = averageTime
                 )
             }
 
@@ -257,8 +257,8 @@ fun ScoreStatsLayout(bestScore: Float, averageScore: Float) {
             //backgroundColor = MaterialTheme.colors.surface
         ) {
             Column {
-                ScoreStatsRow(description = stringResource(R.string.best_score), value = bestScore)
-                ScoreStatsRow(description = stringResource(R.string.av_score), value = averageScore)
+                StatsRow(description = stringResource(R.string.best_score), score = bestScore)
+                StatsRow(description = stringResource(R.string.av_score), score = averageScore)
 
             }
 
@@ -268,8 +268,7 @@ fun ScoreStatsLayout(bestScore: Float, averageScore: Float) {
 }
 
 @Composable
-fun GameStatsRow(description: String, value: Int = 0) {
-
+fun StatsRow(description: String, games: Int = -1, time: String = "", score: Float = -1f) {
     var animationPlayed by remember {
         mutableStateOf(false)
     }
@@ -297,12 +296,32 @@ fun GameStatsRow(description: String, value: Int = 0) {
             fontSize = 15.sp
         )
 
-        Text(
-            text = value.toString(),
-            fontSize = 15.sp,
-            color = Color.DarkGray,
-            fontWeight = FontWeight.Bold
-        )
+        if (games != -1 && time.isEmpty() && score == -1f) {
+            Text(
+                text = games.toString(),
+                fontSize = 15.sp,
+                color = Color.DarkGray,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        else if (time.isNotEmpty() && games == -1 && score == -1f) {
+            Text(
+                text = time,
+                fontSize = 15.sp,
+                color = Color.DarkGray,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        else if (score != -1f && time.isEmpty() && games == -1) {
+            Text(
+                text = score.toString(),
+                fontSize = 15.sp,
+                color = Color.DarkGray,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
     }
     Divider(
@@ -313,94 +332,4 @@ fun GameStatsRow(description: String, value: Int = 0) {
     )
 }
 
-@Composable
-fun TimeStatsRow(description: String, value: String = "") {
 
-    var animationPlayed by remember {
-        mutableStateOf(false)
-    }
-    val dividerWidth = animateDpAsState(
-        targetValue = if (animationPlayed) 400.dp else 0.dp,
-        animationSpec = tween(
-            durationMillis = 1000,
-            delayMillis = 0
-        )
-    )
-    LaunchedEffect(key1 = true) {
-        animationPlayed = true
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .padding(top = 2.dp, start = 10.dp, end = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = description,
-            fontSize = 15.sp
-        )
-
-        Text(
-            text = value,
-            fontSize = 15.sp,
-            color = Color.DarkGray,
-            fontWeight = FontWeight.Bold
-        )
-
-    }
-    Divider(
-        color = Color.LightGray,
-        thickness = 1.dp,
-        modifier = Modifier.width(dividerWidth.value),
-        startIndent = 10.dp
-    )
-}
-
-@Composable
-fun ScoreStatsRow(description: String, value: Float = 0f) {
-
-    var animationPlayed by remember {
-        mutableStateOf(false)
-    }
-    val dividerWidth = animateDpAsState(
-        targetValue = if (animationPlayed) 400.dp else 0.dp,
-        animationSpec = tween(
-            durationMillis = 1000,
-            delayMillis = 0
-        )
-    )
-    LaunchedEffect(key1 = true) {
-        animationPlayed = true
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .padding(top = 2.dp, start = 10.dp, end = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = description,
-            fontSize = 15.sp
-        )
-
-        Text(
-            text = value.toString(),
-            fontSize = 15.sp,
-            color = Color.DarkGray,
-            fontWeight = FontWeight.Bold
-        )
-
-    }
-    Divider(
-        color = Color.LightGray,
-        thickness = 1.dp,
-        modifier = Modifier.width(dividerWidth.value),
-        startIndent = 10.dp
-    )
-}
