@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import mp.sudoku.R
-import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.volley.VolleyGrid
 import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
@@ -106,6 +105,9 @@ fun GameLayout(
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         if (s.value != listOf(listOf(""))) {
+            /*s.value is changed only when Volley updates the value of the new grid, so we enter here only after volley got an answer
+            * s "observe" the state of the volley return grid and wait until it is not empty anymore
+            */
 
             /*
             *   TopBar needs the parameters gridState, notesState and stopWatch in order to save the current game in persistence,
@@ -121,10 +123,10 @@ fun GameLayout(
             GridButtons(difficulty, settingsVM, stopWatch.value, activeGameVM)
 
             /* if the game has been resumed, the following updates 'notes' variable */
-            if (CurrentGame.getInstance().getCurrent() != null && CurrentGame.getInstance().getCurrent()!!.noteGrid != "empty") {
+            if (ActiveGameVM.getCurrent() != null && ActiveGameVM.getCurrentNoteGrid() != "empty") {
                 notes = Adapter.changeStringToInt(
                     Adapter.boardPersistenceFormatToList(
-                        CurrentGame.getInstance().getCurrent()!!.noteGrid
+                        ActiveGameVM.getCurrentNoteGrid()
                     )
                 )
             }
@@ -142,7 +144,7 @@ fun GameLayout(
 
 
             if (resume.value) {
-                stopWatch.value = CurrentGame.getInstance().timer
+                stopWatch.value = ActiveGameVM.getCurrentTimer()
             } else {
                 var maxId = 0
                 allGames.forEach { game ->
@@ -154,6 +156,9 @@ fun GameLayout(
                 resume.value = true
             }
         } else {
+            /* This else is used to ask Volley for a new http request to get a new grid,
+            * so it adds a new Stringrequest in the singleton volley queue
+            */
             CircularProgressIndicator(
                 color = MaterialTheme.colors.secondary,
                 modifier = Modifier.padding(top = 8.dp)
@@ -200,8 +205,8 @@ fun GameLayout(
 
                             /* the following invocation saves the completed game in persistence */
                             gameVM.updateGame(
-                                board = CurrentGame.getInstance().getCurrent()!!.grid,
-                                noteBoard = CurrentGame.getInstance().getCurrent()!!.grid,
+                                board = ActiveGameVM.getCurrentGrid(),
+                                noteBoard = ActiveGameVM.getCurrentNoteGrid(),
                                 timer = stopWatch.value.formattedTime,
                                 finished = 1
                             )

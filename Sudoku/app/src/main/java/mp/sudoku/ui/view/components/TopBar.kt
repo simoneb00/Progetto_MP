@@ -20,9 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.SudokuCell
 import mp.sudoku.ui.view.ScreenRouter
+import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.Adapter
 import mp.sudoku.viewmodel.GameVM
 import mp.sudoku.viewmodel.StopWatch
@@ -82,13 +82,13 @@ fun TopBar(
                     val gameVM = GameVM(ScreenRouter.application)
 
                     /* the timer needs to be paused */
-                    CurrentGame.getInstance().timer.pause()
+                    ActiveGameVM.getCurrentTimer().pause()
 
                     /* the game needs to be saved, because it will have to be restored when returning back to the game screen */
                     gameVM.updateGame(
-                        board = CurrentGame.getInstance().current?.grid!!,
-                        noteBoard = CurrentGame.getInstance().current?.noteGrid!!,
-                        timer = CurrentGame.getInstance().current?.timer!!,
+                        board = ActiveGameVM.getCurrentGrid(),
+                        noteBoard = ActiveGameVM.getCurrentNoteGrid(),
+                        timer = ActiveGameVM.getTimer(),
                         finished = 0,
                         cancel = false
                     )
@@ -116,13 +116,13 @@ fun TopBar(
                     val gameVM = GameVM(ScreenRouter.application)
 
                     /* the timer needs to be paused */
-                    CurrentGame.getInstance().timer.pause()
+                    ActiveGameVM.getCurrentTimer().pause()
 
                     /* the game needs to be saved, because it will have to be restored when returning back to the game screen */
                     gameVM.updateGame(
-                        board = CurrentGame.getInstance().current?.grid!!,
-                        noteBoard = CurrentGame.getInstance().current?.noteGrid!!,
-                        timer = CurrentGame.getInstance().current?.timer!!,
+                        board = ActiveGameVM.getCurrentGrid(),
+                        noteBoard = ActiveGameVM.getCurrentNoteGrid(),
+                        timer = ActiveGameVM.getTimer(),
                         finished = 0,
                         cancel = false
                     )
@@ -170,14 +170,14 @@ fun backButtonHandler(
         ScreenRouter.SETTINGSCREEN -> {
             if (ScreenRouter.previousScreen.value == ScreenRouter.GAMESCREEN) {
                 /* if the user presses the back button while in settings screen and he was previously playing a game, the game needs to be resumed */
-                ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.grid)
+                ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(ActiveGameVM.getCurrentGrid())
             }
             ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value)
         }
         ScreenRouter.RULESSCREEN -> {
             if (ScreenRouter.previousScreen.value == ScreenRouter.GAMESCREEN) {
                 /* if the user presses the back button while in rules screen and he was previously playing a game, the game needs to be resumed */
-                ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.grid)
+                ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(ActiveGameVM.getCurrentGrid())
             }
             ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value)
         }

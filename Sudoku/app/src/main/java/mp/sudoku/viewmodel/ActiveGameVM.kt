@@ -1,6 +1,7 @@
 package mp.sudoku.viewmodel
 
 import mp.sudoku.model.CurrentGame
+import mp.sudoku.model.Game
 import mp.sudoku.model.SudokuCell
 
 class ActiveGameVM {
@@ -36,6 +37,73 @@ class ActiveGameVM {
         mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0),
     )
 
+    companion object {
+        /*
+        * This companion object is used to separate the view from the model. In particular the view
+        * has to pass through the VM so that no fatal exception are found (Compose doesn't support try/catch)
+        * */
+        fun getCurrentGrid(): String {
+            return try {
+                CurrentGame.getInstance().getCurrent()!!.grid
+            } catch (n: NullPointerException) {
+                n.printStackTrace()
+                "empty"
+            }
+        }
+
+        fun getCurrentNoteGrid(): String {
+            return try {
+                CurrentGame.getInstance().getCurrent()!!.noteGrid
+            } catch (n: NullPointerException) {
+                n.printStackTrace()
+                "empty"
+            }
+        }
+
+        fun getCurrentTimer(): StopWatch {
+            return try {
+                CurrentGame.getInstance().timer
+            } catch (n: NullPointerException) {
+                n.printStackTrace()
+                StopWatch()
+            }
+        }
+
+        fun getCurrent(): Game? {
+            return try {
+                CurrentGame.getInstance().current
+            } catch (n: NullPointerException) {
+                n.printStackTrace()
+                null
+            }
+        }
+
+        fun getFirstGrid(): String {
+            return try {
+                CurrentGame.getInstance().getCurrent()!!.firstGrid
+            } catch (n: NullPointerException) {
+                n.printStackTrace()
+                ""
+            }
+        }
+
+        fun getTimer(): String {
+            return try {
+                CurrentGame.getInstance().getCurrent()!!.timer
+            } catch (n: NullPointerException) {
+                n.printStackTrace()
+                ""
+            }
+        }
+
+        fun updateCurrent(game:Game) {
+            try {
+                CurrentGame.getInstance().current = game
+            } catch (n: NullPointerException) {
+                n.printStackTrace()
+            }
+        }
+    }
 
     fun initGrid(
         list: List<List<Int>>,
@@ -145,8 +213,12 @@ class ActiveGameVM {
                     notesState[it.y][it.x] = value
 
                     /* the following updates CurrentGame's notes status */
-                    CurrentGame.getInstance().current?.noteGrid = Adapter.boardListToPersistenceFormat(notesState)
-
+                    try {
+                        CurrentGame.getInstance().current?.noteGrid =
+                            Adapter.boardListToPersistenceFormat(notesState)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 } else {                // if notes mode is off and the user inserts a value on the cell, the previously present note (if any) is cancelled
                     it.note = 0
                     it.value = value
@@ -156,7 +228,8 @@ class ActiveGameVM {
         }
 
         /* the following updates CurrentGame's grid status */
-        CurrentGame.getInstance().current?.grid = Adapter.boardListToPersistenceFormat(Adapter.hashMapToList(gridState))
+        CurrentGame.getInstance().current?.grid =
+            Adapter.boardListToPersistenceFormat(Adapter.hashMapToList(gridState))
         subGridState?.invoke(gridState)     // commit changes to the view (Grid)
         subGridState1?.invoke(gridState)     // commit changes to the view (GameLayout)
         if (checkIfFull()) subCompletedState?.invoke(true)      // if the grid is full, inform the view to show the "Check" button
@@ -166,7 +239,8 @@ class ActiveGameVM {
     fun getHint(): Int {
         var hint = 0
         try {
-            hint = CurrentGame.getInstance().solution?.get(getSelectedCellY())!![getSelectedCellX()]    // the hint is taken from the solved grid
+            hint =
+                CurrentGame.getInstance().solution?.get(getSelectedCellY())!![getSelectedCellX()]    // the hint is taken from the solved grid
             updateGrid(hint)    // showing hint on the grid
         } catch (e: Exception) {
             e.printStackTrace()
@@ -223,11 +297,13 @@ class ActiveGameVM {
                 it.isSelected = true        // mark the (x, y) cell as selected
             }
             if (it.x == x || it.y == y || it.nonet == gridState[x * 10 + y]?.nonet)
-                it.isInEvidence = true         // put every cell on the same row/column/nonet in evidence
+                it.isInEvidence =
+                    true         // put every cell on the same row/column/nonet in evidence
 
             if (gridState[x * 10 + y]?.value != 0) {
                 if (it.value == gridState[x * 10 + y]?.value)
-                    it.isInEvidence = true      // put every cell containing the same value in evidence
+                    it.isInEvidence =
+                        true      // put every cell containing the same value in evidence
             }
 
             /* remove from the number buttons every value contained in the selected nonet */

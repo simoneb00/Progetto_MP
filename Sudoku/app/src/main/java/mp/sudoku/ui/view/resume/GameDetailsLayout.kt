@@ -19,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.R
-import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.Game
 import mp.sudoku.ui.view.ScreenRouter
 import mp.sudoku.ui.view.components.TopBar
@@ -31,7 +30,7 @@ import mp.sudoku.viewmodel.StopWatch
 
 @Composable
 fun GameDetailsLayout() {
-    val game = CurrentGame.getInstance().getCurrent()
+    val game = ActiveGameVM.getCurrent()
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(stopWatch = StopWatch())
         Title(game!!)
@@ -67,7 +66,7 @@ fun ButtonsRow(game: Game) {
         Button(
             onClick = {
                 ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(game.grid)
-                CurrentGame.getInstance().current = game
+                ActiveGameVM.updateCurrent(game)
                 gameVM.resumeGame()
                 ScreenRouter.navigateTo(ScreenRouter.RESUMESCREEN, ScreenRouter.GAMESCREEN)
             },

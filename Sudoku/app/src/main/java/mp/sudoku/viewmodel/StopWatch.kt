@@ -8,6 +8,7 @@ import kotlinx.coroutines.*
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import mp.sudoku.model.CurrentGame
+import java.lang.Exception
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -62,8 +63,13 @@ class StopWatch : Parcelable {
     }
 
     fun start() {
-        CurrentGame.getInstance().current?.timer = this.formattedTime
-
+        try {
+            CurrentGame.getInstance().current?.timer = this.formattedTime
+        }catch (e:Exception){
+            e.printStackTrace()
+            CurrentGame.getInstance().getCurrent()
+            CurrentGame.getInstance().current!!.timer = this.formattedTime
+        }
         if(isActive) return
 
 

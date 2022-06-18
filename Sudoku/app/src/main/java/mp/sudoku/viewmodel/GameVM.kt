@@ -32,6 +32,10 @@ class GameVM(application: Application) : AndroidViewModel(application) {
 
     companion object {
         fun solve(board: List<List<String>>): List<List<Int>> {
+            /* static fun to solve a sudoku. This fun adjust the format of the board changing it from list of list of string
+            * to persistence format so that the class SudokuSolver can calculate the answer.
+            * Persistence format is "..2....3....1.2..3..."
+            * */
             try {
                 var adaptedGrid = ""
                 for (i in board) {
@@ -45,7 +49,7 @@ class GameVM(application: Application) : AndroidViewModel(application) {
                 }
 
                 val solver = SudokuSolver(adaptedGrid.trimIndent())
-                if (solver.solve() == Result.Open)
+                if (solver.solve() == Result.Open) // Solver returns Result.Open if Sudoku as multiple solutions. solver.solveRecursive get one solution out of all
                     solver.solveRecursive()
                 return solver.getSudoku()
             } catch (e: Exception) {
@@ -55,6 +59,10 @@ class GameVM(application: Application) : AndroidViewModel(application) {
 
         }
 
+        /*
+        * function needed to validate grid in case of multiple sudoku's solutions.
+        * For each cell it checks if there is a duplicate on the same row or on the same column.
+        * */
         fun validateGrid(board: List<List<String>>): Boolean {
             var valid = true
             try {
@@ -105,6 +113,9 @@ class GameVM(application: Application) : AndroidViewModel(application) {
     }
 
 
+    /*
+    * Fun to get a new grid using volley and the API from the website
+    * */
     fun loadData(
         difficulty: String,
         onSuccess: (String) -> Unit

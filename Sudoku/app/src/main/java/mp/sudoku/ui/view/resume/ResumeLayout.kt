@@ -22,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mp.sudoku.R
-import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.Game
 import mp.sudoku.ui.theme.isDarkModeOn
 import mp.sudoku.ui.view.ScreenRouter
@@ -115,7 +114,7 @@ fun StartedGameCard(game: Game = Game()) {
             ) {
                 Button(
                     onClick = {
-                        CurrentGame.getInstance().current = game
+                        ActiveGameVM.updateCurrent(game)
                         ScreenRouter.navigateTo(destination = ScreenRouter.GAMEDETAILSSCREEN)
                     },
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary)
@@ -130,7 +129,7 @@ fun StartedGameCard(game: Game = Game()) {
                 Button(
                     onClick = {
                         ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(game.grid)
-                        CurrentGame.getInstance().current = game
+                        ActiveGameVM.updateCurrent(game)
                         gameVM.resumeGame()
                         ScreenRouter.navigateTo(ScreenRouter.RESUMESCREEN, ScreenRouter.GAMESCREEN)
                     },

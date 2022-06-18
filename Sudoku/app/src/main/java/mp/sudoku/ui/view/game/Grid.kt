@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.SudokuCell
 import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.Adapter
@@ -42,7 +41,7 @@ fun Grid(
             isReadOnly = isReadOnly,
             initialGrid = Adapter.changeStringToInt(
                 Adapter.boardPersistenceFormatToList(
-                    CurrentGame.getInstance().current?.firstGrid ?: ""
+                    ActiveGameVM.getFirstGrid()
                 )
             )
         )

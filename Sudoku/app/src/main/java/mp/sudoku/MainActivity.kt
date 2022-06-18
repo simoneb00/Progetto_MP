@@ -13,6 +13,7 @@ import mp.sudoku.model.Game
 import mp.sudoku.ui.theme.SudokuTheme
 import mp.sudoku.ui.view.MainScreen
 import mp.sudoku.ui.view.ScreenRouter
+import mp.sudoku.viewmodel.ActiveGameVM
 import mp.sudoku.viewmodel.GameVM
 
 class MainActivity : ComponentActivity() {
@@ -39,34 +40,39 @@ class MainActivity : ComponentActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
 
-        if (hasFocus && ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
-            CurrentGame.getInstance().current = gameToResume
-            CurrentGame.getInstance().timer.start()
-        }
-
-        if (!hasFocus && ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
-            println("game info:" +
-                    CurrentGame.getInstance().current?.grid + '\n' +
-                    CurrentGame.getInstance().current?.score + '\n' +
-                    CurrentGame.getInstance().current?.noteGrid + '\n' +
-                    CurrentGame.getInstance().current?.timer + '\n'
-            )
-
-            val gameVM = GameVM(ScreenRouter.application)
-
-            if (CurrentGame.getInstance().current?.grid != null) {
-
-                gameToResume = CurrentGame.getInstance().current!!
-
-                gameVM.updateGame(
-                    board = CurrentGame.getInstance().current?.grid!!,
-                    noteBoard = CurrentGame.getInstance().current?.noteGrid!!,
-                    timer = CurrentGame.getInstance().current?.timer!!,
-                    finished = 0,
-                    cancel = false
-                )
+        try {
+            if (hasFocus && ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
+                CurrentGame.getInstance().current = gameToResume
+                ActiveGameVM.getCurrentTimer().start()
             }
 
+            if (!hasFocus && ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
+                println(
+                    "game info:" +
+                            CurrentGame.getInstance().current?.grid + '\n' +
+                            CurrentGame.getInstance().current?.score + '\n' +
+                            CurrentGame.getInstance().current?.noteGrid + '\n' +
+                            CurrentGame.getInstance().current?.timer + '\n'
+                )
+
+                val gameVM = GameVM(ScreenRouter.application)
+
+                if (CurrentGame.getInstance().current?.grid != null) {
+
+                    gameToResume = CurrentGame.getInstance().current!!
+
+                    gameVM.updateGame(
+                        board = CurrentGame.getInstance().current?.grid!!,
+                        noteBoard = CurrentGame.getInstance().current?.noteGrid!!,
+                        timer = CurrentGame.getInstance().current?.timer!!,
+                        finished = 0,
+                        cancel = false
+                    )
+                }
+
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
