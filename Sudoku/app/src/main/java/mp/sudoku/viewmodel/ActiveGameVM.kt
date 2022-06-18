@@ -3,7 +3,10 @@ package mp.sudoku.viewmodel
 import mp.sudoku.model.CurrentGame
 import mp.sudoku.model.Game
 import mp.sudoku.model.SudokuCell
-
+/*
+* Class that has the responsibility to control the current active game when user start play game use case
+* All the private vars observes the DB so that they change immediately with it
+* */
 class ActiveGameVM {
 
     internal val gridState: HashMap<Int, SudokuCell> = HashMap()

@@ -32,12 +32,4 @@ class CurrentGame {
         return current!!
     }
 
-    fun getOnlyCurrent(): Game? {
-        return current
-    }
-
-    fun deleteCurrent(){
-        this.current = null
-    }
-
 }

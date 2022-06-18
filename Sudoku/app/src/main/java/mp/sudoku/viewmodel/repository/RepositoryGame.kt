@@ -7,7 +7,7 @@ import kotlinx.coroutines.launch
 import mp.sudoku.model.Game
 import mp.sudoku.model.database.dao.DAOGame
 /*
-* Class used as repository to ask persistance, in particular Room DAOs
+* Class used as repository to ask persistence, in particular Room DAOs
 * All the private vars observes the DB so that they change immediately with it
 * */
 class RepositoryGame (private val daoGame: DAOGame){

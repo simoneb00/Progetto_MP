@@ -10,7 +10,7 @@ data class Move(val row: Int, val col: Int, val nmb: Int)
 //       '0' or '.' or ' ': field is empty
 @Suppress("ControlFlowWithEmptyBody")
 class SudokuSolver(data: String) {
-    // sudoku: initally empty 9x9 list, to be initalized in constructor
+    // sudoku: initially empty 9x9 list, to be initalized in constructor
     private val sudoku = List(9) { MutableList(9) { 0 } }
 
     // set of candidates for each cell of sudoku
@@ -85,7 +85,7 @@ class SudokuSolver(data: String) {
         }
     }
 
-    // try to solve Sudokue recursively
+    // try to solve Sudoku recursively
     fun solveRecursive(): Result {
         val result = solve()
 
@@ -103,11 +103,11 @@ class SudokuSolver(data: String) {
                             break@findcell
                         }
             choices = choices.reversed()
-            //debugPrintln("Possible choices to continue: ${choices.size} $choices")
+            //debug Println("Possible choices to continue: ${choices.size} $choices")
 
             // try them out
             for (move in choices) {
-               // debugPrintln("Try recursively ${moveNo + 1} / ${choices.size}")
+               // debug Println("Try recursively ${moveNo + 1} / ${choices.size}")
                 debugRecLevel++
                 // make backup of current state of sudoku
                 // (flatten gives a sufficiently 'deep copy' here)
@@ -122,7 +122,7 @@ class SudokuSolver(data: String) {
                     // all done
                     return recResult
                 } else {
-                    //debugPrintln("$recResult, try next.")
+                    //debug Println("$recResult, try next.")
                     // restore Sudoku + candidates, try next
                     var cnt=0
                     for (row in 0..8)

@@ -1,8 +1,6 @@
 package mp.sudoku.model
 
 import android.os.Parcelable
-import androidx.compose.material.MaterialTheme
-import androidx.compose.ui.graphics.Color
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

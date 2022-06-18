@@ -153,7 +153,6 @@ fun SudokuTextFields(
             contentAlignment = if (note == "") Alignment.Center else Alignment.TopStart // notes are smaller and aligned at top start
         ) {
             if (note == "") {
-                println("cell color: " + cell.color)
                 Text(
                     text = text,
                     color = if (cell.color == "Red") Color.Red else MaterialTheme.colors.onPrimary  // red color is used to show wrong values when the grid is checked

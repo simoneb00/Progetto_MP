@@ -18,7 +18,7 @@ import mp.sudoku.viewmodel.GameVM
 
 class MainActivity : ComponentActivity() {
 
-    var gameToResume = Game()
+    private var gameToResume = Game()
 
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,13 +47,6 @@ class MainActivity : ComponentActivity() {
             }
 
             if (!hasFocus && ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
-                println(
-                    "game info:" +
-                            CurrentGame.getInstance().current?.grid + '\n' +
-                            CurrentGame.getInstance().current?.score + '\n' +
-                            CurrentGame.getInstance().current?.noteGrid + '\n' +
-                            CurrentGame.getInstance().current?.timer + '\n'
-                )
 
                 val gameVM = GameVM(ScreenRouter.application)
 

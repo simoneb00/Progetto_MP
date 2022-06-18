@@ -8,6 +8,10 @@ import mp.sudoku.model.database.DBGame
 import mp.sudoku.model.database.sharedpreferences.SettingsSharedPreferences
 import mp.sudoku.viewmodel.repository.RepositoryGame
 
+/*
+* VM class that has the responsibility to communicate with the persistance to update settings, in particular with the shared preferences
+* All the private vars observes the DB so that they change immediately with it
+* */
 class SettingsVM (context: Context) {
     private val repGame: RepositoryGame
     private val settingsSharedPreferences = SettingsSharedPreferences(context)

@@ -15,6 +15,7 @@ import java.time.LocalDate
 
 /*
  *  ViewModel utile per gestire il caricamento via volley di un nuovo schema di sudoku.
+ * All the private vars observes the DB so that they change immediately with it
  */
 
 

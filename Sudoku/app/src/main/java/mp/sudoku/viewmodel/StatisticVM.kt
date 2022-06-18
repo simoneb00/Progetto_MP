@@ -15,6 +15,10 @@ import kotlin.time.toKotlinDuration
     Use it like:
         val all by viewmodel.attr.observeStateOf(listof())
  */
+/*
+* VM that links to the Stats Layout to manage graphic and logic engines
+* All the private vars observes the DB so that they change immediately with it
+* */
 class StatisticVM(application: Application) {
     private val repGame: RepositoryGame
     var allGames: LiveData<List<Game>>
@@ -72,7 +76,7 @@ class StatisticVM(application: Application) {
             return ""
         }
 
-        private fun timeToSeconds(time: String): Int {
+        private fun timeToSeconds(time: String): Int { //cast from string format to int value for time
             val list = time.split(":")
             val minutes: Int = list[0].toInt()
             val seconds: Int = list[1].toInt()
@@ -94,7 +98,7 @@ class StatisticVM(application: Application) {
                     totalDuration += duration
                 }
 
-                val kotlinDuration = totalDuration.toKotlinDuration()
+                val kotlinDuration = totalDuration.toKotlinDuration() //Duration is used in java/kotlin to keep track of time in a non numeric format
 
                 val averageDuration = Duration.ofSeconds(kotlinDuration.inWholeSeconds / finishedGames.size)
 
@@ -104,7 +108,7 @@ class StatisticVM(application: Application) {
             return ""
         }
 
-        private fun timeToLocalTime(timer: String): Duration {
+        private fun timeToLocalTime(timer: String): Duration { //cast from string format to duration format
 
             val list = timer.split(":")
 

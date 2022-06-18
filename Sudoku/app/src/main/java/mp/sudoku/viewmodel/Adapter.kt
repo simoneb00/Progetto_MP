@@ -2,6 +2,9 @@ package mp.sudoku.viewmodel
 
 import mp.sudoku.model.SudokuCell
 
+/*
+* Fun that has the responsibility to change format of the sudoku grid to adapt it for various purposes
+* */
 @Suppress("UNCHECKED_CAST")
 class Adapter {
     companion object {
@@ -25,14 +28,6 @@ class Adapter {
         }
 
         fun intListToStringList(intList: List<List<Int>>): List<List<String>> {
-            println(
-                "*************************************************" +
-                        "Adapter" +
-                        "*************************************************"
-            )
-
-            println("int list: " + intList)
-
             val newList: MutableList<List<String>> = mutableListOf()
 
             try {
@@ -47,9 +42,6 @@ class Adapter {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
-            println("string list: " + newList)
-
             return newList
         }
 
