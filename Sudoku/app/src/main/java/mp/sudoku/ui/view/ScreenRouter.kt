@@ -5,10 +5,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalContext
+import mp.sudoku.model.CurrentGame
+import mp.sudoku.ui.view.components.updateGame
 import mp.sudoku.ui.view.game.TempGameLayout
 import mp.sudoku.ui.view.game.WonGamePopUp
 import mp.sudoku.ui.view.resume.GameDetailsLayout
 import mp.sudoku.ui.view.resume.ResumeLayout
+import mp.sudoku.viewmodel.Adapter
 
 
 object ScreenRouter {
@@ -37,6 +40,7 @@ object ScreenRouter {
         previousScreen.value = source
     }
 
+
 }
 
 /* this function is useful to get the current application, in non-composable functions */
@@ -44,7 +48,6 @@ object ScreenRouter {
 fun GetCurrentContext() {
     ScreenRouter.application = LocalContext.current.applicationContext as Application
 }
-
 
 @Composable
 fun MainScreen() {

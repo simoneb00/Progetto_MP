@@ -40,37 +40,11 @@ fun TopBar(
 
     val activity = LocalContext.current as Activity?
 
+
+
+    /* this handles the device's back button, covering each possible case */
     BackHandler {
-        when (ScreenRouter.currentScreen.value) {
-            ScreenRouter.HOMESCREEN -> activity?.finish()
-            ScreenRouter.DIFFICULTYSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
-            ScreenRouter.RESUMESCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
-            ScreenRouter.GAMESCREEN -> updateGame(
-                activity!!.applicationContext as Application,
-                gridState,
-                noteState,
-                stopWatch
-            )
-            ScreenRouter.GAMEDETAILSSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
-            ScreenRouter.SETTINGSCREEN -> {
-                if (ScreenRouter.previousScreen.value == ScreenRouter.GAMESCREEN) {
-                    ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.grid)
-                }
-                ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value)
-            }
-            ScreenRouter.RULESSCREEN -> {
-                if (ScreenRouter.previousScreen.value == ScreenRouter.GAMESCREEN) {
-                    ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.grid)
-                }
-                ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value)
-            }
-            else -> {
-                ScreenRouter.navigateTo(
-                    destination = ScreenRouter.previousScreen.value,
-                    source = ScreenRouter.currentScreen.value
-                )
-            }
-        }
+        backButtonHandler(activity, gridState, noteState, stopWatch)
     }
 
     ConstraintLayout(
@@ -82,37 +56,10 @@ fun TopBar(
         val (backButton, settingsButton, guideButton) = createRefs()
 
         if (includeBackButton) {
+
+            /* Back Button */
             IconButton(onClick = {
-                when (ScreenRouter.currentScreen.value) {
-                    ScreenRouter.HOMESCREEN -> activity?.finish()
-                    ScreenRouter.DIFFICULTYSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
-                    ScreenRouter.RESUMESCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
-                    ScreenRouter.GAMESCREEN -> updateGame(
-                        activity!!.applicationContext as Application,
-                        gridState,
-                        noteState,
-                        stopWatch
-                    )
-                    ScreenRouter.GAMEDETAILSSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
-                    ScreenRouter.SETTINGSCREEN -> {
-                        if (ScreenRouter.previousScreen.value == ScreenRouter.GAMESCREEN) {
-                            ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.grid)
-                        }
-                        ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value)
-                    }
-                    ScreenRouter.RULESSCREEN -> {
-                        if (ScreenRouter.previousScreen.value == ScreenRouter.GAMESCREEN) {
-                            ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.grid)
-                        }
-                        ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value)
-                    }
-                    else -> {
-                        ScreenRouter.navigateTo(
-                            destination = ScreenRouter.previousScreen.value,
-                            source = ScreenRouter.currentScreen.value
-                        )
-                    }
-                }
+                backButtonHandler(activity, gridState, noteState, stopWatch)
             },
                 modifier = Modifier
                     .size(30.dp)
@@ -128,10 +75,16 @@ fun TopBar(
         }
 
         if (includeGuideButton) {
+            /* Guide Button */
             IconButton(onClick = {
                 if (ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
+                    /* we're opening rules screen while playing a game */
                     val gameVM = GameVM(ScreenRouter.application)
+
+                    /* the timer needs to be paused */
                     CurrentGame.getInstance().timer.pause()
+
+                    /* the game needs to be saved, because it will have to be restored when returning back to the game screen */
                     gameVM.updateGame(
                         board = CurrentGame.getInstance().current?.grid!!,
                         noteBoard = CurrentGame.getInstance().current?.noteGrid!!,
@@ -156,11 +109,16 @@ fun TopBar(
         }
 
         if (includeSettingsButton) {
+            /* Settings Button */
             IconButton(onClick = {
                 if (ScreenRouter.currentScreen.value == ScreenRouter.GAMESCREEN) {
-                    println("id: " + CurrentGame.getInstance().current?.id)
+                    /* we're opening settings while playing a game */
                     val gameVM = GameVM(ScreenRouter.application)
+
+                    /* the timer needs to be paused */
                     CurrentGame.getInstance().timer.pause()
+
+                    /* the game needs to be saved, because it will have to be restored when returning back to the game screen */
                     gameVM.updateGame(
                         board = CurrentGame.getInstance().current?.grid!!,
                         noteBoard = CurrentGame.getInstance().current?.noteGrid!!,
@@ -182,6 +140,52 @@ fun TopBar(
                     tint = MaterialTheme.colors.secondary
                 )
             }
+        }
+    }
+}
+
+
+fun backButtonHandler(
+    activity: Activity?,
+    gridState: HashMap<Int, SudokuCell>,
+    noteState: MutableList<MutableList<Int>>,
+    stopWatch: StopWatch
+) {
+    when (ScreenRouter.currentScreen.value) {
+
+        ScreenRouter.HOMESCREEN -> activity?.finish()   // if user is on the home screen and presses the back button, the application is closed
+        ScreenRouter.DIFFICULTYSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
+        ScreenRouter.RESUMESCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.HOMESCREEN)
+
+        /* the following saves the current game in persistence, when the user presses the back button  */
+        ScreenRouter.GAMESCREEN -> updateGame(
+            activity!!.applicationContext as Application,
+            gridState,
+            noteState,
+            stopWatch
+        )
+
+        ScreenRouter.GAMEDETAILSSCREEN -> ScreenRouter.navigateTo(destination = ScreenRouter.RESUMESCREEN)
+
+        ScreenRouter.SETTINGSCREEN -> {
+            if (ScreenRouter.previousScreen.value == ScreenRouter.GAMESCREEN) {
+                /* if the user presses the back button while in settings screen and he was previously playing a game, the game needs to be resumed */
+                ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.grid)
+            }
+            ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value)
+        }
+        ScreenRouter.RULESSCREEN -> {
+            if (ScreenRouter.previousScreen.value == ScreenRouter.GAMESCREEN) {
+                /* if the user presses the back button while in rules screen and he was previously playing a game, the game needs to be resumed */
+                ScreenRouter.game.value = Adapter.boardPersistenceFormatToList(CurrentGame.getInstance().current!!.grid)
+            }
+            ScreenRouter.navigateTo(destination = ScreenRouter.previousScreen.value)
+        }
+        else -> {
+            ScreenRouter.navigateTo(
+                destination = ScreenRouter.previousScreen.value,
+                source = ScreenRouter.currentScreen.value
+            )
         }
     }
 }
