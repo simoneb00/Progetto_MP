@@ -361,11 +361,12 @@ class ActiveGameVM {
         else {
             /* marking wrong values in red */
             grid.values.forEach { cell ->
-                if (cell.value != linearSolution?.get(cell.y)?.get(cell.x))
+                if (cell.value != linearSolution?.get(cell.y)?.get(cell.x)) {
                     cell.color = "Red"
+                }
             }
 
-            subGridState?.invoke(gridState)     // commit changes to the view (Grid)
+            subGridState?.invoke(grid)     // commit changes to the view (Grid)
             subGridState1?.invoke(gridState)     // commit changes to the view (GameLayout)
 
             isCorrect

@@ -52,6 +52,7 @@ fun GameLayout(
             .current.applicationContext as Application
     )
 
+    /* this variable observes the grid's variations */
     val s = rememberSaveable {
         mutableStateOf(gameGrid)
     }
