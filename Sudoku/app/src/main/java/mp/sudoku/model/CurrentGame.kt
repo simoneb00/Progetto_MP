@@ -1,7 +1,5 @@
 package mp.sudoku.model
 
-import mp.sudoku.viewmodel.StopWatch
-
 /*
 Classe singleton che ha la responsabilità di ottenere una sola instanza relativa al game corrente
 in modo da tener traccia di quale è la partita osservata in un determinato momento di vita dell'app

@@ -8,7 +8,6 @@ import android.content.SharedPreferences
  */
 
 class SettingsSharedPreferences(context: Context) {
-
     private val sharedPrefs: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
     private val editor: SharedPreferences.Editor = sharedPrefs.edit()
 
